@@ -9,7 +9,7 @@ type ProductCard = {
   title: string;
   category: string;
   description: string;
-  status: "Available" | "Setup required" | "Not enabled";
+  status: "Request only" | "Setup required" | "Not enabled";
   count?: number;
   href: string;
   action: string;
@@ -31,7 +31,7 @@ export default async function ProductsPage() {
       title: "Digital services",
       category: "SERVICE CATALOG",
       description: "Browse the live catalog and submit an order request for services activated by the platform team. Requests remain pending until payment and fulfillment integrations are enabled.",
-      status: activeServices > 0 ? "Available" : "Setup required",
+      status: activeServices > 0 ? "Request only" : "Setup required",
       count: activeServices,
       href: "/services",
       action: "Browse services",
