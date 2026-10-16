@@ -7,7 +7,7 @@ import { writeAudit } from "@/lib/audit";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const templateSchema = z.enum(["PORTFOLIO", "BUSINESS", "LANDING_PAGE"]);
+const templateSchema = z.enum(["PORTFOLIO", "BUSINESS", "LANDING_PAGE", "ONLINE_BANKING"]);
 const siteContentSchema = z.object({
   headline: z.string().trim().min(3).max(120),
   tagline: z.string().trim().max(160),
@@ -30,6 +30,16 @@ const updateSchema = z.object({
 });
 
 function defaultContent(template: string, name: string) {
+  if (template === "ONLINE_BANKING") return {
+    headline: "Banking that moves with you.",
+    tagline: "YOUR MONEY, MORE IN CONTROL",
+    description: "A secure digital banking experience for viewing accounts, managing payments, and keeping track of everyday finances.",
+    buttonText: "Explore digital banking",
+    sectionOneTitle: "Everyday banking",
+    sectionOneBody: "Present account overview, transaction history, card controls, and payment options in one clear customer experience.",
+    sectionTwoTitle: "Security by design",
+    sectionTwoBody: "Explain identity checks, account protection, privacy practices, and how customers can reach support.",
+  };
   if (template === "PORTFOLIO") return {
     headline: "Ideas made with purpose.",
     tagline: "PERSONAL PORTFOLIO",
