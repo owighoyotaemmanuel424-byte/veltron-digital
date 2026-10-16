@@ -51,6 +51,8 @@ model User {
   email        String      @unique
   name         String?
   passwordHash String
+  twoFactorSecret String?
+  twoFactorEnabled Boolean @default(false)
   role         UserRole    @default(CUSTOMER)
   status       UserStatus  @default(ACTIVE)
   createdAt    DateTime    @default(now())
@@ -58,6 +60,11 @@ model User {
   orders       Order[]
   payments     Payment[]
   auditEvents  AuditLog[]  @relation("AuditActor")
+  sessions     Session[]
+  walletAccounts WalletAccount[]
+  hostedSites HostedSite[]
+  telephonyLogs TelephonyLog[]
+  generatedDocuments GeneratedDocument[]
   @@index([role, status])
   @@index([createdAt])
 }
@@ -148,4 +155,96 @@ model AuditLog {
   @@index([actorId, createdAt])
   @@index([entityType, entityId, createdAt])
   @@index([action, createdAt])
+}
+
+model Session {
+  id String @id @default(cuid())
+  userId String
+  tokenHash String @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, expiresAt])
+}
+
+model WalletAccount {
+  id String @id @default(cuid())
+  userId String
+  currency String @default("NGN")
+  balanceMinor Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  entries LedgerEntry[]
+  @@unique([userId, currency])
+  @@index([userId])
+}
+
+model LedgerTransaction {
+  id String @id @default(cuid())
+  reference String @unique
+  idempotencyKey String @unique
+  description String
+  createdAt DateTime @default(now())
+  entries LedgerEntry[]
+}
+
+model LedgerEntry {
+  id String @id @default(cuid())
+  transactionId String
+  accountId String
+  amountMinor Int
+  currency String
+  createdAt DateTime @default(now())
+  transaction LedgerTransaction @relation(fields: [transactionId], references: [id], onDelete: Restrict)
+  account WalletAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  @@index([accountId, createdAt])
+  @@index([transactionId])
+}
+
+model HostedSite {
+  id String @id @default(cuid())
+  userId String
+  name String
+  template String
+  domain String?
+  status String @default("DRAFT")
+  providerReference String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  @@index([userId, createdAt])
+  @@index([status])
+}
+
+model TelephonyLog {
+  id String @id @default(cuid())
+  userId String
+  provider String
+  providerCallId String? @unique
+  destination String
+  status String
+  durationSeconds Int @default(0)
+  costMinor Int @default(0)
+  currency String @default("NGN")
+  metadata Json?
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+model GeneratedDocument {
+  id String @id @default(cuid())
+  userId String
+  kind String
+  title String
+  status String @default("DRAFT")
+  content Json
+  fileUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  @@index([userId, createdAt])
 }
