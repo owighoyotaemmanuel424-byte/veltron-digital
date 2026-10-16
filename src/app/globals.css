@@ -403,3 +403,12 @@ label{display:block}
 .document-filters .button{min-height:42px;white-space:nowrap}
 @media(max-width:760px){.document-filters{grid-template-columns:1fr 1fr}.document-filters label{align-self:end}}
 @media(max-width:440px){.document-filters{grid-template-columns:1fr}.document-filters .button{width:100%}}
+
+
+.order-filters{display:grid;grid-template-columns:minmax(220px,1.5fr) minmax(160px,.8fr) auto auto;align-items:end;gap:12px;margin:18px 0;padding:16px;border:1px solid var(--border,#263044);border-radius:14px;background:var(--surface,#111827)}
+.order-filters label{display:grid;gap:7px;min-width:0;color:var(--muted,#aab4c5);font-size:12px;font-weight:700}
+.order-filters input,.order-filters select{width:100%;min-width:0;min-height:44px;padding:10px 12px;border:1px solid var(--border,#263044);border-radius:9px;background:var(--background,#090d16);color:var(--foreground,#f5f7fb);font:inherit}
+.order-filters .button{min-height:44px;white-space:nowrap}
+.order-filter-count{font-size:12px;color:var(--muted,#aab4c5);white-space:nowrap;padding:0 2px 13px}
+@media(max-width:760px){.order-filters{grid-template-columns:1fr 1fr}.order-filter-count{padding:0;align-self:center}}
+@media(max-width:440px){.order-filters{grid-template-columns:1fr}.order-filters .button{width:100%}.order-filter-count{padding:0}}
