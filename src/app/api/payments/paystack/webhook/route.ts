@@ -4,8 +4,17 @@ import { prisma } from "@/lib/prisma";
 import { verifyPaystackSignature } from "@/lib/paystack";
 
 export const runtime = "nodejs";
+const MAX_WEBHOOK_BYTES = 256 * 1024;
+
 export async function POST(request: NextRequest) {
+  const declaredLength = Number(request.headers.get("content-length") ?? "0");
+  if (declaredLength > MAX_WEBHOOK_BYTES) {
+    return NextResponse.json({ error: "Payload too large" }, { status: 413 });
+  }
   const rawBody = await request.text();
+  if (Buffer.byteLength(rawBody, "utf8") > MAX_WEBHOOK_BYTES) {
+    return NextResponse.json({ error: "Payload too large" }, { status: 413 });
+  }
   if (!verifyPaystackSignature(rawBody, request.headers.get("x-paystack-signature"))) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
@@ -30,8 +39,8 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Could not record event; retry delivery" }, { status: 500 });
   }
-  // This endpoint intentionally does not mark payments as paid or fulfil orders.
-  // A reconciliation worker must independently verify the provider transaction,
-  // match reference/amount/currency/order, then update state idempotently.
+  // A signed event is only an input to reconciliation, not proof of a settled
+  // payment. A worker must verify reference/amount/currency/order with Paystack
+  // before changing payment state or fulfilling an order.
   return NextResponse.json({ received: true, referenceRecorded: reference.length > 0 });
 }
