@@ -1,37 +1,43 @@
-# Neon Managed Better Auth integration
+# Neon Managed Better Auth rollout
 
-Veltron Digital is being prepared to use Neon Managed Better Auth (powered by Better Auth) alongside its existing PostgreSQL/Prisma application.
+Veltron Digital now includes a staged Neon Managed Better Auth integration. The app uses Next.js 16 because the selected Neon Auth SDK beta requires Next.js 16 or newer.
 
-## Current status
+## What is implemented
 
-- The Neon Better Auth SDK is installed.
-- The server SDK and same-origin `/api/auth/*` proxy are added.
-- The proxy is **disabled by default**. Set `NEON_AUTH_ENABLED=true` only after completing the readiness checks below.
-- Existing `/sign-in`, `/sign-up`, local password hashes, Prisma sessions, TOTP/recovery codes, user statuses, roles, and admin bootstrap are unchanged.
-- No database schema, production records, payment settings, or email settings are changed by this integration.
+- Neon Auth and Neon Auth UI dependencies.
+- Neon UI routes at /auth/sign-in, /auth/sign-up, and other supported Neon auth paths.
+- /sign-in and /sign-up route to Neon when NEON_AUTH_ENABLED=true; otherwise they retain the legacy forms.
+- Same-origin /api/auth/* proxy and Next.js proxy.ts middleware for Neon session handling and auth callbacks.
+- Server-side app session resolution uses Neon sessions when enabled, then maps verified Neon email identities to existing local User records. Existing local role and suspension status remain authoritative. New verified identities receive a CUSTOMER profile and NGN wallet; they cannot self-assign an admin role.
+- Sign-out uses Neon Better Auth when enabled.
+- Existing PostgreSQL/Prisma business tables and records are not dropped or rewritten by this code change.
 
-## Vercel environment
+## Important migration limitation
 
-In the **veltron-digital** Vercel project, configure these server-side variables:
+Do not enable this for Production yet. Existing local TOTP/recovery-code protection cannot be silently bypassed. For safety, the current mapping refuses access for local accounts with twoFactorEnabled=true until their second factor has a verified migration path to Neon. Existing local passwords and sessions are not portable into Neon, so users will need to establish Neon identities with verified email and use the approved account-linking/onboarding process. Test this with dedicated Preview accounts first.
 
-- `NEON_AUTH_BASE_URL`: the Neon Auth URL supplied for this project:
-  `https://ep-floral-breeze-b5o4y4s0.neonauth.c-7.us-east-2.aws.neon.tech/neondb/auth`
-- `NEON_AUTH_COOKIE_SECRET`: a newly generated random secret of at least 32 characters. Generate it privately with `openssl rand -base64 32`. Do not reuse any secret posted in chat or source control.
-- `NEON_AUTH_ENABLED`: keep `false` during validation.
+Neon Auth stores its own identities and sessions in the Neon-managed neon_auth schema. Veltron's business data, orders, wallets, payment records, roles, suspension status, and audit trail remain in the existing Prisma database. A verified email is used only to locate the local business profile; the local role is never taken from Neon metadata.
 
-Do not add the cookie secret to GitHub, client-side variables, or this document. Keep existing `AUTH_SECRET` unchanged while legacy sessions may still be active. Email-related variables are intentionally outside the scope of this change.
+## Vercel Preview configuration
 
-## Required before switching production sign-in
+In the veltron-digital Vercel project, configure the following for Preview only:
 
-Neon Auth creates identities and sessions in the Neon `neon_auth` schema. Veltron's business data, authorization roles, orders, wallets, and audit trail use the existing Prisma `User` record. A Neon identity must not be trusted as an admin/customer business identity merely because it has a verified email.
+- NEON_AUTH_BASE_URL: https://ep-floral-breeze-b5o4y4s0.neonauth.c-7.us-east-2.aws.neon.tech/neondb/auth
+- NEXT_PUBLIC_NEON_AUTH_URL: the same Neon Auth URL, for the browser SDK.
+- NEON_AUTH_COOKIE_SECRET: a newly generated random secret of at least 32 characters. Generate privately with openssl rand -base64 32. Never put it in GitHub or share it in chat.
+- NEON_AUTH_ENABLED: set to true in Preview only.
 
-Before changing the existing sign-in routes:
+Keep NEON_AUTH_ENABLED=false in Production until Preview validation is complete. Changing Vercel environment variables requires a new deployment. Do not change the existing AUTH_SECRET while legacy sessions may still be in use. Email configuration was not changed.
 
-1. Decide and test a deterministic mapping from Neon user IDs to existing Prisma `User.id` values; email-only matching must account for verified email, uniqueness, account status, and takeover risks.
-2. Preserve existing SUPER_ADMIN/ADMIN/SUPPORT roles, suspended/pending status, TOTP and recovery-code enforcement, and audit events.
-3. Implement a server-side authorization adapter that resolves every Neon session to an active local user and fails closed when no safe mapping exists.
-4. Plan a tested migration/onboarding path for existing password accounts. Do not copy password hashes into Neon Auth or assume existing sessions are portable.
-5. Test new registration, sign-in, sign-out, verification/recovery, 2FA, suspended accounts, admin access, and payment/order API authorization in preview before activation.
-6. Keep the legacy sign-in routes available as a rollback path until the new flow has been verified with real test accounts.
+## Validation checklist
 
-The SDK integration is intentionally not switched on by this commit. This avoids locking out existing users or weakening role checks while the identity mapping is still missing.
+1. Confirm the Preview build installs dependencies and passes TypeScript/Next compilation on Next.js 16.
+2. Confirm Neon Auth is enabled for the Neon project and the base URL is correct.
+3. Test new user registration, email verification/OTP, sign-in, sign-out, refresh/session persistence, and recovery.
+4. Test verified email linking to an existing customer and confirm its local ID, orders, wallets, and payment history are unchanged.
+5. Test that suspended/pending accounts cannot access the app and no Neon user can grant themselves ADMIN or SUPER_ADMIN.
+6. Test admin/customer API authorization and payment/order endpoints.
+7. Resolve the local TOTP migration for existing protected accounts before switching Production.
+8. Keep the legacy sign-in routes as a rollback path until the new flow is verified end-to-end.
+
+No Production environment variables have been changed by this code work, and the production auth switch remains off by default.
