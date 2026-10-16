@@ -20,6 +20,8 @@ export default function DocumentsPage() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [filterKind, setFilterKind] = useState("ALL");
 
   async function load() {
     try {
@@ -31,6 +33,12 @@ export default function DocumentsPage() {
   }
 
   useEffect(() => { void load(); }, []);
+
+  const filteredDocuments = documents.filter(doc => {
+    const matchesKind = filterKind === "ALL" || doc.kind === filterKind;
+    const query = search.trim().toLowerCase();
+    return matchesKind && (!query || doc.title.toLowerCase().includes(query) || (doc.content.body || "").toLowerCase().includes(query));
+  });
 
   async function create() {
     setBusy(true); setMessage(""); setError("");
@@ -79,8 +87,18 @@ export default function DocumentsPage() {
         {error && <p className="form-error" role="alert">{error}</p>}
       </article>
       <section className="dash-section">
-        <div className="section-heading"><div><div className="eyebrow">SAVED IN YOUR ACCOUNT</div><h2>Recent drafts</h2></div><span className="dash-note">{documents.length} shown · latest 50</span></div>
-        {documents.length ? <div className="document-list">{documents.map(doc => <article className="card document-record" key={doc.id}>
+        <div className="section-heading"><div><div className="eyebrow">SAVED IN YOUR ACCOUNT</div><h2>Recent drafts</h2></div><span className="dash-note">{filteredDocuments.length} of {documents.length} drafts</span></div>
+        <div className="document-filters" aria-label="Filter saved drafts">
+          <label htmlFor="document-search">Search drafts</label>
+          <input id="document-search" type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search titles and content…" />
+          <label htmlFor="document-filter-kind">Document type</label>
+          <select id="document-filter-kind" value={filterKind} onChange={e => setFilterKind(e.target.value)}>
+            <option value="ALL">All types</option><option value="LETTER">Letters</option><option value="BUSINESS_NOTE">Business notes</option><option value="SERVICE_SUMMARY">Service summaries</option>
+          </select>
+          <button type="button" className="button secondary" onClick={() => { setSearch(""); setFilterKind("ALL"); }}>Clear filters</button>
+          <button type="button" className="button secondary" onClick={() => void load()}>Refresh drafts</button>
+        </div>
+        {filteredDocuments.length ? <div className="document-list">{filteredDocuments.map(doc => <article className="card document-record" key={doc.id}>
           <div className="eyebrow">{doc.kind.replaceAll("_", " ")}</div><h3>{doc.title}</h3>
           <p className="small-copy">Draft · {new Date(doc.createdAt).toLocaleString()}</p>
           <pre className="document-preview">{doc.content.body || ""}</pre>
@@ -92,7 +110,7 @@ export default function DocumentsPage() {
             w.document.write("<!doctype html><html><head><title>"+esc(doc.title)+"</title><meta charset='utf-8'><style>body{font:16px/1.6 system-ui,sans-serif;max-width:760px;margin:48px auto;padding:0 24px;color:#111}pre{white-space:pre-wrap;font:inherit}.notice{margin-top:40px;border-top:1px solid #bbb;padding-top:12px;font-size:12px;color:#555}</style></head><body><h1>"+esc(doc.title)+"</h1><p>"+esc(doc.kind.replaceAll("_"," "))+" · Draft</p><pre>"+esc(doc.content.body || "")+"</pre><p class='notice'>User-created draft. Not proof of payment, identity, bank balance, or third-party certification.</p><script>window.onload=()=>window.print()</script></body></html>");
             w.document.close();
           }}>Print / Save as PDF</button>
-        </article>)}</div> : <div className="empty-state"><h3>No document drafts yet</h3><p>Create a letter, business note, or service summary above.</p></div>}
+        </article>)}</div> : <div className="empty-state"><h3>{documents.length ? "No drafts match these filters" : "No document drafts yet"}</h3><p>{documents.length ? "Try a different search or clear the filters." : "Create a letter, business note, or service summary above."}</p></div>}
       </section>
     </section>
   </main>;
