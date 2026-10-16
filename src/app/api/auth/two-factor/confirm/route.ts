@@ -1,3 +1,4 @@
+import { createHash, randomBytes } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
@@ -16,9 +17,19 @@ export async function POST(request: NextRequest) {
   try {
     const record = await prisma.user.findUnique({ where: { id: user.id }, select: { twoFactorSecret: true } });
     if (!record?.twoFactorSecret || !verifyTotp(decryptTotpSecret(record.twoFactorSecret), parsed.data.code)) return NextResponse.json({ error: "The authenticator code is invalid or expired." }, { status: 400 });
-    await prisma.user.update({ where: { id: user.id }, data: { twoFactorEnabled: true } });
-    await writeAudit({ actorId: user.id, action: "auth.2fa.enabled", entityType: "User", entityId: user.id });
-    return NextResponse.json({ success: true });
+    const recoveryCodes = Array.from({ length: 10 }, () => randomBytes(10).toString("hex").toUpperCase());
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({ where: { id: user.id }, data: { twoFactorEnabled: true } });
+      await tx.recoveryCode.deleteMany({ where: { userId: user.id } });
+      await tx.recoveryCode.createMany({
+        data: recoveryCodes.map((code) => ({
+          userId: user.id,
+          codeHash: createHash("sha256").update(code).digest("hex"),
+        })),
+      });
+    });
+    await writeAudit({ actorId: user.id, action: "auth.2fa.enabled", entityType: "User", entityId: user.id, details: { recoveryCodesIssued: recoveryCodes.length } });
+    return NextResponse.json({ success: true, recoveryCodes }, { headers: { "Cache-Control": "no-store", "Pragma": "no-cache" } });
   } catch {
     return NextResponse.json({ error: "Could not confirm two-factor setup." }, { status: 503 });
   }
