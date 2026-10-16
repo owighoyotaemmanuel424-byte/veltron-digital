@@ -10,3 +10,6 @@
 
 
 .service-order-action{display:grid;grid-template-columns:90px minmax(0,1fr);gap:8px 10px;align-items:center;margin-top:18px}.service-order-action label{font-size:12px;color:#aeb8ca}.service-order-action input{min-width:0;width:100%;padding:10px;border:1px solid #30394b;border-radius:9px;background:#080a0f;color:#f5f7fb;font:inherit}.service-order-action .button{grid-column:1/-1}.service-order-action .small-copy,.service-order-action .form-error,.service-order-action .form-message{grid-column:1/-1;margin:0}.service-order-action .form-message,.service-order-action .form-error{line-height:1.5}
+
+
+.admin-orders .section-heading{align-items:center}.admin-orders .form-error,.admin-orders .form-message{margin:10px 0}.admin-orders .table-wrap{margin-top:14px}
