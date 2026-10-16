@@ -73,6 +73,8 @@ export default function WebsitesPage() {
       setSelectedId("");
     }
   }
+  // The loader intentionally updates state after its network request completes.
+  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
   useEffect(() => { void load().catch(e => setError(e instanceof Error ? e.message : "Could not load websites.")); }, []);
 
   function chooseSite(site: SiteRecord) {
