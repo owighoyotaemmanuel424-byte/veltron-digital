@@ -3,7 +3,6 @@ import { authViewPaths } from "@neondatabase/auth-ui/server";
 import AuthProviders from "@/app/auth-providers";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
