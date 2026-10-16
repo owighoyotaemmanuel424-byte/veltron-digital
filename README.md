@@ -5,7 +5,9 @@ Original digital services marketplace built with Next.js App Router, TypeScript,
 ## Implemented foundation
 - Password registration/sign-in with bcrypt password hashing and revocable HttpOnly sessions.
 - Email verification for new registrations using one-time, hashed tokens that expire after 24 hours; resend endpoint is rate-limited and avoids account enumeration.
-- Email delivery through Resend; registration fails closed when the required email settings are missing.
+- Durable per-email and per-network rate limits on registration, sign-in and verification resend.
+- Daily protected cleanup for expired/revoked sessions, old verification tokens and stale rate-limit rows.
+- Email delivery through Resend; registration fails closed when the required email settings are missing. Email delivery configuration was intentionally left unchanged.
 - Optional authenticator-based TOTP two-factor authentication with encrypted secret storage.
 - Customer workspace and database-backed service catalog.
 - Role-protected admin overview and one-time token-protected super-admin bootstrap endpoint.
@@ -13,9 +15,11 @@ Original digital services marketplace built with Next.js App Router, TypeScript,
 - Paystack signature verification groundwork. Payment settlement, wallet posting and fulfilment are not enabled by webhook receipt alone.
 
 ## Important readiness limitations
-This is an actively developed foundation, **not yet production-ready**. Admin user management, order creation/fulfilment, balanced ledger posting, payment reconciliation, hosted-site provisioning, telephony provider integration, document rendering, recovery codes, IP/device-level abuse protection, automated limiter/token cleanup, and end-to-end coverage remain to be completed and reviewed.
+This is an actively developed foundation, **not yet production-ready**. Admin user management, order creation/fulfilment, balanced ledger posting, payment reconciliation, hosted-site provisioning, telephony provider integration, document rendering, recovery codes, IP/device-level abuse protection, end-to-end coverage, account recovery/TOTP recovery codes, and production provider integration/reconciliation remain to be completed and reviewed.
 
 Do not enable real money movement until the required controls are implemented and tested. Do not claim telephony, hosting, payment settlement, or document generation is live merely because its schema exists.
+
+Configure `CRON_SECRET` (at least 32 random characters) in Vercel to authorize the daily `/api/cron/cleanup` schedule. See `docs/PLATFORM_ROADMAP.md` for remaining production gates.
 
 ## Local development
 1. Use Node.js 20+ and PostgreSQL.
