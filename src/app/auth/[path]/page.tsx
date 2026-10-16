@@ -52,7 +52,8 @@ export default async function NeonAuthPage({
       </main>
     );
   }
-  const isSignUp = path === authViewPaths.SIGN_UP;
+  const normalizedPath = path.toLowerCase();
+  const isSignUp = normalizedPath.includes("sign-up") || normalizedPath.includes("sign_up") || normalizedPath.includes("signup");
   return (
     <main className="vd-auth-page">
       <header className="vd-auth-header">
