@@ -251,3 +251,40 @@
   .headingAction{grid-template-columns:minmax(0,1fr)}
   .actionTile{min-height:85px}
 }
+
+
+/* Accessible, persisted dashboard theme control and light-theme counterpart. */
+.themeToggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:7px 10px;border:1px solid #2b2b2b;border-radius:9px;background:#080808;color:#e8e8e8;font:inherit;font-size:10px;font-weight:700;cursor:pointer;transition:background .16s,border-color .16s}
+.themeToggle:hover{border-color:#00d477;background:#07130d}
+.themeToggle:focus-visible{outline:2px solid #00d477;outline-offset:3px}
+.themeToggle span:first-child{font-size:14px;line-height:1}
+@media(max-width:480px){.themeToggle{min-height:32px;padding:6px 8px;font-size:9px}}
+:global(html[data-veltron-theme="light"]) .page{background:#f4f6f8;color:#14181d}
+:global(html[data-veltron-theme="light"]) .sidebar{background:#fff;border-right-color:#e2e6eb}
+:global(html[data-veltron-theme="light"]) .main{color:#14181d}
+:global(html[data-veltron-theme="light"]) .topbar{border-bottom-color:#e2e6eb}
+:global(html[data-veltron-theme="light"]) .breadcrumb b,
+:global(html[data-veltron-theme="light"]) .heading h1,
+:global(html[data-veltron-theme="light"]) .actionTile,
+:global(html[data-veltron-theme="light"]) .panel h2,
+:global(html[data-veltron-theme="light"]) .actionGroupTitle h3{color:#14181d}
+:global(html[data-veltron-theme="light"]) .metric,
+:global(html[data-veltron-theme="light"]) .panel,
+:global(html[data-veltron-theme="light"]) .actionGroup,
+:global(html[data-veltron-theme="light"]) .securityPanel{background:#fff;border-color:#e0e5ea}
+:global(html[data-veltron-theme="light"]) .actionTile{background:#fff;border-color:#e0e5ea}
+:global(html[data-veltron-theme="light"]) .actionTile:hover{background:#f0fbf5;border-color:#00b96a}
+:global(html[data-veltron-theme="light"]) .table th{background:#f4f6f8;color:#626c78}
+:global(html[data-veltron-theme="light"]) .table td{color:#28313b;border-top-color:#e8ebef}
+:global(html[data-veltron-theme="light"]) .metricNote,
+:global(html[data-veltron-theme="light"]) .heading p,
+:global(html[data-veltron-theme="light"]) .sectionIntro p,
+:global(html[data-veltron-theme="light"]) .actionTileText small,
+:global(html[data-veltron-theme="light"]) .securityRow p{color:#687482}
+:global(html[data-veltron-theme="light"]) .profileText strong{color:#1a222b}
+:global(html[data-veltron-theme="light"]) .profileText small{color:#687482}
+:global(html[data-veltron-theme="light"]) .mobileBar{background:#fff;border-bottom-color:#e2e6eb}
+:global(html[data-veltron-theme="light"]) .mobileBar .brand{color:#14181d}
+:global(html[data-veltron-theme="light"]) .mobileDrawer{background:#fff;border-right-color:#e2e6eb}
+:global(html[data-veltron-theme="light"]) .drawerTitle{color:#14181d}
+:global(html[data-veltron-theme="light"]) .themeToggle{background:#fff;color:#26313b;border-color:#d8dee5}
