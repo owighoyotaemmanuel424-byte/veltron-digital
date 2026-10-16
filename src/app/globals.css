@@ -196,3 +196,35 @@
 @media(max-width:700px){.vd-auth-header{padding:16px 20px}.vd-auth-layout,.vd-auth-layout-signup{display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;padding:40px 20px 48px}.vd-auth-story{padding:0 0 24px}.vd-auth-story h1{margin:18px 0 13px;font-size:clamp(42px,10vw,61px)}.vd-auth-story>p{font-size:12px;max-width:530px}.vd-auth-benefits{display:none}.vd-auth-story-foot{display:none}.vd-auth-form-panel{max-width:520px;align-self:center;justify-self:auto;padding:25px;width:100%}.vd-auth-form-heading{margin-bottom:22px}.vd-auth-mobile-mark{display:inline-block;margin-bottom:17px}.vd-auth-layout-signup .vd-auth-form-panel{padding-top:25px;padding-bottom:25px}}
 @media(max-width:420px){.vd-auth-header{padding:14px 16px}.vd-auth-back{font-size:11px}.vd-auth-layout,.vd-auth-layout-signup{padding:32px 15px 35px}.vd-auth-story h1{font-size:43px}.vd-auth-form-panel{padding:21px 17px;border-radius:17px}.vd-auth-form-heading h2{font-size:27px}.vd-auth-form>input,.vd-auth-password input{height:44px}}
 @media(prefers-reduced-motion:reduce){.vd-auth-form>input,.vd-auth-password input,.vd-auth-submit,.vd-auth-back{transition:none}.vd-auth-submit:hover{transform:none}}
+
+
+/* Customer dashboard refinements */
+.dashboard-welcome{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:0 0 22px;padding:23px 24px;border:1px solid #34304f;border-radius:17px;background:radial-gradient(ellipse at 90% 0%,#8b7cff20,transparent 48%),linear-gradient(120deg,#151624,#10131c)}
+.dashboard-welcome h2{margin:7px 0;font-size:clamp(19px,2.2vw,25px);letter-spacing:-.045em}
+.dashboard-welcome p{margin:0;color:#9da6ba;font-size:12px;line-height:1.7}
+.dashboard-quick-actions{display:flex;gap:9px;flex-wrap:wrap;flex-shrink:0}
+.dashboard-quick-actions .button{gap:10px;padding:11px 13px;font-size:12px}
+.dashboard-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.dashboard-stats .dash-card{position:relative;min-height:157px;padding:19px}
+.dash-icon{display:grid;place-items:center;width:32px;height:32px;margin-bottom:2px;border:1px solid #a99aff26;border-radius:10px;background:#a99aff14;color:#c4baff;font-size:17px}
+.dash-icon-blue{border-color:#82c8ff26;background:#82c8ff12;color:#a7d9ff}
+.dash-icon-green{border-color:#83e2c326;background:#83e2c312;color:#93e7c0}
+.dashboard-stats .dash-card strong{font-size:29px}
+.dashboard-stats .dash-card .security-state{font-size:20px}
+.dashboard-stats .dash-note{line-height:1.5}
+.status-dot{display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:#83e0b7;box-shadow:0 0 10px #83e0b755}
+.coming-soon{display:inline-block;margin-left:5px;padding:2px 5px;border:1px solid #30394b;border-radius:5px;color:#7f8ba1;font-size:8px;text-transform:uppercase;letter-spacing:.04em}
+.order-reference{color:#b9b0ff;font-variant-numeric:tabular-nums}
+.table-status{font-weight:650}
+.status-completed{background:#123126;color:#8be2bd}
+.status-failed,.status-cancelled,.status-refunded{background:#351d27;color:#ffabb9}
+.status-processing,.status-paid{background:#172a3a;color:#9ed6ff}
+.status-pending{background:#302a1b;color:#f3d28a}
+.wallet-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.wallet-card{background:linear-gradient(145deg,#121a1b,#0d1118)}
+.dashboard-footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:42px;padding-top:18px;border-top:1px solid var(--line);color:#78849a;font-size:11px}
+.dashboard-footer a{color:#b6adff}
+.dashboard-footer a:hover{color:#fff}
+@media(max-width:1100px){.dashboard-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-welcome{align-items:flex-start;flex-direction:column}.dashboard-quick-actions{width:100%}}
+@media(max-width:900px){.side-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.side-nav .brand{grid-column:1/-1}.side-nav .side-label{grid-column:1/-1}.side-nav .side-link{min-width:0}.dashboard-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.wallet-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.dashboard-welcome{padding:18px}.dashboard-quick-actions{display:grid;grid-template-columns:1fr}.dashboard-quick-actions .button{width:100%}.dashboard-stats,.wallet-grid{grid-template-columns:1fr}.dashboard-stats .dash-card{min-height:135px}.dashboard-footer{flex-direction:column}.side-nav .brand{grid-column:1/-1}.side-nav .side-label{grid-column:1/-1}.side-nav .side-link{font-size:12px;padding:10px}.status-chip{font-size:11px}}
