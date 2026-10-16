@@ -67,6 +67,7 @@ model User {
   telephonyLogs TelephonyLog[]
   generatedDocuments GeneratedDocument[]
   emailVerificationTokens EmailVerificationToken[]
+  recoveryCodes RecoveryCode[]
   @@index([role, status])
   @@index([createdAt])
 }
@@ -270,4 +271,14 @@ model AuthRateLimit {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   @@index([updatedAt])
+}
+
+model RecoveryCode {
+  id String @id @default(cuid())
+  userId String
+  codeHash String @unique
+  usedAt DateTime?
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, usedAt])
 }
