@@ -1,16 +1,93 @@
 import Link from "next/link";
-const features = [
-  ["One clear workspace", "Discover services, manage requests, and review every order from one account."],
-  ["Payments built for reconciliation", "Provider references, idempotency, and verified status transitions are first-class records."],
-  ["Accountability by design", "Role-based administration and an audit trail support controlled operations."]
+
+const highlights = [
+  { number: "01", title: "Find what you need", body: "Browse a clear service catalog and understand the request before you place it.", icon: "⌕" },
+  { number: "02", title: "Stay in control", body: "Keep your requests, order status, and account details together in one workspace.", icon: "↗" },
+  { number: "03", title: "Know where things stand", body: "Follow status updates and review payment references without guessing.", icon: "✓" },
 ];
+
+const serviceTypes = [
+  { icon: "✳", title: "Digital services", description: "Explore available services in one organized catalog.", tone: "violet" },
+  { icon: "◷", title: "Order tracking", description: "See request status and keep a clear history.", tone: "blue" },
+  { icon: "⌘", title: "Account workspace", description: "Manage your activity from a single secure account.", tone: "mint" },
+];
+
 export default function Home() {
-  return <main>
-    <header className="topbar"><Link className="brand" href="/">veltron<span>.</span></Link><nav className="nav" aria-label="Main navigation"><a href="#services">Services</a><a href="#security">Security</a><a href="/sign-in">Sign in</a></nav></header>
-    <section className="hero"><div><div className="eyebrow">A smarter service marketplace</div><h1>Move your next task forward.</h1><p className="lead">A streamlined place to discover services, place orders, and track progress — with clear payment records and accountable support.</p><div className="actions"><a className="button" href="/sign-up">Create account</a><a className="button secondary" href="#services">Explore services</a></div></div>
-      <aside className="preview" aria-label="Platform feature preview"><div className="preview-head"><span>YOUR WORKSPACE</span><span>● Protected</span></div><div className="metric">All in one place.</div><div className="pills"><span className="pill">Order tracking</span><span className="pill">Payment history</span><span className="pill">Secure access</span></div><div style={{height:1,background:"#293244",margin:"24px 0"}}/><p className="lead">Designed around clarity: every order has a status, every payment has a reference, and privileged actions are auditable.</p></aside></section>
-    <section className="section" id="services"><div className="eyebrow">Built for confidence</div><h2>Simple on the surface. Accountable underneath.</h2><div className="cards">{features.map(([title,body])=><article className="card" key={title}><h3>{title}</h3><p>{body}</p></article>)}</div></section>
-    <section className="section" id="security"><div className="card"><div className="eyebrow">Integration status</div><h2>Paystack stays off until approved.</h2><p>Checkout is intentionally not activated until merchant eligibility is confirmed and production credentials are configured. Payment status must be reconciled against the provider before an order is fulfilled.</p></div></section>
-    <footer className="footer">Veltron Digital · Original product concept · Secure by default</footer>
-  </main>;
+  return (
+    <main className="vd-page">
+      <header className="vd-header">
+        <Link className="vd-brand" href="/" aria-label="Veltron Digital home">
+          <span className="vd-brand-mark">v</span><span>veltron<span className="vd-brand-dot">.</span></span>
+        </Link>
+        <nav className="vd-nav" aria-label="Main navigation">
+          <Link href="#services">Explore</Link>
+          <Link href="#how-it-works">How it works</Link>
+          <Link href="#trust">Our approach</Link>
+        </nav>
+        <div className="vd-header-actions">
+          <Link className="vd-signin" href="/sign-in">Sign in</Link>
+          <Link className="vd-header-cta" href="/sign-up">Get started <span aria-hidden="true">↗</span></Link>
+        </div>
+      </header>
+
+      <section className="vd-hero">
+        <div className="vd-hero-glow" aria-hidden="true" />
+        <div className="vd-hero-copy">
+          <div className="vd-kicker"><span className="vd-kicker-dot" /> YOUR DIGITAL WORKSPACE, REIMAGINED</div>
+          <h1>Make digital<br />work feel <span>effortless.</span></h1>
+          <p className="vd-hero-lead">One thoughtful place to discover services, manage requests, and follow progress — without losing track of the details.</p>
+          <div className="vd-hero-actions">
+            <Link className="vd-button vd-button-primary" href="/sign-up">Create your account <span aria-hidden="true">↗</span></Link>
+            <Link className="vd-button vd-button-quiet" href="/services">Explore services <span aria-hidden="true">→</span></Link>
+          </div>
+          <div className="vd-social-proof">
+            <div className="vd-avatar-stack" aria-hidden="true"><span>V</span><span>D</span><span>+</span></div>
+            <div><strong>Everything in one place</strong><small>Clear requests. Organized activity. More control.</small></div>
+          </div>
+        </div>
+
+        <div className="vd-product-visual" aria-label="Illustration of the Veltron workspace">
+          <div className="vd-orbit vd-orbit-one" aria-hidden="true" />
+          <div className="vd-orbit vd-orbit-two" aria-hidden="true" />
+          <div className="vd-float-tag vd-float-tag-top"><span className="vd-live-dot" /> Your workspace</div>
+          <div className="vd-dashboard-card">
+            <div className="vd-dash-top"><div><span className="vd-mini-label">OVERVIEW</span><h2>Your activity</h2></div><span className="vd-window-dots" aria-hidden="true">•••</span></div>
+            <div className="vd-activity-highlight"><div className="vd-activity-icon">↗</div><div><small>Stay on top of every request</small><strong>One clear view</strong></div><span className="vd-arrow-circle">↗</span></div>
+            <div className="vd-chart-wrap" aria-hidden="true">
+              <div className="vd-chart-grid"><i /><i /><i /><i /></div>
+              <svg className="vd-chart" viewBox="0 0 440 120" role="img" aria-label="Decorative rising activity line"><defs><linearGradient id="vd-chart-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#9a8cff" stopOpacity=".32" /><stop offset="100%" stopColor="#9a8cff" stopOpacity="0" /></linearGradient></defs><path d="M0 100 C25 92 36 99 58 78 S95 83 116 64 S153 78 176 53 S211 61 232 45 S269 56 290 28 S331 48 354 26 S397 35 440 5 L440 120 L0 120 Z" fill="url(#vd-chart-fill)" /><path d="M0 100 C25 92 36 99 58 78 S95 83 116 64 S153 78 176 53 S211 61 232 45 S269 56 290 28 S331 48 354 26 S397 35 440 5" fill="none" stroke="#a99cff" strokeWidth="3" strokeLinecap="round" /></svg>
+            </div>
+            <div className="vd-chart-legend"><span><i /> Activity overview</span><span>Built around clarity</span></div>
+            <div className="vd-dash-divider" />
+            <div className="vd-lower-row"><div><span className="vd-mini-label">YOUR NEXT STEP</span><strong>Pick a service</strong></div><span className="vd-lower-icon">↗</span></div>
+          </div>
+          <div className="vd-float-tag vd-float-tag-bottom"><span className="vd-check-mark">✓</span><span><strong>Keep it organized</strong><small>Requests, status and history</small></span></div>
+        </div>
+        <div className="vd-hero-footnote"><span>DESIGNED FOR CLARITY</span><span className="vd-footnote-line" /><span>MADE TO MOVE WITH YOU</span></div>
+      </section>
+
+      <section className="vd-service-section" id="services">
+        <div className="vd-section-heading">
+          <div><div className="vd-kicker">A BETTER WAY TO GET THINGS DONE</div><h2>Less friction.<br /><span>More forward motion.</span></h2></div>
+          <p>Everything starts with a simpler experience: know what is available, submit a request, and keep track as it moves forward.</p>
+        </div>
+        <div className="vd-service-grid">
+          {serviceTypes.map((service) => <article className={`vd-service-card vd-${service.tone}`} key={service.title}><div className="vd-service-icon" aria-hidden="true">{service.icon}</div><span className="vd-card-index">VELTRON / 0{serviceTypes.indexOf(service) + 1}</span><h3>{service.title}</h3><p>{service.description}</p><Link href="/services" aria-label={`Explore ${service.title}`}>Explore <span aria-hidden="true">↗</span></Link></article>)}
+        </div>
+      </section>
+
+      <section className="vd-how-section" id="how-it-works">
+        <div className="vd-how-intro"><div className="vd-kicker">A FLOW THAT MAKES SENSE</div><h2>From first click<br />to clear next steps.</h2><p>No unnecessary complexity. Just a more considered way to move through your digital tasks.</p><Link className="vd-text-link" href="/sign-up">Start with Veltron <span aria-hidden="true">→</span></Link></div>
+        <div className="vd-steps">{highlights.map((item) => <article className="vd-step" key={item.number}><div className="vd-step-number">{item.number}</div><div className="vd-step-icon" aria-hidden="true">{item.icon}</div><div><h3>{item.title}</h3><p>{item.body}</p></div><span className="vd-step-arrow" aria-hidden="true">↗</span></article>)}</div>
+      </section>
+
+      <section className="vd-trust-section" id="trust">
+        <div className="vd-trust-card"><div className="vd-trust-orb" aria-hidden="true" /><div className="vd-kicker">BUILT WITH RESPONSIBILITY IN MIND</div><h2>Trust is in the details.</h2><p>Account controls, traceable activity, and careful payment handling matter as much as a polished interface. Veltron is being built to make those details easier to understand.</p><div className="vd-trust-points"><span><i>✓</i> Account-focused access</span><span><i>✓</i> Clear order status</span><span><i>✓</i> Payment checks before fulfilment</span></div><Link className="vd-button vd-button-primary" href="/sign-up">Build your workspace <span aria-hidden="true">↗</span></Link></div>
+      </section>
+
+      <section className="vd-final-cta"><div><div className="vd-kicker">YOUR NEXT STEP STARTS HERE</div><h2>Ready to move<br />things forward?</h2></div><div><p>Create your account and make your digital activity easier to manage.</p><Link className="vd-button vd-button-light" href="/sign-up">Get started with Veltron <span aria-hidden="true">↗</span></Link></div><div className="vd-cta-watermark" aria-hidden="true">v.</div></section>
+
+      <footer className="vd-footer"><Link className="vd-brand" href="/"><span className="vd-brand-mark">v</span><span>veltron<span className="vd-brand-dot">.</span></span></Link><span>Digital, made more manageable.</span><div><Link href="/services">Services</Link><Link href="/sign-in">Sign in</Link><Link href="/sign-up">Create account</Link></div><small>© {new Date().getFullYear()} Veltron Digital</small></footer>
+    </main>
+  );
 }
