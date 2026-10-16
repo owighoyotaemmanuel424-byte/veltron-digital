@@ -144,29 +144,10 @@ export default async function DashboardPage() {
           </div>
         </header>
 
-        <section className={styles.heroCard} aria-label="Wallet overview">
-          <div className={styles.heroTitle}>
-            <div className={styles.overline}><span>✦</span> YOUR VELTRON WORKSPACE</div>
-            <h2>Everything you need, all in one dashboard.</h2>
-            <p>Discover available tools, review your wallet balance, and follow your recent orders and payments from one secure account.</p>
-            <div className={styles.heroButtons}>
-              <Link className={styles.button} href="/services">Browse services <span aria-hidden="true">↗</span></Link>
-              <Link className={`${styles.button} ${styles.buttonSecondary}`} href="/dashboard/orders">View my orders <span aria-hidden="true">→</span></Link>
-            </div>
-          </div>
-          <div className={styles.heroVisual}>
-            <div className={styles.visualHead}><span>WALLET BALANCE</span><strong>{primaryAccount?.currency || "WALLET"}</strong></div>
-            <div className={styles.visualBalance}>Available ledger balance</div>
-            <div className={styles.visualAmount}>{primaryAccount ? money(totalWalletMinor, primaryAccount.currency) : "No wallet yet"}</div>
-            <div className={styles.visualFoot}><span>{accounts.length} wallet {accounts.length === 1 ? "currency" : "currencies"}</span><b>Account overview</b></div>
-          </div>
-        </section>
-
         <section className={styles.metrics} aria-label="Account summary">
           <article className={styles.metric}><div className={styles.metricTop}><span>Wallet balance</span><span className={styles.metricIcon}>₦</span></div><strong className={styles.metricValue}>{primaryAccount ? money(totalWalletMinor, primaryAccount.currency) : "—"}</strong><span className={styles.metricNote}>{primaryAccount?.currency || "No wallet created"}</span></article>
           <article className={styles.metric}><div className={styles.metricTop}><span>Active plan</span><span className={styles.metricIcon}>◇</span></div><strong className={styles.metricValue}>None</strong><span className={styles.metricNote}>Subscription plans are not configured</span></article>
           <article className={styles.metric}><div className={styles.metricTop}><span>Recent payments</span><span className={styles.metricIcon}>↗</span></div><strong className={styles.metricValue}>{payments.length}</strong><span className={styles.metricNote}>Latest {payments.length} payment records</span></article>
-          <article className={styles.metric}><div className={styles.metricTop}><span>My orders</span><span className={styles.metricIcon}>▤</span></div><strong className={styles.metricValue}>{orders}</strong><span className={styles.metricNote}>{inProgress} in progress · {completed} completed</span></article>
         </section>
 
         <section className={styles.quickSection} id="quick-actions">
@@ -178,7 +159,7 @@ export default async function DashboardPage() {
             <section className={styles.actionGroup} key={category}>
               <div className={styles.actionGroupTitle}><h3>{category}</h3><span>{items.length} {items.length === 1 ? "service" : "services"}</span></div>
               <div className={styles.actionGrid}>
-                {items.slice(0, 8).map((service, index) => (
+                {items.map((service, index) => (
                   <Link className={styles.actionTile} href="/services" key={service.id}>
                     <span className={styles.actionTileIcon}>{["◇", "↗", "▤", "✦", "⌁", "◈", "▧", "＋"][index % 8]}</span>
                     <span className={styles.actionTileText}><strong>{service.name}</strong><small>{service.description}</small></span>
