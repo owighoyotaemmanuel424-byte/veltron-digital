@@ -35,9 +35,7 @@ export default function MobileDashboardNav({ name, email, initials, sites, docum
         <Link className={styles.navLink} href="/services" onClick={close}><span className={styles.navIcon}>◇</span>Browse services</Link>
         <Link className={styles.navLink} href="/dashboard/security" onClick={close}><span className={styles.navIcon}>⌑</span>Account security</Link>
         <p className={styles.groupLabel}>TOOLS & ACTIVITY</p>
-        <div className={styles.navLink}><span className={styles.navIcon}>▧</span>Website creator <small className={styles.coming}>{sites}</small></div>
-        <div className={styles.navLink}><span className={styles.navIcon}>▤</span>Documents <small className={styles.coming}>{documents}</small></div>
-        <div className={styles.navLink}><span className={styles.navIcon}>⌁</span>Call tools <small className={styles.coming}>{calls}</small></div>
+        <Link className={styles.navLink} href="/dashboard/products" onClick={close}><span className={styles.navIcon}>▦</span>Products & tools</Link>
         <div className={styles.drawerBottom}>
           <div className={styles.profile}>
             <span className={styles.avatar}>{initials}</span>
