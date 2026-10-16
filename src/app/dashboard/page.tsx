@@ -162,7 +162,7 @@ export default async function DashboardPage() {
 
         <section className={styles.metrics} aria-label="Account summary">
           <article className={styles.metric}><div className={styles.metricTop}><span>Wallet balance</span><span className={styles.metricIcon}>₦</span></div><strong className={styles.metricValue}>{primaryAccount ? money(totalWalletMinor, primaryAccount.currency) : "—"}</strong><span className={styles.metricNote}>{primaryAccount?.currency || "No wallet created"}</span></article>
-          <article className={styles.metric}><div className={styles.metricTop}><span>Active plan</span><span className={styles.metricIcon}>◇</span></div><strong className={styles.metricValue}>{orders > 0 ? "—" : "None"}</strong><span className={styles.metricNote}>Subscription plans are not configured</span></article>
+          <article className={styles.metric}><div className={styles.metricTop}><span>Active plan</span><span className={styles.metricIcon}>◇</span></div><strong className={styles.metricValue}>None</strong><span className={styles.metricNote}>Subscription plans are not configured</span></article>
           <article className={styles.metric}><div className={styles.metricTop}><span>Recent payments</span><span className={styles.metricIcon}>↗</span></div><strong className={styles.metricValue}>{payments.length}</strong><span className={styles.metricNote}>Latest {payments.length} payment records</span></article>
           <article className={styles.metric}><div className={styles.metricTop}><span>My orders</span><span className={styles.metricIcon}>▤</span></div><strong className={styles.metricValue}>{orders}</strong><span className={styles.metricNote}>{inProgress} in progress · {completed} completed</span></article>
         </section>
