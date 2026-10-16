@@ -134,3 +134,65 @@
 @media(max-width:760px){.vd-header{padding:15px 20px;gap:12px}.vd-nav{display:none}.vd-header-actions{gap:15px}.vd-hero{display:flex;flex-direction:column;align-items:stretch;padding:64px 24px 25px;gap:10px}.vd-hero-copy{padding-bottom:0}.vd-hero h1{font-size:clamp(53px,11vw,76px)}.vd-hero-lead{font-size:14px}.vd-product-visual{min-height:410px;margin-top:4px}.vd-dashboard-card{width:min(100%,420px)}.vd-float-tag-top{right:1%}.vd-float-tag-bottom{left:0}.vd-hero-footnote{margin-top:18px}.vd-service-section,.vd-how-section{padding:68px 24px}.vd-section-heading{align-items:flex-start;flex-direction:column;gap:17px}.vd-section-heading>p{max-width:540px}.vd-service-grid{grid-template-columns:1fr;margin-top:27px}.vd-service-card{min-height:205px}.vd-service-card h3{margin-top:21px}.vd-service-card p{min-height:0}.vd-how-section{grid-template-columns:1fr;gap:35px}.vd-step:first-child{padding-top:0}.vd-trust-section{padding:10px 24px 68px}.vd-trust-points{display:grid;gap:12px}.vd-final-cta{align-items:flex-start;flex-direction:column;gap:23px;padding:48px 24px}.vd-final-cta>div:nth-child(2){max-width:400px}.vd-cta-watermark{right:-20px;bottom:-100px;font-size:260px}.vd-footer{grid-template-columns:1fr;gap:17px;padding:25px 24px}.vd-footer>div{flex-wrap:wrap}.vd-footer>small{grid-column:auto}}
 @media(max-width:420px){.vd-header{padding:13px 15px}.vd-brand{font-size:18px}.vd-brand-mark{width:28px;height:28px}.vd-signin{font-size:11px}.vd-header-cta{padding:9px 10px;gap:7px;font-size:11px}.vd-hero{padding-left:19px;padding-right:19px}.vd-hero h1{font-size:52px}.vd-hero-actions{align-items:stretch;flex-direction:column}.vd-button{width:100%}.vd-product-visual{min-height:365px}.vd-dashboard-card{padding:15px}.vd-float-tag{padding:9px}.vd-float-tag-top{top:13px}.vd-float-tag-bottom{bottom:10px}.vd-chart-wrap{height:110px}.vd-service-section,.vd-how-section{padding-left:19px;padding-right:19px}.vd-step{grid-template-columns:24px 38px minmax(0,1fr) 14px;gap:10px}.vd-step-icon{width:37px;height:37px}.vd-trust-section{padding-left:19px;padding-right:19px}.vd-trust-card{padding:25px 20px}.vd-final-cta{padding-left:20px;padding-right:20px}}
 @media(prefers-reduced-motion:reduce){.vd-page a{transition:none}.vd-button-primary:hover,.vd-button-light:hover{transform:none}}
+
+
+/* Veltron premium authentication experience */
+.vd-auth-page{--auth-bg:#090a10;--auth-panel:#11131d;--auth-line:#292a3a;--auth-muted:#a1a3b7;--auth-purple:#a99aff;min-height:100vh;background:radial-gradient(ellipse at 17% 12%,#292044 0,transparent 34%),radial-gradient(ellipse at 92% 92%,#172239 0,transparent 32%),var(--auth-bg);color:#f7f7fb}
+.vd-auth-header{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:21px clamp(22px,6vw,88px);border-bottom:1px solid #ffffff10;background:#090a10a8;backdrop-filter:blur(18px)}
+.vd-auth-back{color:#a7a8ba;font-size:12px;transition:color .2s}.vd-auth-back:hover{color:#fff}
+.vd-auth-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(380px,.78fr);gap:clamp(42px,8vw,120px);align-items:center;width:min(1200px,100%);min-height:calc(100vh - 75px);margin:auto;padding:64px clamp(24px,6vw,82px) 78px}
+.vd-auth-story{position:relative;min-width:0;padding:20px 0 28px}
+.vd-auth-kicker{display:flex;align-items:center;gap:10px;color:#bcb2ff;font-size:9px;font-weight:800;letter-spacing:.17em}
+.vd-auth-story h1{margin:28px 0 22px;font-size:clamp(50px,6.2vw,79px);line-height:.98;letter-spacing:-.075em;font-weight:760}
+.vd-auth-story h1 span{color:transparent;background:linear-gradient(95deg,#c9c0ff,#9e8aff 55%,#92cfff);background-clip:text;-webkit-background-clip:text}
+.vd-auth-story>p{max-width:445px;margin:0;color:#a5a8bd;font-size:14px;line-height:1.9}
+.vd-auth-benefits{display:grid;gap:19px;margin-top:38px}
+.vd-auth-benefits>div{display:flex;align-items:center;gap:13px}
+.vd-auth-benefit-icon{display:grid;place-items:center;flex:none;width:39px;height:39px;border:1px solid #ffffff15;border-radius:12px;background:#ffffff07;color:#c6bdff;font-size:19px}
+.vd-auth-benefits>div>span:last-child{display:grid;gap:5px}
+.vd-auth-benefits strong{font-size:12px;font-weight:700;color:#e6e5f1}
+.vd-auth-benefits small{font-size:10px;color:#8e92a8}
+.vd-auth-story-foot{display:flex;align-items:center;gap:13px;margin-top:56px;color:#74788f;font-size:8px;font-weight:800;letter-spacing:.17em}
+.vd-auth-orb{width:8px;height:8px;border-radius:50%;background:#9c8aff;box-shadow:0 0 16px #a99affaa}
+.vd-auth-form-panel{width:100%;max-width:460px;justify-self:end;padding:clamp(23px,3.3vw,38px);border:1px solid #ffffff17;border-radius:23px;background:linear-gradient(145deg,#171824f5,#10111bf5 72%);box-shadow:0 28px 100px #0005,0 0 0 6px #ffffff02;backdrop-filter:blur(18px)}
+.vd-auth-form-heading{margin-bottom:27px}
+.vd-auth-mobile-mark{display:none;color:#c4baff;font-size:24px;font-weight:900;font-style:italic}
+.vd-auth-eyebrow{color:#b8adff;font-size:9px;font-weight:800;letter-spacing:.18em}
+.vd-auth-form-heading h2{margin:11px 0 8px;font-size:clamp(25px,3vw,32px);line-height:1.15;letter-spacing:-.055em}
+.vd-auth-form-heading p{margin:0;color:#9699ae;font-size:12px;line-height:1.7}
+.vd-auth-form{display:grid;gap:9px}
+.vd-auth-form>label,.vd-auth-label-row label,.vd-auth-security-fields label{color:#d9d9e7;font-size:11px;font-weight:700}
+.vd-auth-label-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:7px}
+.vd-auth-label-row a{color:#bcb2ff;font-size:10px}
+.vd-auth-form>input,.vd-auth-password input,.vd-auth-security-fields input{width:100%;min-width:0;height:45px;padding:0 13px;border:1px solid #333448;border-radius:10px;background:#0b0c14;color:#f7f7fb;font:inherit;font-size:12px;outline:none;transition:border-color .18s,box-shadow .18s}
+.vd-auth-form>input::placeholder,.vd-auth-password input::placeholder,.vd-auth-security-fields input::placeholder{color:#686c81}
+.vd-auth-form>input:focus,.vd-auth-password input:focus,.vd-auth-security-fields input:focus{border-color:#a99aff;box-shadow:0 0 0 3px #a99aff1b}
+.vd-auth-password{position:relative}
+.vd-auth-password input{padding-right:59px}
+.vd-auth-show{position:absolute;right:9px;top:50%;transform:translateY(-50%);padding:5px;border:0;background:transparent;color:#bcb2ff;font:inherit;font-size:10px;font-weight:700;cursor:pointer}
+.vd-auth-security{margin:6px 0 0;border:1px solid #ffffff12;border-radius:10px;background:#ffffff03}
+.vd-auth-security summary{padding:12px;color:#b5b5ca;font-size:10px;cursor:pointer;list-style-position:inside}
+.vd-auth-security[open] summary{border-bottom:1px solid #ffffff12}
+.vd-auth-security-fields{display:grid;gap:8px;padding:12px}
+.vd-auth-security-fields label span{color:#83869a;font-weight:400}
+.vd-auth-security-fields input{height:40px}
+.vd-auth-submit{display:flex;align-items:center;justify-content:space-between;gap:15px;width:100%;min-height:47px;margin-top:7px;padding:0 16px;border:1px solid transparent;border-radius:10px;background:linear-gradient(115deg,#bdb2ff,#9582ff);color:#19142a;font:inherit;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 8px 25px #8b7cff20;transition:transform .18s,filter .18s}
+.vd-auth-submit span{font-size:17px}.vd-auth-submit:hover{transform:translateY(-1px);filter:brightness(1.08)}.vd-auth-submit:disabled{opacity:.65;cursor:wait;transform:none}
+.vd-auth-secure-note{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:12px;color:#777b91;font-size:9px}.vd-auth-secure-note span{color:#a99aff}
+.vd-auth-switch{text-align:center;margin:22px 0 0;color:#a1a3b7;font-size:11px}.vd-auth-switch a{color:#d0c8ff;font-weight:750}.vd-auth-switch a span{margin-left:3px}
+.vd-auth-legal{margin:18px 0 0;padding-top:16px;border-top:1px solid #ffffff10;text-align:center;color:#777b90;font-size:9px;line-height:1.8}.vd-auth-legal a{color:#c1b7ff}
+.vd-auth-optional{margin-left:5px;color:#797d91;font-size:9px;font-weight:400}
+.vd-auth-hint{display:flex;align-items:center;gap:7px;margin:2px 0 0;color:#85899f;font-size:10px;line-height:1.6}.vd-auth-hint span{color:#b8adff}
+.vd-auth-error{margin:5px 0;padding:11px 12px;border:1px solid #713744;border-radius:9px;background:#351922;color:#ffb6c0;font-size:11px;line-height:1.6}
+.vd-auth-success{display:flex;gap:10px;margin:5px 0;padding:13px;border:1px solid #2c6b50;border-radius:10px;background:#10241c;color:#c5f5dc;font-size:11px;line-height:1.6}
+.vd-auth-success>span{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:50%;background:#2d6b4e;color:#e2fff0}
+.vd-auth-success p{margin:4px 0;color:#a9d9c1}.vd-auth-success button{margin-top:7px;padding:0;border:0;background:transparent;color:#c3f5d9;font:inherit;font-size:10px;font-weight:750;text-decoration:underline;cursor:pointer}.vd-auth-success button:disabled{opacity:.6}
+.vd-auth-layout-signup{grid-template-columns:minmax(0,1fr) minmax(380px,.82fr)}
+.vd-auth-layout-signup .vd-auth-form-panel{padding-top:30px;padding-bottom:30px}
+.vd-auth-page .auth-shell{width:min(700px,calc(100% - 32px));padding:50px 0}
+.vd-auth-page .auth-shell .topbar{margin-bottom:28px}
+.vd-auth-page .auth-card{margin-top:22px}
+@media(max-width:900px){.vd-auth-layout,.vd-auth-layout-signup{grid-template-columns:minmax(0,1fr) minmax(350px,.9fr);gap:35px;padding-left:28px;padding-right:28px}.vd-auth-story h1{font-size:clamp(45px,6vw,62px)}.vd-auth-form-panel{padding:25px}.vd-auth-story-foot{margin-top:39px}}
+@media(max-width:700px){.vd-auth-header{padding:16px 20px}.vd-auth-layout,.vd-auth-layout-signup{display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;padding:40px 20px 48px}.vd-auth-story{padding:0 0 24px}.vd-auth-story h1{margin:18px 0 13px;font-size:clamp(42px,10vw,61px)}.vd-auth-story>p{font-size:12px;max-width:530px}.vd-auth-benefits{display:none}.vd-auth-story-foot{display:none}.vd-auth-form-panel{max-width:520px;align-self:center;justify-self:auto;padding:25px;width:100%}.vd-auth-form-heading{margin-bottom:22px}.vd-auth-mobile-mark{display:inline-block;margin-bottom:17px}.vd-auth-layout-signup .vd-auth-form-panel{padding-top:25px;padding-bottom:25px}}
+@media(max-width:420px){.vd-auth-header{padding:14px 16px}.vd-auth-back{font-size:11px}.vd-auth-layout,.vd-auth-layout-signup{padding:32px 15px 35px}.vd-auth-story h1{font-size:43px}.vd-auth-form-panel{padding:21px 17px;border-radius:17px}.vd-auth-form-heading h2{font-size:27px}.vd-auth-form>input,.vd-auth-password input{height:44px}}
+@media(prefers-reduced-motion:reduce){.vd-auth-form>input,.vd-auth-password input,.vd-auth-submit,.vd-auth-back{transition:none}.vd-auth-submit:hover{transform:none}}
