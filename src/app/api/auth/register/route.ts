@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: "Enter a valid email, optional name, and password of at least 12 characters." }, { status: 400 });
   const email = parsed.data.email.toLowerCase();
   try {
-    const user = await prisma.user.create({ data: { email, name: parsed.data.name, passwordHash: await hashPassword(parsed.data.password) }, select: { id: true, email: true, name: true } });
+    const user = await prisma.user.create({ data: { email, name: parsed.data.name, passwordHash: await hashPassword(parsed.data.password), walletAccounts: { create: { currency: "NGN" } } }, select: { id: true, email: true, name: true } });
     await createSession(user.id);
     await writeAudit({ actorId: user.id, action: "auth.register", entityType: "User", entityId: user.id, ipAddress: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null, userAgent: request.headers.get("user-agent") ?? null });
     return NextResponse.json({ user }, { status: 201, headers: { "Cache-Control": "no-store" } });
