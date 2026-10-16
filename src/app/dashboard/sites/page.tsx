@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import WebsiteTemplateLibrary from "./template-library";
 
 type SiteContent = {
   headline: string;
@@ -133,6 +134,7 @@ export default function WebsitesPage() {
         <div className="section-heading"><div><div className="eyebrow">YOUR PROJECTS</div><h2>Saved websites</h2></div><span className="dash-note">{sites.length} shown · latest 50</span></div>
         {sites.length ? <div className="document-list">{sites.map(site => <button type="button" key={site.id} className={"card document-record site-select-card" + (site.id === selectedId ? " is-selected" : "")} onClick={() => chooseSite(site)}><div className="eyebrow">{templateNames[site.template] || site.template}</div><h3>{site.name}</h3><p className="small-copy">Status: {site.status} · {site.domain || "No domain attached"}</p></button>)}</div> : <div className="empty-state"><h3>No website projects yet</h3><p>Create a project below to begin editing.</p></div>}
       </section>
+      <WebsiteTemplateLibrary selected={template} onSelect={changeTemplate} />
       <div className="website-builder-grid">
         <article className="card document-editor">
           <div className="eyebrow">{selectedId ? "EDIT WEBSITE PROJECT" : "NEW WEBSITE PROJECT"}</div>
