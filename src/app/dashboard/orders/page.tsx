@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "../logout-button";
+import OrderHistoryTable from "./order-history-table";
 
 export const dynamic = "force-dynamic";
 
@@ -78,32 +79,7 @@ export default async function OrdersPage() {
             <div><div className="eyebrow">ACTIVITY LOG</div><h2>All recent orders</h2></div>
             <Link href="/dashboard" className="text-link">← Back to overview</Link>
           </div>
-          {orders.length ? (
-            <div className="table-wrap">
-              <table>
-                <thead><tr><th>Service</th><th>Reference</th><th>Qty</th><th>Status</th><th>Total</th><th>Placed</th></tr></thead>
-                <tbody>
-                  {orders.map((order) => (
-                    <tr key={order.publicId}>
-                      <td><strong>{order.service.name}</strong><div className="dash-note">{order.service.category}</div></td>
-                      <td><span className="order-reference">{order.publicId}</span></td>
-                      <td>{order.quantity}</td>
-                      <td><span className={`table-status status-${order.status.toLowerCase()}`}>{order.status.toLowerCase().replaceAll("_", " ")}</span></td>
-                      <td>{money(order.totalMinor, order.currency)}</td>
-                      <td>{order.createdAt.toLocaleDateString("en", { year: "numeric", month: "short", day: "numeric" })}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-mark">↗</div>
-              <h3>No orders yet</h3>
-              <p>When you submit a service request, its reference, status, and total will appear here.</p>
-              <Link href="/services" className="button">Explore services <span aria-hidden="true">↗</span></Link>
-            </div>
-          )}
+          <OrderHistoryTable orders={orders.map((order) => ({ ...order, createdAt: order.createdAt.toISOString() }))} />
           <p className="dash-note orders-disclaimer">This page shows the latest 100 orders. Order creation does not itself mean payment has settled or a service has been fulfilled.</p>
         </section>
       </section>
