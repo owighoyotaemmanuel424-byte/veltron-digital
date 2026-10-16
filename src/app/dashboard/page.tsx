@@ -107,9 +107,7 @@ export default async function DashboardPage() {
         <Link className={styles.navLink} href="/dashboard/security"><span className={styles.navIcon}>⌑</span>Account security</Link>
 
         <p className={styles.groupLabel}>TOOLS & ACTIVITY</p>
-        <div className={styles.navLink} aria-label={`Website creator records: ${sites}; feature availability depends on services`}><span className={styles.navIcon}>▧</span>Website creator <small className={styles.coming}>{sites}</small></div>
-        <div className={styles.navLink} aria-label={`Document tool records: ${documents}`}><span className={styles.navIcon}>▤</span>Documents <small className={styles.coming}>{documents}</small></div>
-        <div className={styles.navLink} aria-label={`Telephony records: ${calls}`}><span className={styles.navIcon}>⌁</span>Call tools <small className={styles.coming}>{calls}</small></div>
+        <Link className={styles.navLink} href="/dashboard/products"><span className={styles.navIcon}>▦</span>Products & tools</Link>
 
         <div className={styles.sidebarBottom}>
           <div className={styles.profile}>
