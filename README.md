@@ -38,3 +38,8 @@ The new platform-core, authentication-rate-limit, and email-verification migrati
 Paystack remains disabled until merchant eligibility and server-side credentials are confirmed. Validate provider reference, amount, currency and order association; make reconciliation and ledger posting idempotent and transactional before activating funding or fulfilment.
 
 See [docs/PLATFORM_ROADMAP.md](docs/PLATFORM_ROADMAP.md) and [docs/SECURITY.md](docs/SECURITY.md).
+
+
+## Neon Managed Better Auth
+
+A staged integration for Neon Managed Better Auth is available. It is disabled by default while the app's local user roles, existing accounts, two-factor authentication, and admin authorization are mapped safely to Neon identities. See [docs/NEON_BETTER_AUTH_MIGRATION.md](docs/NEON_BETTER_AUTH_MIGRATION.md) before enabling it. Keep `NEON_AUTH_ENABLED=false` until the documented migration and authorization checks pass. Email configuration is unchanged.
