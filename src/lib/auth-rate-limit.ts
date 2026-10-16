@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
  * The identifier is HMACed so raw email addresses are never stored in the table.
  */
 export async function enforceAuthRateLimit(
-  action: "login" | "register" | "resend-verification",
+  action: "login" | "register" | "resend-verification" | "login-ip" | "register-ip" | "resend-verification-ip",
   identifier: string,
   limit: number,
   windowSeconds: number
@@ -33,4 +33,18 @@ export async function enforceAuthRateLimit(
     RETURNING "attempts"
   `;
   return (rows[0]?.attempts ?? limit + 1) <= limit;
+}
+
+
+/** Prefer the platform-provided client IP. IP values are HMACed before persistence. */
+export function getClientAddress(headers: Headers): string {
+  const realIp = headers.get("x-real-ip")?.trim();
+  if (realIp && realIp.length <= 100) return realIp;
+  const forwarded = headers.get("x-forwarded-for");
+  if (forwarded) {
+    const candidates = forwarded.split(",").map((value) => value.trim()).filter(Boolean);
+    const last = candidates.at(-1);
+    if (last && last.length <= 100) return last;
+  }
+  return "unknown";
 }
