@@ -85,8 +85,9 @@ export default function DocumentsPage() {
           <p className="small-copy">Draft · {new Date(doc.createdAt).toLocaleString()}</p>
           <pre className="document-preview">{doc.content.body || ""}</pre>
           <button className="button secondary" onClick={() => {
-            const w = window.open("", "_blank", "noopener,noreferrer");
+            const w = window.open("", "_blank");
             if (!w) { setError("Allow pop-ups to print this document."); return; }
+            w.opener = null;
             const esc = (s: string) => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c] || c));
             w.document.write("<!doctype html><html><head><title>"+esc(doc.title)+"</title><meta charset='utf-8'><style>body{font:16px/1.6 system-ui,sans-serif;max-width:760px;margin:48px auto;padding:0 24px;color:#111}pre{white-space:pre-wrap;font:inherit}.notice{margin-top:40px;border-top:1px solid #bbb;padding-top:12px;font-size:12px;color:#555}</style></head><body><h1>"+esc(doc.title)+"</h1><p>"+esc(doc.kind.replaceAll("_"," "))+" · Draft</p><pre>"+esc(doc.content.body || "")+"</pre><p class='notice'>User-created draft. Not proof of payment, identity, bank balance, or third-party certification.</p><script>window.onload=()=>window.print()</script></body></html>");
             w.document.close();
