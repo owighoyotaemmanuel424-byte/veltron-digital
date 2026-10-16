@@ -1,4 +1,5 @@
-import { AuthView, authViewPaths } from "@neondatabase/auth-ui";
+import { AuthView } from "@neondatabase/auth-ui";
+import { authViewPaths } from "@neondatabase/auth-ui/server";
 import AuthProviders from "@/app/auth-providers";
 import Link from "next/link";
 
