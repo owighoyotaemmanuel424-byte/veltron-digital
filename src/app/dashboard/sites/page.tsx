@@ -75,6 +75,7 @@ export default function WebsitesPage() {
       <header className="workspace-header">
         <div><div className="eyebrow">WEBSITE CREATOR</div><h1>Website drafts.</h1><p className="lead">Start a site record and choose the type of site you want to build. This saves your project; it does not publish a live website.</p></div>
       </header>
+      <div className="website-builder-grid">
       <article className="card document-editor">
         <div className="eyebrow">NEW WEBSITE PROJECT</div>
         <label htmlFor="site-name">Website or project name</label>
@@ -90,6 +91,21 @@ export default function WebsitesPage() {
         {message && <p className="form-message" role="status">{message}</p>}
         {error && <p className="form-error" role="alert">{error}</p>}
       </article>
+      <article className={"card website-live-preview website-preview-" + template.toLowerCase()} aria-label="Website template preview">
+        <div className="eyebrow">LIVE TEMPLATE PREVIEW · NOT PUBLISHED</div>
+        <div className="website-preview-page">
+          <div className="website-preview-nav"><strong>{name.trim() || "Your brand"}</strong><span>About · Services · Contact</span></div>
+          <div className="website-preview-hero">
+            <p className="website-preview-kicker">{template === "PORTFOLIO" ? "PERSONAL PORTFOLIO" : template === "LANDING_PAGE" ? "INTRODUCING SOMETHING NEW" : "WELCOME TO OUR BUSINESS"}</p>
+            <h2>{template === "PORTFOLIO" ? "Ideas made with purpose." : template === "LANDING_PAGE" ? "Make your next move count." : "Thoughtful service. Real results."}</h2>
+            <p>{template === "PORTFOLIO" ? "Showcase selected work, skills, and creative direction." : template === "LANDING_PAGE" ? "A clear message, a focused offer, and one next step." : "A modern online home for your company and customers."}</p>
+            <span className="website-preview-cta">{template === "PORTFOLIO" ? "Explore my work →" : template === "LANDING_PAGE" ? "Get started →" : "Explore services →"}</span>
+          </div>
+          <div className="website-preview-feature-row"><div><b>01</b><strong>Clear purpose</strong><p>A message visitors can understand.</p></div><div><b>02</b><strong>Designed for trust</strong><p>Simple sections that can grow with you.</p></div></div>
+        </div>
+        <p className="small-copy">Illustrative preview only. Hosting and publishing are not configured.</p>
+      </article>
+      </div>
       <section className="dash-section">
         <div className="section-heading"><div><div className="eyebrow">SAVED IN YOUR ACCOUNT</div><h2>Your website projects</h2></div><span className="dash-note">{sites.length} shown · latest 50</span></div>
         {sites.length ? <div className="document-list">{sites.map(site => <article className="card document-record" key={site.id}>
