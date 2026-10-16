@@ -1,4 +1,4 @@
-import Link from "next/link";import {prisma} from "@/lib/prisma";import ServiceOrderAction from "./service-order-action";
+import Link from "next/link";import {prisma} from "@/lib/prisma";import ServiceCatalog from "./service-catalog";
 export const dynamic="force-dynamic";
 function money(minor:number,currency:string){try{return new Intl.NumberFormat("en",{style:"currency",currency}).format(minor/100);}catch{return currency+" "+(minor/100).toFixed(2);}}
 export default async function ServicesPage(){
