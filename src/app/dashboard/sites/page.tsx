@@ -24,6 +24,7 @@ type SiteRecord = {
   createdAt: string;
 };
 const templateNames: Record<string, string> = {
+  ONLINE_BANKING: "Online Banking Suite",
   PORTFOLIO: "Personal portfolio",
   BUSINESS: "Business website",
   LANDING_PAGE: "Landing page",
@@ -88,7 +89,12 @@ export default function WebsitesPage() {
   }
   function changeTemplate(value: string) {
     setTemplate(value);
-    setContent(value === "PORTFOLIO" ? {
+    setContent(value === "ONLINE_BANKING" ? {
+      ...emptyContent, tagline: "YOUR MONEY, MORE IN CONTROL", headline: "Banking that moves with you.",
+      description: "A secure digital banking experience for viewing accounts, managing payments, and keeping track of everyday finances.", buttonText: "Explore digital banking",
+      sectionOneTitle: "Everyday banking", sectionOneBody: "Present account overview, transaction history, card controls, and payment options in one clear customer experience.",
+      sectionTwoTitle: "Security by design", sectionTwoBody: "Explain identity checks, account protection, privacy practices, and how customers can reach support.",
+    } : value === "PORTFOLIO" ? {
       ...emptyContent, tagline: "PERSONAL PORTFOLIO", headline: "Ideas made with purpose.",
       description: "A home for selected work, skills, and creative direction.", buttonText: "Explore my work",
       sectionOneTitle: "Selected work", sectionOneBody: "Show the projects that best represent your craft and experience.",
@@ -141,7 +147,7 @@ export default function WebsitesPage() {
           <label htmlFor="site-name">Website or project name</label>
           <input id="site-name" value={name} maxLength={80} onChange={e => setName(e.target.value)} placeholder="e.g. Brightline Consulting" />
           <label htmlFor="site-template">Template</label>
-          <select id="site-template" value={template} onChange={e => changeTemplate(e.target.value)}><option value="BUSINESS">Business website</option><option value="PORTFOLIO">Personal portfolio</option><option value="LANDING_PAGE">Landing page</option></select>
+          <select id="site-template" value={template} onChange={e => changeTemplate(e.target.value)}><option value="BUSINESS">Business website</option><option value="PORTFOLIO">Personal portfolio</option><option value="LANDING_PAGE">Landing page</option><option value="ONLINE_BANKING">Online Banking Suite</option></select>
           <div className="eyebrow content-editor-label">EDIT PAGE CONTENT</div>
           {(Object.keys(fieldLabels) as (keyof SiteContent)[]).map(key => <div className="site-content-field" key={key}><label htmlFor={"site-"+key}>{fieldLabels[key]}</label>{key.endsWith("Body") || key === "description" ? <textarea id={"site-"+key} value={content[key]} maxLength={key === "description" ? 1000 : 400} rows={3} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} /> : <input id={"site-"+key} value={content[key]} maxLength={key === "headline" ? 120 : key === "tagline" ? 160 : 80} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} />}</div>)}
           <p className="small-copy">Content is stored with this draft. Publishing, hosting, custom domains, DNS, and SSL are not connected.</p>
@@ -153,7 +159,7 @@ export default function WebsitesPage() {
           <div className="website-preview-page">
             <div className="website-preview-nav"><strong>{name.trim() || "Your brand"}</strong><span>About · Services · Contact</span></div>
             <div className="website-preview-hero"><p className="website-preview-kicker">{content.tagline}</p><h2>{content.headline}</h2><p>{content.description}</p><span className="website-preview-cta">{content.buttonText} →</span></div>
-            <div className="website-preview-feature-row"><div><b>01</b><strong>{content.sectionOneTitle}</strong><p>{content.sectionOneBody}</p></div><div><b>02</b><strong>{content.sectionTwoTitle}</strong><p>{content.sectionTwoBody}</p></div></div>
+            {template === "ONLINE_BANKING" && <div className="banking-preview-metrics" aria-label="Illustrative banking dashboard preview"><div><span>Available balance</span><strong>••••••</strong><small>Sample preview only</small></div><div><span>Recent activity</span><strong>Transactions</strong><small>Connect a provider to enable</small></div><div><span>Account security</span><strong>Protected access</strong><small>Configure identity and security</small></div></div>}\n            <div className="website-preview-feature-row"><div><b>01</b><strong>{content.sectionOneTitle}</strong><p>{content.sectionOneBody}</p></div><div><b>02</b><strong>{content.sectionTwoTitle}</strong><p>{content.sectionTwoBody}</p></div></div>
           </div>
           <p className="small-copy">Preview updates as you type. Save changes to persist them. This is not a public website.</p>
         </article>
