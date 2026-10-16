@@ -26,9 +26,10 @@ export async function issueEmailVerification(userId: string, email: string, name
 
   const verifyUrl = new URL("/verify-email", base);
   verifyUrl.searchParams.set("token", token);
-  const safeName = (name ?? "there").replace(/[&<>"']/g, (char) => ({
+  const htmlEntities: Record<string, string> = {
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-  })[char] ?? char);
+  };
+  const safeName = (name ?? "there").replace(/[&<>"']/g, (char) => htmlEntities[char] ?? char);
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
