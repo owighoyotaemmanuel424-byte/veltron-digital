@@ -18,6 +18,7 @@ const createSchema = z.object({
 });
 const patchSchema = z.object({
   id: z.string().min(1).max(100),
+  slug: z.string().trim().min(2).max(80).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).optional(),
   name: z.string().trim().min(2).max(120).optional(),
   description: z.string().trim().min(5).max(2000).optional(),
   category: z.string().trim().min(2).max(80).optional(),
