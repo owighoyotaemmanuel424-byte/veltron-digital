@@ -17,7 +17,11 @@ export async function createSession(userId: string) {
 
 async function getNeonSessionUser() {
   try {
-    const { session, user: neonUser } = await getNeonAuth().getSession();
+    const { data, error } = await getNeonAuth().getSession();
+    if (error || !data) return null;
+
+    const neonUser = data.user;
+    const session = data.session;
     if (!session || !neonUser || !neonUser.email || neonUser.emailVerified !== true) return null;
 
     const email = neonUser.email.toLowerCase();
@@ -30,7 +34,7 @@ async function getNeonSessionUser() {
       // Create a local business-profile record for a verified Neon identity.
       // The random password hash is never used for Neon sign-in.
       try {
-        const created = await prisma.user.create({
+        user = await prisma.user.create({
           data: {
             email,
             name: neonUser.name || null,
@@ -41,7 +45,6 @@ async function getNeonSessionUser() {
           },
           select: { id: true, email: true, name: true, role: true, status: true, twoFactorEnabled: true, emailVerifiedAt: true },
         });
-        user = created;
       } catch {
         // Handle simultaneous first requests without creating duplicate profiles.
         user = await prisma.user.findUnique({
