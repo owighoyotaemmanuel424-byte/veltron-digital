@@ -159,3 +159,95 @@
 @media(prefers-reduced-motion:reduce){
   .mobileDrawer,.menuLine,.menuLineOpen{transition:none}
 }
+
+
+/* Reference fidelity pass: Globalgle's compact black canvas, fine borders and green actions. */
+.page{--bg:#000;--panel:#050505;--panel2:#080808;--line:#242424;--muted:#9b9b9b;--accent:#00d477;background:#000;color:#f7f7f7}
+.sidebar{background:#050505;border-right-color:#202020}
+.brandMark{background:#00d477;color:#001b0e}
+.brand span:last-child{color:#00d477}
+.active{background:#062116;border-color:#075d37;color:#fff}
+.active .navIcon{color:#00e884}
+.navLink:hover{background:#101010}
+.kicker,.heroTitle .overline{color:#00d477}
+.button{background:#00d477;color:#001b0e}
+.buttonSecondary{background:#050505;border-color:#303030;color:#e9e9e9}
+.helpLink{border-color:#2b2b2b;color:#d1d1d1}
+.status{border-color:#075d37;background:#03160d;color:#8fffc3}
+.statusDot{background:#00d477;box-shadow:0 0 9px #00d47777}
+.metric,.panel,.actionGroup{border-color:#292929;background:#030303}
+.metricIcon,.actionTileIcon,.emptyIcon{border-color:#075d37;background:#041b10;color:#00e884}
+.actionTile{border-color:#2a2a2a;background:#030303}
+.actionTile:hover{border-color:#00d477;background:#07130d}
+.actionArrow,.textLink,.securityLink{color:#00d477}
+.securityPanel{border-color:#292929;background:#030303}
+.securityIcon{border-color:#075d37;background:#041b10;color:#00d477}
+.reference{color:#00d477}
+.amountPositive{color:#00d477!important}
+.mobileBar{background:#050505;border-bottom-color:#242424}
+.mobileBar .brand{color:#f7f7f7}
+.menuButton{border-color:#292929;background:#0a0a0a}
+.menuLine,.menuLineOpen{background:#00d477}
+.mobileDrawer{background:#050505;border-right-color:#252525}
+.drawerClose{background:#0b0b0b;border-color:#303030;color:#00d477}
+.drawerBottom{border-top-color:#262626}
+.actionGroupTitle span,.panelCount{color:#818181}
+.table th{background:#080808;color:#8c8c8c}
+.table td{border-top-color:#202020;color:#dedede}
+.badge{border-color:#333;background:#080808}
+.statuscompleted{border-color:#075d37;background:#041b10;color:#00d477}
+.statusprocessing,.statuspaid{border-color:#164a60;background:#06151b;color:#94dfff}
+.statuspending{border-color:#5d4a20;background:#171206;color:#f0cf7c}
+.statusfailed,.statuscancelled,.statusrefunded{border-color:#5a2632;background:#1b080d;color:#ff9caf}
+@media(min-width:801px){
+  .metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .heroCard{display:none}
+}
+@media(max-width:800px){
+  .page{background:#000}
+  .main{padding:0 13px 30px}
+  .topbar{min-height:0;padding:12px 0;border-bottom:0}
+  .breadcrumb{display:none}
+  .topActions{width:100%;justify-content:flex-end}
+  .helpLink{display:none}
+  .status{font-size:9px}
+  .heading{padding:12px 0 17px;gap:13px}
+  .heading h1{margin:0 0 7px;font-size:25px;font-weight:750;letter-spacing:-.04em}
+  .heading p{font-size:10px;color:#999}
+  .headingAction{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .headingAction .button{min-height:38px;padding:9px 7px;font-size:10px}
+  .metrics{grid-template-columns:minmax(0,1fr);gap:9px;margin-top:4px}
+  .metric{padding:15px 13px;border-radius:14px;background:#020202}
+  .metricTop{font-size:9px}
+  .metricIcon{width:25px;height:25px;border-radius:8px}
+  .metricValue{margin:10px 0 2px;font-size:21px}
+  .metricNote{font-size:9px}
+  .quickSection{margin-top:21px}
+  .sectionIntro{margin-bottom:13px}
+  .sectionIntro h2{margin:0 0 4px;font-size:15px;letter-spacing:-.02em}
+  .sectionIntro p{display:none}
+  .sectionIntro .kicker{display:none}
+  .sectionIntro .textLink{font-size:9px}
+  .actionGroup{margin-top:15px;padding:0;border:0;border-radius:0;background:transparent}
+  .actionGroupTitle{margin-bottom:9px}
+  .actionGroupTitle h3{color:#8a8a8a;font-size:8px;font-weight:650;letter-spacing:.13em;text-transform:uppercase}
+  .actionGroupTitle span{font-size:8px}
+  .actionGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .actionTile{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:12px;min-height:91px;padding:11px 10px;border-radius:13px;background:#020202}
+  .actionTileIcon{width:30px;height:30px;border-radius:9px;font-size:15px}
+  .actionTileText{gap:0;width:100%}
+  .actionTileText strong{font-size:9px;font-weight:550;white-space:normal}
+  .actionTileText small{display:none}
+  .actionArrow{position:absolute;right:10px;top:10px;font-size:10px}
+  .activityGrid{grid-template-columns:minmax(0,1fr);gap:12px;margin-top:23px}
+  .panel{border-radius:14px}
+  .panelHead{padding:13px 11px}
+  .panelHead h2{font-size:12px;font-weight:600}
+  .orderPanel{margin-top:12px}
+  .securityPanel{margin-top:12px}
+  .footer{font-size:8px}
+}
+@media(max-width:380px){
+  .headingAction{grid-template-columns:minmax(0,1fr)}
+  .actionTile{min-height:85px}
+}
