@@ -3,12 +3,26 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "./logout-button";
+import styles from "./dashboard.module.css";
 
 function money(minor: number, currency: string) {
   try {
     return new Intl.NumberFormat("en", { style: "currency", currency }).format(minor / 100);
   } catch {
     return currency + " " + (minor / 100).toFixed(2);
+  }
+}
+
+function statusClass(status: string) {
+  switch (status) {
+    case "COMPLETED": return styles.statuscompleted;
+    case "PROCESSING": return styles.statusprocessing;
+    case "PAID": return styles.statuspaid;
+    case "PENDING": return styles.statuspending;
+    case "FAILED": return styles.statusfailed;
+    case "CANCELLED": return styles.statuscancelled;
+    case "REFUNDED": return styles.statusrefunded;
+    default: return "";
   }
 }
 
@@ -45,140 +59,177 @@ export default async function DashboardPage() {
     prisma.telephonyLog.count({ where: { userId: user.id } }),
   ]);
 
-  const firstName = user.name?.trim().split(/\\s+/)[0];
+  const firstName = user.name?.trim().split(/\s+/)[0];
+  const initials = (user.name?.trim() || user.email).slice(0, 1).toUpperCase();
+  const primaryAccount = accounts[0];
 
   return (
-    <main className="workspace">
-      <aside className="side-nav" aria-label="Workspace navigation">
-        <Link className="brand" href="/">veltron<span>.</span></Link>
-        <p className="side-label">WORKSPACE</p>
-        <Link className="side-link active" href="/dashboard" aria-current="page"><span>◫ &nbsp; Overview</span><span aria-hidden="true">↗</span></Link>
-        <Link className="side-link" href="/dashboard/orders"><span>↗ &nbsp; Order history</span><span aria-hidden="true">→</span></Link>
-        <Link className="side-link" href="/services"><span>◇ &nbsp; Service catalog</span><span aria-hidden="true">→</span></Link>
-        <Link className="side-link" href="/dashboard/security"><span>⌑ &nbsp; Account security</span><span aria-hidden="true">→</span></Link>
-        <p className="side-label">YOUR ACTIVITY</p>
-        <div className="side-link muted-link" aria-label={`Hosted sites, ${sites} records; section not yet available`}><span>Hosted sites <small className="coming-soon">Soon</small></span><small>{sites}</small></div>
-        <div className="side-link muted-link" aria-label={`Documents, ${documents} records; section not yet available`}><span>Documents <small className="coming-soon">Soon</small></span><small>{documents}</small></div>
-        <div className="side-link muted-link" aria-label={`Telephony history, ${calls} records; section not yet available`}><span>Telephony history <small className="coming-soon">Soon</small></span><small>{calls}</small></div>
-        <div className="side-bottom">
-          <span className="side-foot">{user.email}</span>
+    <main className={styles.page}>
+      <aside className={styles.sidebar} aria-label="Workspace navigation">
+        <Link className={styles.brand} href="/">
+          <span className={styles.brandMark}>v</span>
+          Veltron<span>Digital</span>
+        </Link>
+
+        <p className={styles.groupLabel}>YOUR WORKSPACE</p>
+        <Link className={`${styles.navLink} ${styles.active}`} href="/dashboard" aria-current="page"><span className={styles.navIcon}>◫</span>Overview</Link>
+        <Link className={styles.navLink} href="/dashboard/orders"><span className={styles.navIcon}>↗</span>Order history</Link>
+        <Link className={styles.navLink} href="/services"><span className={styles.navIcon}>◇</span>Explore services</Link>
+        <Link className={styles.navLink} href="/dashboard/security"><span className={styles.navIcon}>⌑</span>Security & access</Link>
+
+        <p className={styles.groupLabel}>MORE TOOLS</p>
+        <div className={styles.navLink} aria-label={`Website creator, ${sites} records; coming soon`}><span className={styles.navIcon}>▧</span>Website creator <small className={styles.coming}>Soon</small></div>
+        <div className={styles.navLink} aria-label={`Document tools, ${documents} records; coming soon`}><span className={styles.navIcon}>▤</span>Document tools <small className={styles.coming}>Soon</small></div>
+        <div className={styles.navLink} aria-label={`AI telephony, ${calls} records; coming soon`}><span className={styles.navIcon}>⌁</span>AI telephony <small className={styles.coming}>Soon</small></div>
+
+        <div className={styles.sidebarBottom}>
+          <div className={styles.profile}>
+            <span className={styles.avatar}>{initials}</span>
+            <span className={styles.profileText}>
+              <strong>{user.name?.trim() || "Veltron member"}</strong>
+              <small>{user.email}</small>
+            </span>
+          </div>
           <LogoutButton />
         </div>
       </aside>
 
-      <section className="workspace-main">
-        <header className="workspace-header">
-          <div>
-            <div className="eyebrow">CUSTOMER WORKSPACE</div>
-            <h1>Good to see you{firstName ? `, ${firstName}` : ""}.</h1>
-            <p className="lead">A clear view of your orders, wallet balances, and account protection.</p>
+      <section className={styles.main}>
+        <header className={styles.topbar}>
+          <div className={styles.breadcrumb}><span>Workspace</span><span>/</span><b>Overview</b></div>
+          <div className={styles.topActions}>
+            <Link className={styles.helpLink} href="/services">Explore tools ↗</Link>
+            <span className={styles.status}><span className={styles.statusDot} />Account active</span>
           </div>
-          <span className="status-chip"><span className="status-dot" /> Account active</span>
         </header>
 
-        <section className="dashboard-welcome" aria-label="Quick actions">
+        <header className={styles.heading}>
           <div>
-            <span className="dash-label">YOUR NEXT STEP</span>
-            <h2>What would you like to do?</h2>
-            <p>Explore available services or strengthen your account security.</p>
+            <div className={styles.kicker}>YOUR DIGITAL WORKSPACE</div>
+            <h1>Welcome back{firstName ? `, ${firstName}` : ""}.</h1>
+            <p>Your services, account activity, and balances — all in one place.</p>
           </div>
-          <div className="dashboard-quick-actions">
-            <Link className="button" href="/services">Browse services <span aria-hidden="true">↗</span></Link>
-            <Link className="button secondary" href="/dashboard/security">Security settings <span aria-hidden="true">→</span></Link>
+          <div className={styles.headingAction}>
+            <Link className={`${styles.button} ${styles.buttonSecondary}`} href="/dashboard/security">Manage account <span aria-hidden="true">→</span></Link>
+            <Link className={styles.button} href="/services">Browse services <span aria-hidden="true">↗</span></Link>
+          </div>
+        </header>
+
+        <section className={styles.heroCard} aria-label="Wallet overview">
+          <div className={styles.heroTitle}>
+            <div className={styles.overline}><span>✦</span> ONE ACCOUNT. MORE POSSIBILITIES.</div>
+            <h2>Your digital operations, simplified.</h2>
+            <p>Discover available services, keep track of your requests, and manage your account from one secure workspace.</p>
+            <div className={styles.heroButtons}>
+              <Link className={styles.button} href="/services">Explore the catalog <span aria-hidden="true">↗</span></Link>
+              <Link className={`${styles.button} ${styles.buttonSecondary}`} href="/dashboard/orders">View activity <span aria-hidden="true">→</span></Link>
+            </div>
+          </div>
+          <div className={styles.heroVisual}>
+            <div className={styles.visualHead}><span>WALLET OVERVIEW</span><strong>{primaryAccount?.currency || "ACCOUNT"}</strong></div>
+            <div className={styles.visualBalance}>Available ledger balance</div>
+            <div className={styles.visualAmount}>{primaryAccount ? money(primaryAccount.balanceMinor, primaryAccount.currency) : "Not available"}</div>
+            <div className={styles.visualFoot}><span>{accounts.length} wallet {accounts.length === 1 ? "currency" : "currencies"}</span><b>Live account data</b></div>
           </div>
         </section>
 
-        <section className="dashboard-grid dashboard-stats" aria-label="Account summary">
-          <article className="dash-card">
-            <span className="dash-icon" aria-hidden="true">↗</span>
-            <span className="dash-label">Total orders</span>
-            <strong>{orders}</strong>
-            <span className="dash-note">All-time requests</span>
+        <section className={styles.metrics} aria-label="Account summary">
+          <article className={styles.metric}>
+            <div className={styles.metricTop}><span>Total orders</span><span className={styles.metricIcon}>↗</span></div>
+            <strong className={styles.metricValue}>{orders}</strong>
+            <span className={styles.metricNote}>All-time service requests</span>
           </article>
-          <article className="dash-card">
-            <span className="dash-icon dash-icon-blue" aria-hidden="true">◷</span>
-            <span className="dash-label">In progress</span>
-            <strong>{inProgress}</strong>
-            <span className="dash-note">Pending, paid, or processing</span>
+          <article className={styles.metric}>
+            <div className={styles.metricTop}><span>In progress</span><span className={styles.metricIcon}>◷</span></div>
+            <strong className={styles.metricValue}>{inProgress}</strong>
+            <span className={styles.metricNote}>Awaiting completion</span>
           </article>
-          <article className="dash-card">
-            <span className="dash-icon dash-icon-green" aria-hidden="true">✓</span>
-            <span className="dash-label">Completed</span>
-            <strong>{completed}</strong>
-            <span className="dash-note">Successfully completed orders</span>
+          <article className={styles.metric}>
+            <div className={styles.metricTop}><span>Completed</span><span className={styles.metricIcon}>✓</span></div>
+            <strong className={styles.metricValue}>{completed}</strong>
+            <span className={styles.metricNote}>Successfully completed</span>
           </article>
-          <article className="dash-card">
-            <span className="dash-icon dash-icon-blue" aria-hidden="true">◈</span>
-            <span className="dash-label">Wallet currencies</span>
-            <strong>{accounts.length}</strong>
-            <span className="dash-note">Account balances in PostgreSQL</span>
-          </article>
-          <article className="dash-card dash-security-card">
-            <span className="dash-icon dash-icon-green" aria-hidden="true">⌑</span>
-            <span className="dash-label">Two-factor authentication</span>
-            <strong className="security-state">{user.twoFactorEnabled ? "Enabled" : "Not enabled"}</strong>
-            <Link href="/dashboard/security" className="dash-note dash-action">Manage security →</Link>
+          <article className={styles.metric}>
+            <div className={styles.metricTop}><span>Wallet currencies</span><span className={styles.metricIcon}>◈</span></div>
+            <strong className={styles.metricValue}>{accounts.length}</strong>
+            <span className={styles.metricNote}>Wallets linked to your account</span>
           </article>
         </section>
 
-        <section className="dash-section">
-          <div className="section-heading">
-            <div><div className="eyebrow">ACTIVITY</div><h2>Recent orders</h2></div>
-            <Link href="/dashboard/orders" className="text-link">View all orders →</Link>
-          </div>
-          {recent.length ? (
-            <div className="table-wrap">
-              <table>
-                <thead><tr><th>Service</th><th>Order reference</th><th>Status</th><th>Total</th><th>Placed</th></tr></thead>
-                <tbody>
-                  {recent.map((order) => (
-                    <tr key={order.publicId}>
-                      <td>{order.service.name}</td>
-                      <td><span className="order-reference">{order.publicId.slice(0, 12)}</span></td>
-                      <td><span className={`table-status status-${order.status.toLowerCase()}`}>{order.status.toLowerCase().replaceAll("_", " ")}</span></td>
-                      <td>{money(order.totalMinor, order.currency)}</td>
-                      <td>{order.createdAt.toLocaleDateString("en", { year: "numeric", month: "short", day: "numeric" })}</td>
-                    </tr>
+        <div className={styles.contentGrid}>
+          <section className={styles.panel}>
+            <div className={styles.panelHead}>
+              <div><div className={styles.kicker}>LATEST ACTIVITY</div><h2>Recent orders</h2></div>
+              <Link className={styles.textLink} href="/dashboard/orders">View all orders ↗</Link>
+            </div>
+            {recent.length ? (
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead><tr><th>Service</th><th>Reference</th><th>Status</th><th>Total</th><th>Date</th></tr></thead>
+                  <tbody>
+                    {recent.map((order) => (
+                      <tr key={order.publicId}>
+                        <td><div className={styles.serviceCell}><strong>{order.service.name}</strong><small>Service order</small></div></td>
+                        <td><span className={styles.reference}>{order.publicId.slice(0, 12)}</span></td>
+                        <td><span className={`${styles.badge} ${statusClass(order.status)}`}>{order.status.toLowerCase().replaceAll("_", " ")}</span></td>
+                        <td>{money(order.totalMinor, order.currency)}</td>
+                        <td>{order.createdAt.toLocaleDateString("en", { year: "numeric", month: "short", day: "numeric" })}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className={styles.empty}>
+                <span className={styles.emptyIcon}>↗</span>
+                <h3>Your next step starts here</h3>
+                <p>You haven’t placed an order yet. Explore the available service catalog and your orders will appear here as you get started.</p>
+                <Link className={styles.button} href="/services">Browse services ↗</Link>
+              </div>
+            )}
+          </section>
+
+          <div>
+            <section className={styles.panel}>
+              <div className={styles.panelHead}>
+                <div><div className={styles.kicker}>YOUR FINANCES</div><h2>Wallet balances</h2></div>
+                <small>Read only</small>
+              </div>
+              {accounts.length ? (
+                <div className={styles.walletList}>
+                  {accounts.map((account) => (
+                    <div className={styles.walletItem} key={account.currency}>
+                      <div className={styles.walletLeft}>
+                        <span className={styles.currencyMark}>{account.currency.slice(0, 3)}</span>
+                        <span className={styles.walletText}><strong>{account.currency} wallet</strong><small>Available ledger balance</small></span>
+                      </div>
+                      <strong className={styles.walletAmount}>{money(account.balanceMinor, account.currency)}</strong>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-mark">↗</div>
-              <h3>Your workspace is ready</h3>
-              <p>Your order history will appear here after you place your first request. Browse the live catalog to see what is currently available.</p>
-              <Link href="/services" className="button">Browse services <span aria-hidden="true">↗</span></Link>
-            </div>
-          )}
-        </section>
+                </div>
+              ) : (
+                <div className={styles.empty}>
+                  <span className={styles.emptyIcon}>◈</span>
+                  <h3>No wallet available</h3>
+                  <p>A wallet balance will appear here once a wallet has been created for your account.</p>
+                </div>
+              )}
+            </section>
 
-        <section className="dash-section">
-          <div className="section-heading">
-            <div><div className="eyebrow">WALLET</div><h2>Your balances</h2></div>
-            <span className="dash-note">Read-only overview</span>
+            <section className={styles.securityPanel}>
+              <div className={styles.securityRow}>
+                <span className={styles.securityIcon}>⌑</span>
+                <div><strong>Account protection</strong><p>Two-factor authentication is {user.twoFactorEnabled ? "enabled" : "not enabled"} on your account.</p></div>
+              </div>
+              <Link className={styles.securityLink} href="/dashboard/security">Review security settings →</Link>
+            </section>
           </div>
-          {accounts.length ? (
-            <div className="dashboard-grid wallet-grid">
-              {accounts.map((account) => (
-                <article className="dash-card wallet-card" key={account.currency}>
-                  <span className="dash-label">{account.currency} wallet</span>
-                  <strong>{money(account.balanceMinor, account.currency)}</strong>
-                  <span className="dash-note">Available ledger balance</span>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state compact">
-              <h3>No wallets yet</h3>
-              <p>A wallet will appear here when one is created for your account. Funding and transfers remain unavailable until payment reconciliation and ledger posting are implemented and tested.</p>
-            </div>
-          )}
-        </section>
+        </div>
 
-        <footer className="dashboard-footer">
+        <footer className={styles.footer}>
           <span>Veltron Digital · Your workspace</span>
-          <Link href="/dashboard/security">Review account security →</Link>
+          <span>{orders} total orders · {accounts.length} wallet currencies</span>
+          <Link href="/dashboard/security">Account security →</Link>
         </footer>
       </section>
     </main>
