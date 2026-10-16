@@ -8,7 +8,7 @@ This is an original product using the supplied GlobalGle documentation as a func
 - Email verification for new registrations using single-use, hashed 24-hour tokens; resend requests use a privacy-preserving response and durable per-email rate limiting.
 - Email delivery through the Resend API; requires server-side RESEND_API_KEY, EMAIL_FROM and APP_URL configuration. Registration fails closed if these are missing.
 - Existing ACTIVE accounts are marked verified by the additive migration to preserve access; one-time bootstrapped super-admin accounts are also marked verified.
-- Optional TOTP two-factor setup with AES-256-GCM encrypted secret storage and server-side verification.
+- Optional TOTP two-factor setup with AES-256-GCM encrypted secret storage, server-side verification, and ten single-use hashed recovery codes issued once when enabling 2FA.
 - Customer dashboard reads order counts, recent orders, wallet balances and platform record counts from PostgreSQL.
 - Service catalog reads only administrator-activated services.
 - Additive schema foundations for wallet accounts, ledger transactions/entries, hosted sites, telephony logs and generated documents.
@@ -16,7 +16,7 @@ This is an original product using the supplied GlobalGle documentation as a func
 
 ## Not yet production-ready
 - Registration, sign-in and verification resend apply durable PostgreSQL-backed per-email and per-network rate limits. Raw email addresses and IP addresses are HMACed before storage. A protected daily cleanup endpoint removes expired/revoked sessions, old verification tokens and stale limiter rows; configure CRON_SECRET in Vercel and verify the scheduled invocation. Device-level controls and broader abuse monitoring remain outstanding.
-- Add single-use recovery codes, TOTP recovery, password reset and secure account recovery before requiring 2FA.
+- Recovery codes are now generated, stored as hashes, and atomically consumed on sign-in; still add password reset and secure account recovery before requiring 2FA.
 - Wallet top-ups, subscriptions, document charges and voice overage are not enabled. Do not change balances until a reviewed double-entry posting service and reconciliation worker exist.
 - Customer order requests can now be created idempotently against active catalog items and appear in the customer dashboard. They remain PENDING: payment and provider fulfilment are intentionally not enabled.
 - Hosted-site provisioning, registrar/DNS, container orchestration and telephony require provider selection, credentials, quotas, secure callback validation and integration tests.
