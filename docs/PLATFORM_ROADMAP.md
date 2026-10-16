@@ -18,10 +18,10 @@ This is an original product using the supplied GlobalGle documentation as a func
 - Registration and sign-in apply durable PostgreSQL-backed per-email rate limits (registration: 5 attempts/hour; sign-in: 8 attempts/15 minutes; verification resend: 3/hour). Raw email addresses are not stored in the limiter table. IP/device-level controls and automated retention cleanup still need implementation.
 - Add recovery codes, TOTP recovery, and secure account recovery before requiring 2FA.
 - Wallet top-ups, subscriptions, document charges and voice overage are not enabled. Do not change balances until a reviewed double-entry posting service and reconciliation worker exist.
-- Orders do not yet trigger provider fulfilment.
+- Customer order requests can now be created idempotently against active catalog items and appear in the customer dashboard. They remain PENDING: payment and provider fulfilment are intentionally not enabled.
 - Hosted-site provisioning, registrar/DNS, container orchestration and telephony require provider selection, credentials, quotas, secure callback validation and integration tests.
 - Document generation must not create fake financial records or imitate third-party bank statements/receipts. Generate clearly identified documents for legitimate use.
-- Add admin routes with server-side role checks, immutable audit events, origin/CSRF review, monitoring and end-to-end tests before production launch.
+- Admins can now create/edit catalog services, control catalog status, search users, and suspend/reactivate accounts; role changes are restricted to super-admins and protected actions are audit-logged. Still add order administration, append-only audit enforcement, broader origin/CSRF review, monitoring and end-to-end tests before production launch.
 
 ## Deployment requirements
 - Node.js 20+, PostgreSQL and a strong AUTH_SECRET of at least 32 characters.

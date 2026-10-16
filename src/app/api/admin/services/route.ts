@@ -42,7 +42,7 @@ async function authorized(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const auth = await authorized(request);
-  if (auth.response) return auth.response;
+  if ("response" in auth) return auth.response;
   try {
     const services = await prisma.service.findMany({
       select: { id: true, slug: true, name: true, description: true, category: true, priceMinor: true, currency: true, status: true, createdAt: true, updatedAt: true, _count: { select: { orders: true } } },
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const auth = await authorized(request);
-  if (auth.response) return auth.response;
+  if ("response" in auth) return auth.response;
   let body: unknown;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 }); }
   const parsed = createSchema.safeParse(body);
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const auth = await authorized(request);
-  if (auth.response) return auth.response;
+  if ("response" in auth) return auth.response;
   let body: unknown;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 }); }
   const parsed = patchSchema.safeParse(body);

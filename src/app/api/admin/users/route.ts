@@ -29,7 +29,7 @@ async function authorized(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const auth = await authorized(request);
-  if (auth.response) return auth.response;
+  if ("response" in auth) return auth.response;
   const query = request.nextUrl.searchParams.get("q")?.trim().slice(0, 100) ?? "";
   try {
     const users = await prisma.user.findMany({
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const auth = await authorized(request);
-  if (auth.response) return auth.response;
+  if ("response" in auth) return auth.response;
   let body: unknown;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 }); }
   const parsed = patchSchema.safeParse(body);
