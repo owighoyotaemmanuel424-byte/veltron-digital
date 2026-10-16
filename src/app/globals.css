@@ -284,3 +284,14 @@ th{background:#0b100d}
   .vd-footer{border-top:1px solid #202923}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* Product workspace: clearly distinguish live catalog items from modules requiring setup. */
+.product-card-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.product-card-heading h2{margin:0}
+.product-status{display:inline-flex;align-items:center;border:1px solid var(--border, #303030);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:650;white-space:nowrap}
+.product-status-available{color:#8df0b0;border-color:#286744;background:rgba(40,103,68,.16)}
+.product-status-setup-required{color:#f4d28a;border-color:#765d25;background:rgba(118,93,37,.16)}
+.product-status-not-enabled{color:#c0c0c0;border-color:#484848;background:rgba(72,72,72,.16)}
+.product-count{font-size:13px;opacity:.82}
+.product-count strong{font-size:16px;opacity:1}
