@@ -332,6 +332,15 @@ th{background:#0b100d}
 .website-preview-landing_page .website-preview-hero{background:radial-gradient(ellipse at 95% 5%,#ffe7c9,transparent 50%),#fffaf4}
 .website-preview-landing_page .website-preview-kicker{color:#9a4d15!important}
 .website-preview-landing_page .website-preview-cta{background:#8c3e10}
+.website-template-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr));gap:12px;margin-top:16px}
+.website-template-card{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:0;padding:16px}
+.website-template-card h3{margin:0;font-size:16px;line-height:1.35}
+.website-template-card p{margin:0;color:var(--muted-text,#9aa6a0);font-size:13px;line-height:1.6;flex:1}
+.template-status{display:inline-flex;align-items:center;border:1px solid var(--border-color,#303a34);border-radius:999px;padding:4px 8px;font-size:9px;font-weight:800;letter-spacing:.07em}
+.website-template-card.is-selected{border-color:#24df7b;box-shadow:0 0 0 1px #24df7b}
+.website-template-card.is-locked{opacity:.76}
+.template-action{font-size:12px;color:var(--muted-text,#9aa6a0)}
+@media(max-width:520px){.website-template-grid{grid-template-columns:1fr}.website-template-card{padding:14px}}
 .website-preview-online_banking .website-preview-page{background:#f5f7fb;color:#101827;border-color:#d8deea}
 .website-preview-online_banking .website-preview-nav{background:#fff;border-color:#e1e6ef}
 .website-preview-online_banking .website-preview-nav strong{color:#101827}
