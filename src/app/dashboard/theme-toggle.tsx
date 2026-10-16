@@ -12,7 +12,6 @@ export default function DashboardThemeToggle() {
     try {
       const saved = window.localStorage.getItem(KEY);
       const next = saved === "light";
-      setLight(next);
       document.documentElement.dataset.veltronTheme = next ? "light" : "dark";
     } catch {
       document.documentElement.dataset.veltronTheme = "dark";
