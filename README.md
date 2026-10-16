@@ -8,14 +8,14 @@ Original digital services marketplace built with Next.js App Router, TypeScript,
 - Durable per-email and per-network rate limits on registration, sign-in and verification resend.
 - Daily protected cleanup for expired/revoked sessions, old verification tokens and stale rate-limit rows.
 - Email delivery through Resend; registration fails closed when the required email settings are missing. Email delivery configuration was intentionally left unchanged.
-- Optional authenticator-based TOTP two-factor authentication with encrypted secret storage.
+- Optional authenticator-based TOTP two-factor authentication with encrypted secret storage and ten single-use recovery codes stored only as hashes.
 - Customer workspace and database-backed service catalog.
 - Role-protected admin overview and one-time token-protected super-admin bootstrap endpoint.
 - PostgreSQL models for users, orders, payments, webhook events, audit logs, wallet accounts, ledger entries, hosted sites, telephony records and generated documents.
 - Paystack signature verification groundwork. Payment settlement, wallet posting and fulfilment are not enabled by webhook receipt alone.
 
 ## Important readiness limitations
-This is an actively developed foundation, **not yet production-ready**. Admin user management, order creation/fulfilment, balanced ledger posting, payment reconciliation, hosted-site provisioning, telephony provider integration, document rendering, recovery codes, IP/device-level abuse protection, end-to-end coverage, account recovery/TOTP recovery codes, and production provider integration/reconciliation remain to be completed and reviewed.
+This is an actively developed platform, **not yet production-ready**. Admin catalog/user management and pending order review are implemented. Remaining gates include balanced ledger posting and payment reconciliation, provider-backed order fulfilment, hosted-site provisioning, telephony integration, document rendering, password/account recovery, device-level abuse monitoring, broader CSRF review, end-to-end coverage, production migrations, and verified deployment.
 
 Do not enable real money movement until the required controls are implemented and tested. Do not claim telephony, hosting, payment settlement, or document generation is live merely because its schema exists.
 
