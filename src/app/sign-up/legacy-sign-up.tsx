@@ -11,7 +11,6 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  const [resending, setResending] = useState(false);
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,31 +25,11 @@ export default function SignUpPage() {
       });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || "Registration failed.");
-      setMessage(d.message || "Check your inbox for a verification link.");
+      setMessage(d.message || "Account created successfully. You can now sign in.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Registration failed.");
     } finally {
       setBusy(false);
-    }
-  }
-
-  async function resend() {
-    setError("");
-    setMessage("");
-    setResending(true);
-    try {
-      const r = await fetch("/api/auth/resend-verification", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.error || "Could not request a new link.");
-      setMessage(d.message || "If the account needs verification, a new link will be sent.");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not request a new link.");
-    } finally {
-      setResending(false);
     }
   }
 
@@ -90,7 +69,7 @@ export default function SignUpPage() {
             </div>
             <p className="vd-auth-hint"><span>◈</span> Use at least 12 characters for a stronger password.</p>
             {error ? <p role="alert" className="vd-auth-error">{error}</p> : null}
-            {message ? <div role="status" className="vd-auth-success"><span>✓</span><div><strong>You&apos;re on your way</strong><p>{message}</p><button type="button" onClick={resend} disabled={resending || !email.trim()}>{resending ? "Requesting link…" : "Resend verification email"}</button></div></div> : null}
+            {message ? <div role="status" className="vd-auth-success"><span>✓</span><div><strong>Account created</strong><p>{message}</p><Link href="/sign-in">Continue to sign in →</Link></div></div> : null}
             <button className="vd-auth-submit" disabled={busy}>{busy ? "Creating your account…" : "Create account"}<span>↗</span></button>
           </form>
           <p className="vd-auth-switch">Already have an account? <Link href="/sign-in">Sign in <span>→</span></Link></p>
