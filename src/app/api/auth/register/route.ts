@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/password";
 import { writeAudit } from "@/lib/audit";
-import { enforceAuthRateLimit } from "@/lib/auth-rate-limit";
+import { enforceAuthRateLimit, getClientAddress } from "@/lib/auth-rate-limit";
 import { issueEmailVerification } from "@/lib/email-verification";
 export const runtime = "nodejs";
 const schema = z.object({ email: z.string().trim().email().max(254), name: z.string().trim().min(1).max(100).optional(), password: z.string().min(12).max(128) });
@@ -16,6 +16,8 @@ export async function POST(request: NextRequest) {
   try {
     const allowed = await enforceAuthRateLimit("register", email, 5, 60 * 60);
     if (!allowed) return NextResponse.json({ error: "Too many registration attempts. Please try again later." }, { status: 429, headers: { "Retry-After": "3600", "Cache-Control": "no-store" } });
+    const ipAllowed = await enforceAuthRateLimit("register-ip", getClientAddress(request.headers), 15, 60 * 60);
+    if (!ipAllowed) return NextResponse.json({ error: "Too many registration attempts from this network. Please try again later." }, { status: 429, headers: { "Retry-After": "3600", "Cache-Control": "no-store" } });
     if (!process.env.RESEND_API_KEY || !process.env.EMAIL_FROM || !process.env.APP_URL) {
       return NextResponse.json({ error: "Registration is temporarily unavailable because email verification is not configured." }, { status: 503, headers: { "Cache-Control": "no-store" } });
     }
