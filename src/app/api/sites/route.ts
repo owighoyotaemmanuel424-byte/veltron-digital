@@ -17,6 +17,10 @@ const siteContentSchema = z.object({
   sectionOneBody: z.string().trim().min(5).max(400),
   sectionTwoTitle: z.string().trim().min(2).max(80),
   sectionTwoBody: z.string().trim().min(5).max(400),
+  accountPageTitle: z.string().trim().min(2).max(80).optional(),
+  transfersPageTitle: z.string().trim().min(2).max(80).optional(),
+  ledgerPageTitle: z.string().trim().min(2).max(80).optional(),
+  kycPageTitle: z.string().trim().min(2).max(80).optional(),
 });
 const createSchema = z.object({
   name: z.string().trim().min(2).max(80),
@@ -39,6 +43,10 @@ function defaultContent(template: string, name: string) {
     sectionOneBody: "Present account overview, transaction history, card controls, and payment options in one clear customer experience.",
     sectionTwoTitle: "Security by design",
     sectionTwoBody: "Explain identity checks, account protection, privacy practices, and how customers can reach support.",
+    accountPageTitle: "Account overview",
+    transfersPageTitle: "Wire transfers",
+    ledgerPageTitle: "Account ledger",
+    kycPageTitle: "Identity verification (KYC)",
   };
   if (template === "PORTFOLIO") return {
     headline: "Ideas made with purpose.",
