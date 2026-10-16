@@ -332,6 +332,18 @@ th{background:#0b100d}
 .website-preview-landing_page .website-preview-hero{background:radial-gradient(ellipse at 95% 5%,#ffe7c9,transparent 50%),#fffaf4}
 .website-preview-landing_page .website-preview-kicker{color:#9a4d15!important}
 .website-preview-landing_page .website-preview-cta{background:#8c3e10}
+.website-preview-online_banking .website-preview-page{background:#f5f7fb;color:#101827;border-color:#d8deea}
+.website-preview-online_banking .website-preview-nav{background:#fff;border-color:#e1e6ef}
+.website-preview-online_banking .website-preview-nav strong{color:#101827}
+.website-preview-online_banking .website-preview-hero{background:radial-gradient(ellipse at 95% 5%,#d6e6ff,transparent 48%),#f5f7fb}
+.website-preview-online_banking .website-preview-kicker{color:#315fba!important}
+.website-preview-online_banking .website-preview-cta{background:#183d80}
+.banking-preview-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:0 18px 20px;background:#f5f7fb}
+.banking-preview-metrics>div{display:grid;gap:6px;align-content:start;min-width:0;padding:12px 10px;border:1px solid #dce3ef;border-radius:9px;background:#fff}
+.banking-preview-metrics span,.banking-preview-metrics small{font-size:9px;line-height:1.4;color:#69758a}
+.banking-preview-metrics strong{font-size:12px;overflow-wrap:anywhere;color:#14284b}
+@media(max-width:520px){.banking-preview-metrics{grid-template-columns:1fr;padding:0 12px 14px}.banking-preview-metrics>div{grid-template-columns:1fr;}}
+
 @media(max-width:980px){.website-builder-grid{grid-template-columns:1fr}.website-live-preview{max-width:none}}
 @media(max-width:520px){.website-live-preview{padding:12px}.website-preview-page{min-height:0}.website-preview-nav{padding:13px;align-items:flex-start}.website-preview-nav span{max-width:55%;line-height:1.5}.website-preview-hero{padding:31px 17px 23px}.website-preview-hero h2{font-size:30px}.website-preview-feature-row{padding:17px;gap:10px}.website-preview-feature-row strong{font-size:11px}}
 
