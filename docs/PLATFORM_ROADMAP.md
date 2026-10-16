@@ -12,7 +12,7 @@ This is an original product using the supplied GlobalGle documentation as a func
 - Paystack remains disabled until merchant eligibility and credentials are confirmed. A signed webhook is not itself proof of settled payment.
 
 ## Not yet production-ready
-- Registration currently does not perform email verification or abuse/rate limiting. Add an email provider, verification tokens, resend controls and durable rate limits before opening registration publicly.
+- Registration and sign-in now apply durable PostgreSQL-backed per-email rate limits (registration: 5 attempts/hour; sign-in: 8 attempts/15 minutes). Raw email addresses are not stored in the limiter table. Email verification, resend controls, IP/device-level controls and automated retention cleanup still need implementation before opening registration publicly.
 - Add recovery codes, TOTP recovery, and secure account recovery before requiring 2FA.
 - Wallet top-ups, subscriptions, document charges and voice overage are not enabled. Do not change balances until a reviewed double-entry posting service and reconciliation worker exist.
 - Orders do not yet trigger provider fulfilment.
