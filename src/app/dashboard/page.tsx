@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "./logout-button";
+import MobileDashboardNav from "./mobile-dashboard-nav";
 import styles from "./dashboard.module.css";
 
 export const dynamic = "force-dynamic";
@@ -92,6 +93,7 @@ export default async function DashboardPage() {
 
   return (
     <main className={styles.page}>
+      <MobileDashboardNav name={user.name?.trim() || "Veltron member"} email={user.email} initials={initials} sites={sites} documents={documents} calls={calls} />
       <aside className={styles.sidebar} aria-label="Workspace navigation">
         <Link className={styles.brand} href="/">
           <span className={styles.brandMark}>v</span>
