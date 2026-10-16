@@ -1,0 +1,22 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getSessionUser } from "@/lib/session";
+import { prisma } from "@/lib/prisma";
+import LogoutButton from "./logout-button";
+function money(minor:number,currency:string){try{return new Intl.NumberFormat("en",{style:"currency",currency}).format(minor/100);}catch{return currency+" "+(minor/100).toFixed(2);}}
+export const dynamic="force-dynamic";
+export default async function DashboardPage(){
+ const user=await getSessionUser();if(!user)redirect("/sign-in");
+ const [orders,accounts,recent,sites,documents,calls]=await Promise.all([
+ prisma.order.count({where:{userId:user.id}}),
+ prisma.walletAccount.findMany({where:{userId:user.id},select:{currency:true,balanceMinor:true},orderBy:{currency:"asc"}}),
+ prisma.order.findMany({where:{userId:user.id},select:{publicId:true,status:true,totalMinor:true,currency:true,createdAt:true,service:{select:{name:true}}},orderBy:{createdAt:"desc"},take:5}),
+ prisma.hostedSite.count({where:{userId:user.id}}),prisma.generatedDocument.count({where:{userId:user.id}}),prisma.telephonyLog.count({where:{userId:user.id}})
+ ]);
+ return <main className="workspace"><aside className="side-nav"><Link className="brand" href="/">veltron<span>.</span></Link><p className="side-label">WORKSPACE</p><Link className="side-link active" href="/dashboard">Overview</Link><Link className="side-link" href="/services">Service catalog</Link><Link className="side-link" href="/dashboard/security">Account security</Link><p className="side-label">PLATFORM</p><span className="side-link muted-link">Hosted sites <small>{sites}</small></span><span className="side-link muted-link">Documents <small>{documents}</small></span><span className="side-link muted-link">Telephony history <small>{calls}</small></span><div className="side-bottom"><span className="side-foot">{user.email}</span><LogoutButton/></div></aside>
+ <section className="workspace-main"><header className="workspace-header"><div><div className="eyebrow">CUSTOMER WORKSPACE</div><h1>Good to see you{user.name?", "+user.name.split(" ")[0]:""}.</h1><p className="lead">Your orders, balances, and account security in one place.</p></div><span className="status-chip">● Account active</span></header>
+ <div className="dashboard-grid"><article className="dash-card"><span className="dash-label">Total orders</span><strong>{orders}</strong><span className="dash-note">All-time order count</span></article><article className="dash-card"><span className="dash-label">Wallet currencies</span><strong>{accounts.length}</strong><span className="dash-note">Balances from PostgreSQL</span></article><article className="dash-card"><span className="dash-label">Two-factor authentication</span><strong className="security-state">{user.twoFactorEnabled?"Enabled":"Not enabled"}</strong><Link href="/dashboard/security" className="dash-note dash-action">Manage security →</Link></article></div>
+ <section className="dash-section"><div className="section-heading"><div><div className="eyebrow">ACTIVITY</div><h2>Recent orders</h2></div><Link href="/services" className="text-link">Explore services →</Link></div>
+ {recent.length?<div className="table-wrap"><table><thead><tr><th>Service</th><th>Order reference</th><th>Status</th><th>Total</th><th>Placed</th></tr></thead><tbody>{recent.map(o=><tr key={o.publicId}><td>{o.service.name}</td><td>{o.publicId.slice(0,12)}</td><td><span className="table-status">{o.status.toLowerCase()}</span></td><td>{money(o.totalMinor,o.currency)}</td><td>{o.createdAt.toLocaleDateString("en")}</td></tr>)}</tbody></table></div>:<div className="empty-state"><div className="empty-mark">↗</div><h3>Your next step starts here</h3><p>When ordering is enabled, your order status and payment record will appear here.</p><Link href="/services" className="button">Browse services</Link></div>}</section>
+ <section className="dash-section"><div className="section-heading"><div><div className="eyebrow">WALLET</div><h2>Balances</h2></div></div>{accounts.length?<div className="dashboard-grid">{accounts.map(a=><article className="dash-card" key={a.currency}><span className="dash-label">{a.currency} wallet</span><strong>{money(a.balanceMinor,a.currency)}</strong><span className="dash-note">Funding is not yet enabled</span></article>)}</div>:<div className="empty-state compact"><h3>No wallets yet</h3><p>Wallet funding requires payment reconciliation and ledger posting to be implemented and tested first.</p></div>}</section></section></main>;
+}

@@ -1,28 +1,33 @@
 # Veltron Digital
 
-Original service-marketplace platform foundation built with Next.js App Router, TypeScript, PostgreSQL, and Prisma.
+Original digital services marketplace built with Next.js App Router, TypeScript, PostgreSQL, and Prisma. The supplied GlobalGle PDFs are used as functional reference material; this repository is not a clone of GlobalGle.
 
-## Status
-This repository is an initial scaffold, not yet production-ready. Authentication and sessions, customer/admin dashboards, service/order workflows, verified payment reconciliation, authorization enforcement, and full integration tests must be completed before real customers or payments are enabled.
+## Implemented foundation
+- Password registration/sign-in with bcrypt password hashing and revocable HttpOnly sessions.
+- Optional authenticator-based TOTP two-factor authentication with encrypted secret storage.
+- Customer workspace and database-backed service catalog.
+- Role-protected admin overview and one-time token-protected super-admin bootstrap endpoint.
+- PostgreSQL models for users, orders, payments, webhook events, audit logs, wallet accounts, ledger entries, hosted sites, telephony records and generated documents.
+- Paystack signature verification groundwork. Payment settlement, wallet posting and fulfilment are not enabled by webhook receipt alone.
 
-## Stack
-- Next.js + TypeScript
-- PostgreSQL + Prisma
-- Vercel deployment target
-- Paystack planned, pending merchant eligibility and credentials
+## Important readiness limitations
+This is an actively developed foundation, **not yet production-ready**. Public registration currently lacks email verification and durable abuse/rate limiting. Admin user management, order creation/fulfilment, balanced ledger posting, payment reconciliation, hosted-site provisioning, telephony provider integration, document rendering, recovery codes, and end-to-end coverage remain to be completed and reviewed.
+
+Do not enable public production registration or real money movement until those controls are implemented and tested. Do not claim telephony, hosting, payment settlement, or document generation is live merely because its schema exists.
 
 ## Local development
-1. Use Node.js 20+ and a development PostgreSQL database.
-2. Copy `.env.example` to `.env` and set `DATABASE_URL`.
-3. Run `npm install`, `npx prisma generate`, `npx prisma migrate dev --name init`, then `npm run dev`.
+1. Use Node.js 20+ and PostgreSQL.
+2. Copy `.env.example` to `.env`; configure `DATABASE_URL`, a random `AUTH_SECRET` of at least 32 characters, and `APP_URL`.
+3. Run `npm install`, `npx prisma generate`, `npx prisma migrate dev`, then `npm run dev`.
+4. Run `npm run typecheck`, `npm run lint`, and `npm test`.
 
-## Security requirements
-- Never commit credentials, production data, or real customer records.
-- Do not activate Paystack until merchant eligibility is confirmed and server-side credentials are configured.
-- Never trust browser redirects or webhook payloads alone to mark payments successful.
-- Verify provider reference, amount, currency, and order association; make state changes idempotent and transactional.
-- Do not expose admin routes until server-side authorization and secure sessions are implemented.
-- Provision the first super-admin using a one-time protected bootstrap; never hardcode admin credentials.
-- Use reviewed Prisma migrations; never run destructive schema resets against production.
+## Initial super-admin
+Set a unique random `ADMIN_BOOTSTRAP_TOKEN` of at least 32 characters as a server-side environment variable. Send a POST request to `/api/admin/bootstrap` with JSON fields `token`, `email`, `password` (at least 16 characters), and optional `name`. The endpoint is available only while no SUPER_ADMIN exists. After successful setup, remove `ADMIN_BOOTSTRAP_TOKEN` from the deployment environment. Never put the token or credentials in source control or a public client.
 
-See [docs/SECURITY.md](docs/SECURITY.md) for the readiness checklist.
+## Database safety
+The new platform-core migration is additive. Review it and take a database backup before applying it to any production database. Use `npx prisma migrate deploy` for reviewed production migrations; never use `prisma migrate reset` on production.
+
+## Payments
+Paystack remains disabled until merchant eligibility and server-side credentials are confirmed. Validate provider reference, amount, currency and order association; make reconciliation and ledger posting idempotent and transactional before activating funding or fulfilment.
+
+See [docs/PLATFORM_ROADMAP.md](docs/PLATFORM_ROADMAP.md) and [docs/SECURITY.md](docs/SECURITY.md).
