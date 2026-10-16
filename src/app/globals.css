@@ -334,3 +334,15 @@ th{background:#0b100d}
 .website-preview-landing_page .website-preview-cta{background:#8c3e10}
 @media(max-width:980px){.website-builder-grid{grid-template-columns:1fr}.website-live-preview{max-width:none}}
 @media(max-width:520px){.website-live-preview{padding:12px}.website-preview-page{min-height:0}.website-preview-nav{padding:13px;align-items:flex-start}.website-preview-nav span{max-width:55%;line-height:1.5}.website-preview-hero{padding:31px 17px 23px}.website-preview-hero h2{font-size:30px}.website-preview-feature-row{padding:17px;gap:10px}.website-preview-feature-row strong{font-size:11px}}
+
+
+/* Website editor controls */
+.site-select-card{width:100%;text-align:left;cursor:pointer;color:inherit}
+.site-select-card.is-selected{border-color:#24df7b;box-shadow:0 0 0 1px #24df7b}
+.content-editor-label{margin-top:22px;margin-bottom:8px}
+.site-content-field{display:grid;gap:6px;margin:12px 0}
+.site-content-field textarea{width:100%;min-height:84px;resize:vertical;border:1px solid var(--border-color,#303a34);border-radius:10px;padding:11px 12px;background:var(--surface,#101512);color:inherit;font:inherit}
+.site-content-field input{width:100%}
+.site-editor-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.button-secondary{background:transparent;border:1px solid currentColor}
+@media(max-width:520px){.site-editor-actions>*{width:100%}.site-select-card{min-width:0}}
