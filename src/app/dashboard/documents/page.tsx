@@ -32,6 +32,8 @@ export default function DocumentsPage() {
     } catch (e) { setError(e instanceof Error ? e.message : "Could not load documents."); }
   }
 
+  // The loader intentionally updates state after its network request completes.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { void load(); }, []);
 
   const filteredDocuments = documents.filter(doc => {
