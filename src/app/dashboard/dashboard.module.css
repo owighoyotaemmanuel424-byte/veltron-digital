@@ -99,3 +99,29 @@
 @media(max-width:800px){.page{display:block}.sidebar{position:relative;height:auto;padding:14px 16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;border-right:0;border-bottom:1px solid #ffffff12}.brand{grid-column:1/-1;padding:0 5px 8px}.groupLabel{grid-column:1/-1;margin:10px 4px 4px}.navLink{padding:10px 9px;font-size:11px}.sidebarBottom{grid-column:1/-1;grid-template-columns:minmax(0,1fr) auto;align-items:center;margin-top:9px;padding:12px 4px 0}.sidebarBottom .logout{width:auto;min-width:100px}.main{padding:0 18px 35px}.topbar{min-height:64px}.heading{align-items:flex-start;flex-direction:column;padding-top:26px}.headingAction{width:100%}.heroCard{grid-template-columns:minmax(0,1fr)}.heroVisual{max-width:100%}.contentGrid{grid-template-columns:minmax(0,1fr)}.walletArea{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:480px){.main{padding:0 13px 28px}.topbar{align-items:flex-start;padding:14px 0;min-height:0}.topActions{gap:6px}.helpLink{padding:8px;font-size:9px}.status{padding:7px 8px;font-size:9px}.breadcrumb{padding-top:7px;font-size:10px}.heading h1{font-size:31px}.headingAction{display:grid;grid-template-columns:1fr}.heroCard{padding:20px 16px}.heroTitle h2{font-size:27px}.heroButtons{display:grid;grid-template-columns:1fr}.button{width:100%}.metrics{gap:9px}.metric{padding:14px}.metricValue{font-size:24px}.metricTop{align-items:flex-start;font-size:9px}.metricIcon{width:27px;height:27px}.panelHead{padding:15px 13px}.panelHead h2{font-size:14px}.table th,.table td{padding:12px 11px}.walletList{padding:0 13px}.sidebar{padding:12px}.navLink{font-size:10px;gap:7px}.navIcon{font-size:14px;width:18px}}
 @media(prefers-reduced-motion:reduce){.navLink,.button{transition:none}.button:hover{transform:none}}
+
+
+/* Globalgle PDF-inspired dashboard sections: quick actions and financial history */
+.quickSection{margin-top:30px;scroll-margin-top:24px}
+.sectionIntro{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px}
+.sectionIntro h2{margin:7px 0 5px;font-size:24px;letter-spacing:-.045em}
+.sectionIntro p{margin:0;color:#9296aa;font-size:11px;line-height:1.7}
+.actionGroup{margin-top:20px;padding:18px;border:1px solid #ffffff13;border-radius:15px;background:#10111a}
+.actionGroupTitle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.actionGroupTitle h3{margin:0;font-size:13px;font-weight:750}
+.actionGroupTitle span,.panelCount{color:#777d94;font-size:9px}
+.actionGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.actionTile{display:flex;align-items:center;gap:10px;min-width:0;min-height:76px;padding:12px;border:1px solid #ffffff10;border-radius:12px;background:linear-gradient(145deg,#171824,#11121b);color:#f7f7fb;text-decoration:none;transition:transform .18s,border-color .18s,background .18s}
+.actionTile:hover{transform:translateY(-2px);border-color:#a99aff65;background:#1b1a2b}
+.actionTileIcon{display:grid;place-items:center;flex:none;width:34px;height:34px;border:1px solid #a99aff24;border-radius:10px;background:#a99aff12;color:#c5bcff;font-size:16px}
+.actionTileText{display:grid;gap:5px;min-width:0}
+.actionTileText strong{overflow:hidden;font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+.actionTileText small{display:-webkit-box;overflow:hidden;color:#777d92;font-size:9px;line-height:1.5;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.actionArrow{margin-left:auto;color:#aaa0e9;font-size:12px}
+.activityGrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:15px;margin-top:26px;align-items:start}
+.amountPositive{color:#91e2b5!important;font-weight:750;font-variant-numeric:tabular-nums}
+.amountNegative{color:#ffb7c3!important;font-weight:750;font-variant-numeric:tabular-nums}
+.orderPanel{margin-top:16px}
+@media(max-width:1250px){.actionGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.activityGrid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:900px){.actionGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.activityGrid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:520px){.sectionIntro{align-items:flex-start;flex-direction:column}.sectionIntro h2{font-size:21px}.actionGroup{padding:13px}.actionGrid{grid-template-columns:minmax(0,1fr)}.actionTile{min-height:65px}.panelHead{align-items:flex-start}.panelCount{padding-top:5px}}
