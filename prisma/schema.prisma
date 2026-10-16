@@ -1,110 +1,150 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-enum UserRole { CUSTOMER SUPPORT ADMIN SUPER_ADMIN }
-enum UserStatus { ACTIVE SUSPENDED PENDING }
-enum ServiceStatus { DRAFT ACTIVE PAUSED ARCHIVED }
-enum OrderStatus { PENDING PAID PROCESSING COMPLETED FAILED CANCELLED REFUNDED }
-enum PaymentStatus { INITIALIZED PENDING SUCCESS FAILED REVERSED }
-enum AuditOutcome { SUCCESS DENIED FAILURE }
+
+enum UserRole {
+  CUSTOMER
+  SUPPORT
+  ADMIN
+  SUPER_ADMIN
+}
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+enum ServiceStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+enum PaymentStatus {
+  INITIALIZED
+  PENDING
+  SUCCESS
+  FAILED
+  REVERSED
+}
+enum AuditOutcome {
+  SUCCESS
+  DENIED
+  FAILURE
+}
+
 model User {
-  id String @id @default(cuid())
-  email String @unique
-  name String?
+  id           String      @id @default(cuid())
+  email        String      @unique
+  name         String?
   passwordHash String
-  role UserRole @default(CUSTOMER)
-  status UserStatus @default(ACTIVE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders Order[]
-  payments Payment[]
-  auditEvents AuditLog[] @relation("AuditActor")
+  role         UserRole    @default(CUSTOMER)
+  status       UserStatus  @default(ACTIVE)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  orders       Order[]
+  payments     Payment[]
+  auditEvents  AuditLog[]  @relation("AuditActor")
   @@index([role, status])
   @@index([createdAt])
 }
+
 model Service {
-  id String @id @default(cuid())
-  slug String @unique
-  name String
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
   description String
-  category String
-  priceMinor Int
-  currency String @default("NGN")
-  status ServiceStatus @default(DRAFT)
-  metadata Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders Order[]
+  category    String
+  priceMinor  Int
+  currency    String        @default("NGN")
+  status      ServiceStatus @default(DRAFT)
+  metadata    Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  orders      Order[]
   @@index([status, category])
 }
+
 model Order {
-  id String @id @default(cuid())
-  publicId String @unique @default(cuid())
-  userId String
-  serviceId String
-  status OrderStatus @default(PENDING)
-  quantity Int @default(1)
+  id             String      @id @default(cuid())
+  publicId       String      @unique @default(cuid())
+  userId         String
+  serviceId      String
+  status         OrderStatus @default(PENDING)
+  quantity       Int         @default(1)
   unitPriceMinor Int
-  totalMinor Int
-  currency String @default("NGN")
-  customerInput Json?
-  idempotencyKey String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
-  service Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
-  payments Payment[]
+  totalMinor     Int
+  currency       String      @default("NGN")
+  customerInput  Json?
+  idempotencyKey String      @unique
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  user           User        @relation(fields: [userId], references: [id], onDelete: Restrict)
+  service        Service     @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  payments       Payment[]
   @@index([userId, createdAt])
   @@index([status, createdAt])
 }
+
 model Payment {
-  id String @id @default(cuid())
-  userId String
-  orderId String
-  provider String @default("PAYSTACK")
-  providerReference String @unique
-  providerTransactionId String? @unique
-  status PaymentStatus @default(INITIALIZED)
-  amountMinor Int
-  currency String
-  idempotencyKey String @unique
-  verifiedAt DateTime?
-  providerPayload Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
-  order Order @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  id                    String        @id @default(cuid())
+  userId                String
+  orderId               String
+  provider              String        @default("PAYSTACK")
+  providerReference     String        @unique
+  providerTransactionId String?       @unique
+  status                PaymentStatus @default(INITIALIZED)
+  amountMinor           Int
+  currency              String
+  idempotencyKey        String        @unique
+  verifiedAt            DateTime?
+  providerPayload       Json?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  order                 Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
   @@index([orderId, status])
   @@index([status, createdAt])
 }
+
 model WebhookEvent {
-  id String @id @default(cuid())
-  provider String
-  eventId String
-  eventType String
+  id          String   @id @default(cuid())
+  provider    String
+  eventId     String
+  eventType   String
   processedAt DateTime?
-  receivedAt DateTime @default(now())
-  payload Json
+  receivedAt  DateTime @default(now())
+  payload     Json
   @@unique([provider, eventId])
   @@index([processedAt, receivedAt])
 }
+
 model AuditLog {
-  id String @id @default(cuid())
-  actorId String?
-  action String
+  id         String       @id @default(cuid())
+  actorId    String?
+  action     String
   entityType String
-  entityId String?
-  outcome AuditOutcome @default(SUCCESS)
-  ipAddress String?
-  userAgent String?
-  requestId String?
-  details Json?
-  createdAt DateTime @default(now())
-  actor User? @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  entityId   String?
+  outcome    AuditOutcome @default(SUCCESS)
+  ipAddress  String?
+  userAgent  String?
+  requestId  String?
+  details    Json?
+  createdAt  DateTime     @default(now())
+  actor      User?        @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
   @@index([actorId, createdAt])
   @@index([entityType, entityId, createdAt])
   @@index([action, createdAt])
