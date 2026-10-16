@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { issueEmailVerification } from "@/lib/email-verification";
-import { enforceAuthRateLimit } from "@/lib/auth-rate-limit";
+import { enforceAuthRateLimit, getClientAddress } from "@/lib/auth-rate-limit";
 export const runtime = "nodejs";
 const schema = z.object({ email: z.string().trim().email().max(254) });
 const genericMessage = "If an unverified account exists for that email, a new verification link will be sent.";
@@ -15,6 +15,8 @@ export async function POST(request: NextRequest) {
   try {
     const allowed = await enforceAuthRateLimit("resend-verification", email, 3, 60 * 60);
     if (!allowed) return NextResponse.json({ error: "Too many requests. Please wait an hour before trying again." }, { status: 429, headers: { "Retry-After": "3600", "Cache-Control": "no-store" } });
+    const ipAllowed = await enforceAuthRateLimit("resend-verification-ip", getClientAddress(request.headers), 15, 60 * 60);
+    if (!ipAllowed) return NextResponse.json({ error: "Too many verification requests from this network. Please try again later." }, { status: 429, headers: { "Retry-After": "3600", "Cache-Control": "no-store" } });
     const user = await prisma.user.findUnique({ where: { email }, select: { id: true, email: true, name: true, status: true, emailVerifiedAt: true } });
     if (user && user.status === "PENDING" && !user.emailVerifiedAt) {
       await issueEmailVerification(user.id, user.email, user.name);
