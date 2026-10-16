@@ -49,7 +49,7 @@ async function getNeonSessionUser() {
           select: { id: true, email: true, name: true, role: true, status: true, twoFactorEnabled: true, emailVerifiedAt: true },
         });
       }
-    } else if (!user.emailVerifiedAt && user.status === "PENDING") {
+    } else if (!user.emailVerifiedAt && user.status !== "SUSPENDED") {
       user = await prisma.user.update({
         where: { id: user.id },
         data: { emailVerifiedAt: new Date(), status: "ACTIVE" },
