@@ -90,7 +90,7 @@ export default function SignUpPage() {
             </div>
             <p className="vd-auth-hint"><span>◈</span> Use at least 12 characters for a stronger password.</p>
             {error ? <p role="alert" className="vd-auth-error">{error}</p> : null}
-            {message ? <div role="status" className="vd-auth-success"><span>✓</span><div><strong>You're on your way</strong><p>{message}</p><button type="button" onClick={resend} disabled={resending || !email.trim()}>{resending ? "Requesting link…" : "Resend verification email"}</button></div></div> : null}
+            {message ? <div role="status" className="vd-auth-success"><span>✓</span><div><strong>You&apos;re on your way</strong><p>{message}</p><button type="button" onClick={resend} disabled={resending || !email.trim()}>{resending ? "Requesting link…" : "Resend verification email"}</button></div></div> : null}
             <button className="vd-auth-submit" disabled={busy}>{busy ? "Creating your account…" : "Create account"}<span>↗</span></button>
           </form>
           <p className="vd-auth-switch">Already have an account? <Link href="/sign-in">Sign in <span>→</span></Link></p>
