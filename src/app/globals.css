@@ -346,3 +346,51 @@ th{background:#0b100d}
 .site-editor-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .button-secondary{background:transparent;border:1px solid currentColor}
 @media(max-width:520px){.site-editor-actions>*{width:100%}.site-select-card{min-width:0}}
+
+
+/* Cross-page quality baseline: consistent, touch-friendly behavior for every workspace route. */
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{min-width:320px;overflow-x:hidden}
+img,svg,video,canvas{max-width:100%}
+button,a,input,select,textarea{touch-action:manipulation}
+button:disabled{cursor:not-allowed;opacity:.62;transform:none!important}
+input,select,textarea{max-width:100%;font:inherit}
+label{display:block}
+.workspace,.workspace-main,.section,.dashboard-page{min-width:0}
+.workspace-main{overflow-wrap:anywhere}
+.workspace-header{flex-wrap:wrap}
+.workspace-header>*,.section-heading>*,.product-card-heading>*{min-width:0}
+.table-wrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap table{min-width:620px}
+.card,.dash-card,.dashboard-welcome,.empty-state{min-width:0;overflow-wrap:anywhere}
+.empty-state p,.card p,.lead{line-height:1.7}
+.button,.button.secondary{min-height:42px}
+.auth-card,.document-editor,.totp-panel{min-width:0}
+.auth-card input,.auth-card button,.document-editor input,.document-editor select,.document-editor textarea,.confirm-row input,.totp-panel textarea{box-sizing:border-box}
+@media(max-width:760px){
+  .workspace{display:block}
+  .side-nav{position:relative;top:auto;width:100%;height:auto;display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:12px}
+  .side-nav .brand{margin-right:auto;padding:5px 8px}
+  .side-nav .side-label{width:100%;margin:8px 4px 2px}
+  .side-nav .side-link{flex:1 1 auto;justify-content:center;min-width:calc(50% - 8px);text-align:center}
+  .side-nav .side-bottom{width:100%;margin-top:5px;padding-top:9px}
+  .workspace-main{padding:24px 16px 36px}
+  .workspace-header{align-items:flex-start;gap:14px}
+  .workspace-header h1{font-size:clamp(28px,8vw,40px)!important;overflow-wrap:anywhere}
+  .section{padding-left:16px!important;padding-right:16px!important}
+  .section h1{overflow-wrap:anywhere}
+  .cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+  .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dashboard-grid>*{min-width:0}
+}
+@media(max-width:420px){
+  .side-nav .side-link{min-width:100%;justify-content:flex-start}
+  .dashboard-grid{grid-template-columns:1fr}
+  .topbar{gap:10px;flex-wrap:wrap;padding:12px 16px}
+  .topbar .nav{display:flex;flex-wrap:wrap;gap:10px}
+  .section h1{font-size:clamp(27px,9vw,36px)!important}
+  .card{padding:16px}
+  .button{max-width:100%;white-space:normal;text-align:center}
+  .document-preview{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
