@@ -53,6 +53,7 @@ export default async function DashboardPage() {
         <Link className="brand" href="/">veltron<span>.</span></Link>
         <p className="side-label">WORKSPACE</p>
         <Link className="side-link active" href="/dashboard" aria-current="page"><span>◫ &nbsp; Overview</span><span aria-hidden="true">↗</span></Link>
+        <Link className="side-link" href="/dashboard/orders"><span>↗ &nbsp; Order history</span><span aria-hidden="true">→</span></Link>
         <Link className="side-link" href="/services"><span>◇ &nbsp; Service catalog</span><span aria-hidden="true">→</span></Link>
         <Link className="side-link" href="/dashboard/security"><span>⌑ &nbsp; Account security</span><span aria-hidden="true">→</span></Link>
         <p className="side-label">YOUR ACTIVITY</p>
@@ -123,7 +124,7 @@ export default async function DashboardPage() {
         <section className="dash-section">
           <div className="section-heading">
             <div><div className="eyebrow">ACTIVITY</div><h2>Recent orders</h2></div>
-            <Link href="/services" className="text-link">Explore services →</Link>
+            <Link href="/dashboard/orders" className="text-link">View all orders →</Link>
           </div>
           {recent.length ? (
             <div className="table-wrap">
