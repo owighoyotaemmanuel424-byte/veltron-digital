@@ -234,3 +234,53 @@
 .orders-disclaimer{margin-top:16px;line-height:1.7}
 @media(max-width:1100px){.order-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.order-summary{grid-template-columns:1fr}}
+
+
+/* Site-wide Globalgle-inspired black/green system across public, auth, customer and admin routes */
+:root{color-scheme:dark;--bg:#050706;--panel:#0b100d;--line:#242d27;--muted:#9ba79e;--accent:#20e879}
+html,body{background:#050706;color:#f5f8f5}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #20e879;outline-offset:3px}
+.button,.vd-button-primary,.vd-auth-submit{background:#20e879;color:#031108;box-shadow:none}
+.button:hover,.vd-button-primary:hover,.vd-auth-submit:hover{background:#39f28b;color:#031108}
+.secondary,.vd-button-quiet{background:#0c120e;border-color:#2a382f;color:#e8f4eb}
+.brand span,.vd-brand-dot,.vd-signin:hover,.vd-footer a:hover,.text-link,.auth-foot a,.dash-action{color:#20e879}
+.eyebrow,.vd-kicker,.vd-auth-kicker,.vd-auth-eyebrow{color:#20e879}
+.topbar,.vd-header,.vd-auth-header{background:#050706;border-color:#202923}
+.card,.preview,.auth-card,.vd-dashboard-card,.vd-service-card,.vd-trust-card,.vd-auth-form-panel{background:#0b100d;border-color:#27332b;box-shadow:none}
+.auth-card input,.confirm-row input,.totp-panel textarea,.vd-auth-form>input,.vd-auth-password input,.vd-auth-security-fields input{background:#050806;border-color:#2a382f}
+.auth-card input:focus,.confirm-row input:focus,.totp-panel textarea:focus,.vd-auth-form>input:focus,.vd-auth-password input:focus,.vd-auth-security-fields input:focus{border-color:#20e879;box-shadow:0 0 0 3px #20e87920}
+.workspace{background:#050706}.side-nav{background:#070b08;border-color:#202923}
+.side-link.active{background:#20e87918;border-color:#20e87955;color:#eafff0}
+.side-link:hover,.logout:hover{background:#101a13;color:#fff}
+.status-chip{border-color:#236641;background:#0c2114;color:#83f0ad}
+.empty-mark,.dash-icon{background:#20e87916;border-color:#20e87935;color:#5df59a}
+.status-completed{background:#10321d;color:#8bf2a9}
+.vd-page,.vd-auth-page{--vd-bg:#050706;--vd-panel:#0b100d;--vd-border:#27332b;--vd-purple:#20e879;--auth-bg:#050706;--auth-panel:#0b100d;--auth-line:#27332b;--auth-purple:#20e879;background:#050706;color:#f5f8f5}
+.vd-page{background:#050706}
+.vd-hero h1 span,.vd-auth-story h1 span{background:none;color:#20e879;-webkit-text-fill-color:#20e879}
+.vd-brand-mark{background:#20e879;color:#031108;box-shadow:none}
+.vd-kicker-dot,.vd-auth-orb{background:#20e879;box-shadow:0 0 12px #20e87966}
+.vd-activity-icon,.vd-arrow-circle,.vd-lower-icon,.vd-service-icon,.vd-step-icon,.vd-auth-benefit-icon{background:#20e87912;color:#67f49c;border-color:#20e8792b}
+.vd-service-card:after{background:#20e879;opacity:.06}
+.vd-service-card>a,.vd-text-link,.vd-auth-label-row a,.vd-auth-switch a,.vd-auth-legal a{color:#20e879}
+.vd-orbit-one,.vd-orbit-two{border-color:#20e87918}
+.vd-trust-orb{background:radial-gradient(circle,#20e87918,transparent 67%)}
+.vd-final-cta{background:#20e879;color:#031108}
+.vd-final-cta .vd-kicker{color:#06391c}
+.vd-final-cta p{color:#12472a}
+.vd-button-light{background:#06110a;color:#f4fff7}
+.vd-auth-submit{background:#20e879;color:#031108}
+.vd-auth-submit:hover{filter:brightness(1.07)}
+.vd-auth-success{border-color:#236641;background:#0b2113;color:#c5f5d4}
+.form-error,.vd-auth-error{border-color:#713744}
+.table-wrap{border-color:#263229}
+th{background:#0b100d}
+@media(max-width:760px){
+  .vd-header{flex-wrap:wrap}
+  .vd-header-actions{gap:10px}
+  .workspace-main{min-width:0}
+  .side-nav{position:sticky;top:0;z-index:20}
+  .vd-hero{padding-top:42px}
+  .vd-footer{border-top:1px solid #202923}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
