@@ -4,6 +4,7 @@ import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "./logout-button";
 import MobileDashboardNav from "./mobile-dashboard-nav";
+import DashboardThemeToggle from "./theme-toggle";
 import styles from "./dashboard.module.css";
 
 export const dynamic = "force-dynamic";
@@ -127,6 +128,7 @@ export default async function DashboardPage() {
           <div className={styles.breadcrumb}><span>Workspace</span><span>/</span><b>Dashboard</b></div>
           <div className={styles.topActions}>
             <Link className={styles.helpLink} href="#quick-actions">Take the tour ↓</Link>
+            <DashboardThemeToggle />
             <span className={styles.status}><span className={styles.statusDot} />Account active</span>
           </div>
         </header>
