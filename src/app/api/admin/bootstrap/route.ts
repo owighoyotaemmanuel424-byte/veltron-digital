@@ -22,7 +22,7 @@ export async function POST(request:NextRequest){
   const user=await prisma.$transaction(async tx=>{
    const count=await tx.user.count({where:{role:UserRole.SUPER_ADMIN}});
    if(count>0)throw new Error("BOOTSTRAP_ALREADY_USED");
-   return tx.user.create({data:{email,name:parsed.data.name,passwordHash:await hashPassword(parsed.data.password),role:UserRole.SUPER_ADMIN},select:{id:true,email:true,name:true,role:true}});
+   return tx.user.create({data:{email,name:parsed.data.name,passwordHash:await hashPassword(parsed.data.password),role:UserRole.SUPER_ADMIN,emailVerifiedAt:new Date()},select:{id:true,email:true,name:true,role:true}});
   },{isolationLevel:Prisma.TransactionIsolationLevel.Serializable});
   await createSession(user.id);
   await writeAudit({actorId:user.id,action:"admin.bootstrap",entityType:"User",entityId:user.id,ipAddress:request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()??null,userAgent:request.headers.get("user-agent")??null});

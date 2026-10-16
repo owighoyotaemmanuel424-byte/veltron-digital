@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
  * The identifier is HMACed so raw email addresses are never stored in the table.
  */
 export async function enforceAuthRateLimit(
-  action: "login" | "register",
+  action: "login" | "register" | "resend-verification",
   identifier: string,
   limit: number,
   windowSeconds: number

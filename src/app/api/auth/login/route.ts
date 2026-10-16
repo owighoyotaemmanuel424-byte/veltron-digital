@@ -17,7 +17,9 @@ export async function POST(request: NextRequest) {
     const allowed = await enforceAuthRateLimit("login", parsed.data.email, 8, 15 * 60);
     if (!allowed) return NextResponse.json({ error: "Too many sign-in attempts. Please wait 15 minutes and try again." }, { status: 429, headers: { "Retry-After": "900", "Cache-Control": "no-store" } });
     const user = await prisma.user.findUnique({ where: { email: parsed.data.email.toLowerCase() } });
-    if (!user || user.status !== "ACTIVE" || !(await verifyPassword(parsed.data.password, user.passwordHash))) return NextResponse.json({ error: "Email or password is incorrect." }, { status: 401 });
+    if (!user || !(await verifyPassword(parsed.data.password, user.passwordHash))) return NextResponse.json({ error: "Email or password is incorrect." }, { status: 401 });
+    if (!user.emailVerifiedAt || user.status === "PENDING") return NextResponse.json({ error: "Verify your email before signing in. You can request a new verification link from the sign-up page." }, { status: 403, headers: { "Cache-Control": "no-store" } });
+    if (user.status !== "ACTIVE") return NextResponse.json({ error: "Email or password is incorrect." }, { status: 401 });
     if (user.twoFactorEnabled && (!user.twoFactorSecret || !parsed.data.totpCode || !verifyTotp(decryptTotpSecret(user.twoFactorSecret), parsed.data.totpCode))) return NextResponse.json({ error: "A valid authenticator code is required." }, { status: 401 });
     await createSession(user.id);
     await writeAudit({ actorId: user.id, action: "auth.login", entityType: "User", entityId: user.id, ipAddress: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null, userAgent: request.headers.get("user-agent") ?? null });
