@@ -88,7 +88,7 @@ export default function DocumentsPage() {
         <button className="button" disabled={busy || title.trim().length < 3 || body.trim().length < 10} onClick={() => void create()}>{busy ? "Saving…" : "Save document draft"}</button>
         {message && <p className="form-message" role="status">{message}</p>}
         {error && <p className="form-error" role="alert">{error}</p>}
-      </article>
+      </Panel>
       <section className="dash-section">
         <div className="section-heading"><div><div className="eyebrow">SAVED IN YOUR ACCOUNT</div><h2>Recent drafts</h2></div><span className="dash-note">{filteredDocuments.length} of {documents.length} drafts</span></div>
         <div className="document-filters" aria-label="Filter saved drafts">
