@@ -33,7 +33,12 @@ export async function POST(request: NextRequest) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Sign in before placing an order." }, { status: 401 });
   const origin = request.headers.get("origin");
-  if (!origin || new URL(origin).origin !== request.nextUrl.origin) {
+  try {
+    if (!origin || new URL(origin).origin !== request.nextUrl.origin) {
+      return NextResponse.json({ error: "Same-origin request required." }, { status: 403 });
+    }
+  } catch {
+    // Malformed Origin headers must be rejected, not allowed to escape as a 500.
     return NextResponse.json({ error: "Same-origin request required." }, { status: 403 });
   }
   let body: unknown;
