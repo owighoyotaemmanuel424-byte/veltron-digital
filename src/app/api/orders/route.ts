@@ -3,7 +3,6 @@ import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { writeAudit } from "@/lib/audit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -71,16 +70,29 @@ export async function POST(request: NextRequest) {
     if (!service) return NextResponse.json({ error: "This service is not currently available." }, { status: 404 });
     const totalMinor = service.priceMinor * parsed.data.quantity;
     if (!Number.isSafeInteger(totalMinor) || totalMinor <= 0) return NextResponse.json({ error: "The requested order total is invalid." }, { status: 400 });
-    const order = await prisma.order.create({
-      data: {
-        userId: user.id, serviceId: service.id, quantity: parsed.data.quantity,
-        unitPriceMinor: service.priceMinor, totalMinor, currency: service.currency,
-        customerInput: parsed.data.customerInput ? parsed.data.customerInput : undefined,
-        idempotencyKey,
-      },
-      select: { id: true, publicId: true, status: true, totalMinor: true, currency: true, createdAt: true },
+    // Persist the order and its audit record atomically. If audit persistence
+    // fails, the order must not be left behind without its required audit event.
+    const order = await prisma.$transaction(async (tx) => {
+      const createdOrder = await tx.order.create({
+        data: {
+          userId: user.id, serviceId: service.id, quantity: parsed.data.quantity,
+          unitPriceMinor: service.priceMinor, totalMinor, currency: service.currency,
+          customerInput: parsed.data.customerInput ? parsed.data.customerInput : undefined,
+          idempotencyKey,
+        },
+        select: { id: true, publicId: true, status: true, totalMinor: true, currency: true, createdAt: true },
+      });
+      await tx.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: "order.created.pending",
+          entityType: "Order",
+          entityId: createdOrder.id,
+          details: { serviceId: service.id, quantity: parsed.data.quantity, totalMinor, currency: service.currency },
+        },
+      });
+      return createdOrder;
     });
-    await writeAudit({ actorId: user.id, action: "order.created.pending", entityType: "Order", entityId: order.id, details: { serviceId: service.id, quantity: parsed.data.quantity, totalMinor, currency: service.currency } });
     return NextResponse.json({ order }, { status: 201, headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     // The unique database constraint is the final arbiter when two identical
