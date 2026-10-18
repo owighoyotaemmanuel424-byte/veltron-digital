@@ -156,6 +156,7 @@ export default function WebsitesPage() {
       <Link className="brand" href="/">veltron<span>.</span></Link>
       <p className="side-label">WORKSPACE</p>
       <Link className="side-link" href="/dashboard">◫ &nbsp; Overview</Link>
+      <Link className="side-link" href="/dashboard/sites">▧ &nbsp; Website Creator</Link>
       <Link className="side-link" href="/dashboard/products">▦ &nbsp; Products & tools</Link>
       <Link className="side-link" href="/dashboard/documents">▤ &nbsp; Document drafts</Link>
       <Link className="side-link" href="/services">◇ &nbsp; Service catalog</Link>
