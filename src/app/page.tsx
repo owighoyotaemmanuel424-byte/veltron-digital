@@ -25,6 +25,7 @@ export default function Home() {
         <nav className="vd-nav" aria-label="Main navigation">
           <Link href="#services">Explore</Link>
           <Link href="#how-it-works">How it works</Link>
+          <Link href="/faq">FAQ</Link>
           <Link href="#trust">Our approach</Link>
         </nav>
         <div className="vd-header-actions">
@@ -90,7 +91,7 @@ export default function Home() {
 
       <section className="vd-final-cta"><div><div className="vd-kicker">YOUR NEXT STEP STARTS HERE</div><h2>Ready to move<br />things forward?</h2></div><div><p>Create your account and make your digital activity easier to manage.</p><Link className="vd-button vd-button-light" href="/sign-up">Get started with Veltron <span aria-hidden="true">↗</span></Link></div><div className="vd-cta-watermark" aria-hidden="true">v.</div></section>
 
-      <footer className="vd-footer"><Link className="vd-brand" href="/"><span className="vd-brand-mark">v</span><span>veltron<span className="vd-brand-dot">.</span></span></Link><span>Digital, made more manageable.</span><div><Link href="/services">Services</Link><Link href="/sign-in">Sign in</Link><Link href="/sign-up">Create account</Link></div><small>© {new Date().getFullYear()} Veltron Digital</small></footer>
+      <footer className="vd-footer"><Link className="vd-brand" href="/"><span className="vd-brand-mark">v</span><span>veltron<span className="vd-brand-dot">.</span></span></Link><span>Digital, made more manageable.</span><div><Link href="/services">Services</Link><Link href="/faq">FAQ</Link><Link href="/sign-in">Sign in</Link><Link href="/sign-up">Create account</Link></div><small>© {new Date().getFullYear()} Veltron Digital</small></footer>
     </main>
   );
 }
