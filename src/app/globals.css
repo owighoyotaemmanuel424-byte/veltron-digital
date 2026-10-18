@@ -477,3 +477,30 @@ label{display:block}
 .vd-tools-rail b{align-self:start;color:#a99aff;font-size:14px}
 @media(max-width:900px){.vd-tools-rail{grid-template-columns:repeat(2,minmax(0,1fr))}.vd-tools-intro{padding-top:58px}}
 @media(max-width:560px){.vd-announcement{justify-content:flex-start;flex-wrap:wrap;gap:7px 9px;font-size:10px}.vd-announcement>a{margin-left:auto}.vd-tools-intro{padding:48px 18px 35px}.vd-tools-intro-note{flex-direction:column;gap:15px}.vd-tools-rail{grid-template-columns:1fr;gap:9px}.vd-tools-rail>a{padding:13px}.vd-tools-intro-copy h2{font-size:34px}}
+
+
+/* Shared GlobalGle-inspired page shell for public catalog, help and administration. */
+:root{--vd-shell-bg:#090a10;--vd-shell-panel:#11131d;--vd-shell-line:#272a3a;--vd-shell-text:#f7f7fb;--vd-shell-muted:#a0a4b7;--vd-shell-accent:#a99aff}
+body{background:var(--vd-shell-bg);color:var(--vd-shell-text)}
+.topbar{position:sticky;top:0;z-index:20;min-height:72px;padding:14px clamp(18px,5vw,72px);background:#090a10ed;border-bottom:1px solid #ffffff12;backdrop-filter:blur(18px)}
+.topbar .brand{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:850;letter-spacing:-.06em;color:#f7f7fb}
+.topbar .brand span{color:var(--vd-shell-accent)}
+.topbar .nav{align-items:center;gap:clamp(12px,2.4vw,28px);flex-wrap:wrap}
+.topbar .nav a{color:#b5b7c9;transition:color .18s ease}
+.topbar .nav a:hover{color:#fff}
+.section{max-width:1240px;padding:clamp(32px,5vw,64px) clamp(18px,5vw,68px) 76px}
+.section>.eyebrow{color:#b6aaff;letter-spacing:.17em;font-weight:800}
+.section>h1{max-width:900px;font-size:clamp(36px,5vw,64px)!important;line-height:1.03;letter-spacing:-.065em;margin:16px 0}
+.section>.lead{max-width:690px;color:#a0a4b7;font-size:14px;line-height:1.85}
+.card,.empty-state{border:1px solid #ffffff14;border-radius:16px;background:linear-gradient(145deg,#151622,#0e1018);color:#f7f7fb}
+.card p,.empty-state p{color:#a0a4b7}
+.button,.button:not(.secondary){background:linear-gradient(120deg,#b8adff,#9582ff);color:#171326;border-radius:10px}
+.button.secondary{background:#171824;border-color:#ffffff20;color:#e5e2f4}
+.empty-state{padding:28px}
+.footer{background:#090a10;color:#85899f;border-top:1px solid #ffffff12}
+.workspace{background:radial-gradient(ellipse at 82% 0%,#29204430,transparent 35%),#090a10}
+.side-nav{background:#0a0b12;border-right-color:#ffffff12}
+.side-link.active{background:#a99aff17;border-color:#a99aff40;color:#f8f6ff}
+.admin-management,.admin-orders{color:#f7f7fb}
+@media(max-width:600px){.topbar{position:relative;align-items:flex-start;gap:14px;padding:14px 16px}.topbar .nav{justify-content:flex-end;font-size:12px}.section{padding:34px 16px 54px}.section>h1{font-size:clamp(34px,9vw,46px)!important}.workspace-main{padding-left:16px;padding-right:16px}}
+@media(prefers-reduced-motion:reduce){.topbar .nav a{transition:none}}
