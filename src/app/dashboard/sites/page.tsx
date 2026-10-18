@@ -47,7 +47,17 @@ const emptyContent: SiteContent = {
   ledgerPageTitle: "Account ledger",
   kycPageTitle: "Identity verification (KYC)",
 };
-const fieldLabels: Record<keyof SiteContent, string> = {
+type EditableSiteContentKey =
+  | "headline"
+  | "tagline"
+  | "description"
+  | "buttonText"
+  | "sectionOneTitle"
+  | "sectionOneBody"
+  | "sectionTwoTitle"
+  | "sectionTwoBody";
+
+const fieldLabels: Record<EditableSiteContentKey, string> = {
   headline: "Main headline",
   tagline: "Eyebrow / short label",
   description: "Introductory description",
@@ -158,7 +168,7 @@ export default function WebsitesPage() {
           <label htmlFor="site-template">Template</label>
           <select id="site-template" value={template} onChange={e => changeTemplate(e.target.value)}><option value="BUSINESS">Business website</option><option value="PORTFOLIO">Personal portfolio</option><option value="LANDING_PAGE">Landing page</option><option value="ONLINE_BANKING">Online Banking Suite</option></select>
           <div className="eyebrow content-editor-label">EDIT PAGE CONTENT</div>
-          {(Object.keys(fieldLabels) as (keyof SiteContent)[]).filter(key => template === "ONLINE_BANKING" || !["accountPageTitle", "transfersPageTitle", "ledgerPageTitle", "kycPageTitle"].includes(key)).map(key => <div className="site-content-field" key={key}><label htmlFor={"site-"+key}>{fieldLabels[key]}</label>{key.endsWith("Body") || key === "description" ? <textarea id={"site-"+key} value={content[key]} maxLength={key === "description" ? 1000 : 400} rows={3} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} /> : <input id={"site-"+key} value={content[key]} maxLength={key === "headline" ? 120 : key === "tagline" ? 160 : 80} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} />}</div>)}
+          {(Object.keys(fieldLabels) as EditableSiteContentKey[]).map(key => <div className="site-content-field" key={key}><label htmlFor={"site-"+key}>{fieldLabels[key]}</label>{key.endsWith("Body") || key === "description" ? <textarea id={"site-"+key} value={content[key]} maxLength={key === "description" ? 1000 : 400} rows={3} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} /> : <input id={"site-"+key} value={content[key]} maxLength={key === "headline" ? 120 : key === "tagline" ? 160 : 80} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} />}</div>)}
           <p className="small-copy">Content is stored with this draft. Publishing, hosting, custom domains, DNS, and SSL are not connected.</p>
           <div className="site-editor-actions"><button className="button" disabled={busy || name.trim().length < 2} onClick={() => void save(!selectedId)}>{busy ? "Saving…" : selectedId ? "Save website changes" : "Create website draft"}</button>{selectedId && <button className="button button-secondary" disabled={busy} onClick={() => { setSelectedId(""); setName(""); setTemplate("BUSINESS"); setContent(emptyContent); setMessage(""); setError(""); }}>New project</button>}</div>
           {message && <p className="form-message" role="status">{message}</p>}{error && <p className="form-error" role="alert">{error}</p>}
