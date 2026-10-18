@@ -55,7 +55,11 @@ type EditableSiteContentKey =
   | "sectionOneTitle"
   | "sectionOneBody"
   | "sectionTwoTitle"
-  | "sectionTwoBody";
+  | "sectionTwoBody"
+  | "accountPageTitle"
+  | "transfersPageTitle"
+  | "ledgerPageTitle"
+  | "kycPageTitle";
 
 const fieldLabels: Record<EditableSiteContentKey, string> = {
   headline: "Main headline",
@@ -66,6 +70,10 @@ const fieldLabels: Record<EditableSiteContentKey, string> = {
   sectionOneBody: "First section text",
   sectionTwoTitle: "Second section heading",
   sectionTwoBody: "Second section text",
+  accountPageTitle: "Banking: account page title",
+  transfersPageTitle: "Banking: transfers page title",
+  ledgerPageTitle: "Banking: ledger page title",
+  kycPageTitle: "Banking: identity verification page title",
 };
 export default function WebsitesPage() {
   const [name, setName] = useState("");
@@ -168,7 +176,7 @@ export default function WebsitesPage() {
           <label htmlFor="site-template">Template</label>
           <select id="site-template" value={template} onChange={e => changeTemplate(e.target.value)}><option value="BUSINESS">Business website</option><option value="PORTFOLIO">Personal portfolio</option><option value="LANDING_PAGE">Landing page</option><option value="ONLINE_BANKING">Online Banking Suite</option></select>
           <div className="eyebrow content-editor-label">EDIT PAGE CONTENT</div>
-          {(Object.keys(fieldLabels) as EditableSiteContentKey[]).map(key => <div className="site-content-field" key={key}><label htmlFor={"site-"+key}>{fieldLabels[key]}</label>{key.endsWith("Body") || key === "description" ? <textarea id={"site-"+key} value={content[key]} maxLength={key === "description" ? 1000 : 400} rows={3} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} /> : <input id={"site-"+key} value={content[key]} maxLength={key === "headline" ? 120 : key === "tagline" ? 160 : 80} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} />}</div>)}
+          {(Object.keys(fieldLabels) as EditableSiteContentKey[]).filter(key => template === "ONLINE_BANKING" || !(["accountPageTitle", "transfersPageTitle", "ledgerPageTitle", "kycPageTitle"] as EditableSiteContentKey[]).includes(key)).map(key => <div className="site-content-field" key={key}><label htmlFor={"site-"+key}>{fieldLabels[key]}</label>{key.endsWith("Body") || key === "description" ? <textarea id={"site-"+key} value={content[key] ?? ""} maxLength={key === "description" ? 1000 : 400} rows={3} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} /> : <input id={"site-"+key} value={content[key] ?? ""} maxLength={key === "headline" ? 120 : key === "tagline" ? 160 : 80} onChange={e => setContent(current => ({ ...current, [key]: e.target.value }))} />}</div>)}
           <p className="small-copy">Content is stored with this draft. Publishing, hosting, custom domains, DNS, and SSL are not connected.</p>
           <div className="site-editor-actions"><button className="button" disabled={busy || name.trim().length < 2} onClick={() => void save(!selectedId)}>{busy ? "Saving…" : selectedId ? "Save website changes" : "Create website draft"}</button>{selectedId && <button className="button button-secondary" disabled={busy} onClick={() => { setSelectedId(""); setName(""); setTemplate("BUSINESS"); setContent(emptyContent); setMessage(""); setError(""); }}>New project</button>}</div>
           {message && <p className="form-message" role="status">{message}</p>}{error && <p className="form-error" role="alert">{error}</p>}
@@ -178,7 +186,8 @@ export default function WebsitesPage() {
           <div className="website-preview-page">
             <div className="website-preview-nav"><strong>{name.trim() || "Your brand"}</strong><span>About · Services · Contact</span></div>
             <div className="website-preview-hero"><p className="website-preview-kicker">{content.tagline}</p><h2>{content.headline}</h2><p>{content.description}</p><span className="website-preview-cta">{content.buttonText} →</span></div>
-            {template === "ONLINE_BANKING" && <div className="banking-preview-metrics" aria-label="Illustrative banking dashboard preview"><div><span>Available balance</span><strong>••••••</strong><small>Sample preview only</small></div><div><span>Recent activity</span><strong>Transactions</strong><small>Connect a provider to enable</small></div><div><span>Account security</span><strong>Protected access</strong><small>Configure identity and security</small></div></div>}\n            {template === "ONLINE_BANKING" && <section className="banking-preview-pages" aria-label="Banking template page structure"><h3>Included page layouts</h3><div><article><span>01 / ACCOUNTS</span><strong>{content.accountPageTitle}</strong><p>Account summary and balance presentation. Live account data is not connected.</p></article><article><span>02 / PAYMENTS</span><strong>{content.transfersPageTitle}</strong><p>Transfer form layout with beneficiary and confirmation steps. No transfers can be submitted.</p></article><article><span>03 / LEDGER</span><strong>{content.ledgerPageTitle}</strong><p>Transaction history and account ledger layout. Entries are illustrative only.</p></article><article><span>04 / COMPLIANCE</span><strong>{content.kycPageTitle}</strong><p>Identity-verification journey layout. No identity documents are collected here.</p></article></div></section>}
+            {template === "ONLINE_BANKING" && <div className="banking-preview-metrics" aria-label="Illustrative banking dashboard preview"><div><span>Available balance</span><strong>••••••</strong><small>Sample preview only</small></div><div><span>Recent activity</span><strong>Transactions</strong><small>Connect a provider to enable</small></div><div><span>Account security</span><strong>Protected access</strong><small>Configure identity and security</small></div></div>}
+            {template === "ONLINE_BANKING" && <section className="banking-preview-pages" aria-label="Banking template page structure"><h3>Included page layouts</h3><div><article><span>01 / ACCOUNTS</span><strong>{content.accountPageTitle}</strong><p>Account summary and balance presentation. Live account data is not connected.</p></article><article><span>02 / PAYMENTS</span><strong>{content.transfersPageTitle}</strong><p>Transfer form layout with beneficiary and confirmation steps. No transfers can be submitted.</p></article><article><span>03 / LEDGER</span><strong>{content.ledgerPageTitle}</strong><p>Transaction history and account ledger layout. Entries are illustrative only.</p></article><article><span>04 / COMPLIANCE</span><strong>{content.kycPageTitle}</strong><p>Identity-verification journey layout. No identity documents are collected here.</p></article></div></section>}
             <div className="website-preview-feature-row"><div><b>01</b><strong>{content.sectionOneTitle}</strong><p>{content.sectionOneBody}</p></div><div><b>02</b><strong>{content.sectionTwoTitle}</strong><p>{content.sectionTwoBody}</p></div></div>
           </div>
           <p className="small-copy">Preview updates as you type. Save changes to persist them. This is not a public website.</p>
