@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import LogoutButton from "./logout-button";
 import MobileDashboardNav from "./mobile-dashboard-nav";
 import DashboardThemeToggle from "./theme-toggle";
+import { MetricCard, PageHeading } from "@/components/veltron-ui";
 import styles from "./dashboard.module.css";
 
 export const dynamic = "force-dynamic";
@@ -134,22 +135,20 @@ export default async function DashboardPage() {
           </div>
         </header>
 
-        <header className={styles.heading}>
-          <div>
-            <div className={styles.kicker}>YOUR ACCOUNT AT A GLANCE</div>
-            <h1>Welcome{firstName ? `, ${firstName}` : ""}.</h1>
-            <p>Your wallet, services, and recent activity in one place.</p>
-          </div>
-          <div className={styles.headingAction}>
-            <Link className={`${styles.button} ${styles.buttonSecondary}`} href="/dashboard/security">Manage account <span aria-hidden="true">→</span></Link>
-            <Link className={styles.button} href="/services">Explore services <span aria-hidden="true">↗</span></Link>
-          </div>
-        </header>
+        <div className={styles.heading}>
+          <PageHeading
+            eyebrow="Your account at a glance"
+            title={`Welcome${firstName ? `, ${firstName}` : ""}.`}
+            description="Your wallet, services, and recent activity in one place."
+            action={{ label: "Explore services", href: "/services" }}
+          />
+          <Link className={`${styles.button} ${styles.buttonSecondary}`} href="/dashboard/security">Manage account <span aria-hidden="true">→</span></Link>
+        </div>
 
         <section className={styles.metrics} aria-label="Account summary">
-          <article className={styles.metric}><div className={styles.metricTop}><span>Wallet balance</span><span className={styles.metricIcon}>₦</span></div><strong className={styles.metricValue}>{primaryAccount ? money(totalWalletMinor, primaryAccount.currency) : "—"}</strong><span className={styles.metricNote}>{primaryAccount?.currency || "No wallet created"}</span></article>
-          <article className={styles.metric}><div className={styles.metricTop}><span>Active plan</span><span className={styles.metricIcon}>◇</span></div><strong className={styles.metricValue}>None</strong><span className={styles.metricNote}>Subscription plans are not configured</span></article>
-          <article className={styles.metric}><div className={styles.metricTop}><span>Recent payments</span><span className={styles.metricIcon}>↗</span></div><strong className={styles.metricValue}>{payments.length}</strong><span className={styles.metricNote}>Latest {payments.length} payment records</span></article>
+          <MetricCard label="Wallet balance" value={primaryAccount ? money(totalWalletMinor, primaryAccount.currency) : "—"} detail={primaryAccount?.currency || "No wallet created"} icon="₦" />
+          <MetricCard label="Active plan" value="None" detail="Subscription plans are not configured" icon="◇" />
+          <MetricCard label="Recent payments" value={payments.length} detail={`Latest ${payments.length} payment records`} icon="↗" />
         </section>
 
         <section className={styles.quickSection} id="quick-actions">
