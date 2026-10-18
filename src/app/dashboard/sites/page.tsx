@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import WebsiteTemplateLibrary from "./template-library";
+import { EmptyState, PageHeading, StatusPill } from "@/components/veltron-ui";
 
 type SiteContent = {
   headline: string;
@@ -163,10 +164,10 @@ export default function WebsitesPage() {
       <Link className="side-link" href="/dashboard/security">⌑ &nbsp; Account security</Link>
     </aside>
     <section className="workspace-main">
-      <header className="workspace-header"><div><div className="eyebrow">WEBSITE CREATOR</div><h1>Build your website draft.</h1><p className="lead">Edit the copy in your selected template and save it privately to your account. Saving does not publish a live website.</p></div></header>
+      <PageHeading eyebrow="WEBSITE CREATOR" title="Build your website draft" description="Choose a template, refine your content, and save a private draft. Saving does not publish a live website." action={{ label: "Document drafts", href: "/dashboard/documents" }} />
       <section className="dash-section">
         <div className="section-heading"><div><div className="eyebrow">YOUR PROJECTS</div><h2>Saved websites</h2></div><span className="dash-note">{sites.length} shown · latest 50</span></div>
-        {sites.length ? <div className="document-list">{sites.map(site => <button type="button" key={site.id} className={"card document-record site-select-card" + (site.id === selectedId ? " is-selected" : "")} onClick={() => chooseSite(site)}><div className="eyebrow">{templateNames[site.template] || site.template}</div><h3>{site.name}</h3><p className="small-copy">Status: {site.status} · {site.domain || "No domain attached"}</p></button>)}</div> : <div className="empty-state"><h3>No website projects yet</h3><p>Create a project below to begin editing.</p></div>}
+        {sites.length ? <div className="document-list">{sites.map(site => <button type="button" key={site.id} className={"card document-record site-select-card" + (site.id === selectedId ? " is-selected" : "")} onClick={() => chooseSite(site)}><div className="eyebrow">{templateNames[site.template] || site.template}</div><h3>{site.name}</h3><p className="small-copy"><StatusPill tone={site.status.toLowerCase().includes("publish") ? "success" : "neutral"}>{site.status}</StatusPill> · {site.domain || "No domain attached"}</p></button>)}</div> : <EmptyState title="No website projects yet" description="Create a project below to begin editing. Your first save stays private until publishing is connected." />}
       </section>
       <WebsiteTemplateLibrary selected={template} onSelect={changeTemplate} />
       <div className="website-builder-grid">
