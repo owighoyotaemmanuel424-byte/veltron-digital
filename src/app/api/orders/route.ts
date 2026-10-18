@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
@@ -45,12 +46,27 @@ export async function POST(request: NextRequest) {
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 }); }
   const parsed = schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Choose a service and provide a valid idempotency key." }, { status: 400 });
-  try {
-    const existing = await prisma.order.findUnique({ where: { idempotencyKey: parsed.data.idempotencyKey }, select: { id: true, publicId: true, userId: true, status: true, totalMinor: true, currency: true } });
-    if (existing) {
-      if (existing.userId !== user.id) return NextResponse.json({ error: "Idempotency key conflict." }, { status: 409 });
-      return NextResponse.json({ order: { publicId: existing.publicId, status: existing.status, totalMinor: existing.totalMinor, currency: existing.currency }, reused: true }, { headers: { "Cache-Control": "no-store" } });
+
+  const idempotencyKey = parsed.data.idempotencyKey;
+  const existingOrder = async () => prisma.order.findUnique({
+    where: { idempotencyKey },
+    select: { id: true, publicId: true, userId: true, status: true, totalMinor: true, currency: true },
+  });
+  const respondForExisting = (existing: Awaited<ReturnType<typeof existingOrder>>) => {
+    if (!existing) return null;
+    if (existing.userId !== user.id) {
+      return NextResponse.json({ error: "Idempotency key conflict." }, { status: 409 });
     }
+    return NextResponse.json(
+      { order: { publicId: existing.publicId, status: existing.status, totalMinor: existing.totalMinor, currency: existing.currency }, reused: true },
+      { headers: { "Cache-Control": "no-store" } },
+    );
+  };
+
+  try {
+    const existing = respondForExisting(await existingOrder());
+    if (existing) return existing;
+
     const service = await prisma.service.findFirst({ where: { id: parsed.data.serviceId, status: "ACTIVE" }, select: { id: true, name: true, priceMinor: true, currency: true } });
     if (!service) return NextResponse.json({ error: "This service is not currently available." }, { status: 404 });
     const totalMinor = service.priceMinor * parsed.data.quantity;
@@ -60,13 +76,23 @@ export async function POST(request: NextRequest) {
         userId: user.id, serviceId: service.id, quantity: parsed.data.quantity,
         unitPriceMinor: service.priceMinor, totalMinor, currency: service.currency,
         customerInput: parsed.data.customerInput ? parsed.data.customerInput : undefined,
-        idempotencyKey: parsed.data.idempotencyKey,
+        idempotencyKey,
       },
       select: { id: true, publicId: true, status: true, totalMinor: true, currency: true, createdAt: true },
     });
     await writeAudit({ actorId: user.id, action: "order.created.pending", entityType: "Order", entityId: order.id, details: { serviceId: service.id, quantity: parsed.data.quantity, totalMinor, currency: service.currency } });
     return NextResponse.json({ order }, { status: 201, headers: { "Cache-Control": "no-store" } });
-  } catch {
+  } catch (error) {
+    // The unique database constraint is the final arbiter when two identical
+    // requests race. Re-read the winning row so retries remain idempotent.
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      try {
+        const existing = respondForExisting(await existingOrder());
+        if (existing) return existing;
+      } catch {
+        // Fall through to the generic safe response if the winning row cannot be read.
+      }
+    }
     return NextResponse.json({ error: "Order could not be created. Refresh and try again." }, { status: 503 });
   }
 }
