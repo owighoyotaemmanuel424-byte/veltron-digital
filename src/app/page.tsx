@@ -7,9 +7,12 @@ const highlights = [
 ];
 
 const serviceTypes = [
-  { icon: "✳", title: "Digital services", description: "Explore available services in one organized catalog.", tone: "violet" },
-  { icon: "◷", title: "Order tracking", description: "See request status and keep a clear history.", tone: "blue" },
-  { icon: "⌘", title: "Account workspace", description: "Manage your activity from a single secure account.", tone: "mint" },
+  { icon: "▦", title: "Website Creator", description: "Create, edit, and preview your website drafts from one workspace.", tone: "violet", href: "/dashboard/sites", eyebrow: "BUILD" },
+  { icon: "↗", title: "Orders & tracking", description: "Review requests, follow their current status, and keep your activity organized.", tone: "blue", href: "/dashboard/orders", eyebrow: "TRACK" },
+  { icon: "◇", title: "Service catalog", description: "Browse the live catalog and see only services that have been activated.", tone: "mint", href: "/services", eyebrow: "EXPLORE" },
+  { icon: "▤", title: "Document drafts", description: "Manage document drafts for legitimate recordkeeping and clearly labelled samples.", tone: "violet", href: "/dashboard/documents", eyebrow: "CREATE" },
+  { icon: "⌑", title: "Account security", description: "Review account protection options and manage your security settings.", tone: "blue", href: "/dashboard/security", eyebrow: "PROTECT" },
+  { icon: "⌘", title: "Products & tools", description: "See the tools available in your account and their current setup status.", tone: "mint", href: "/dashboard/products", eyebrow: "MANAGE" },
 ];
 
 export default function Home() {
@@ -72,7 +75,7 @@ export default function Home() {
           <p>Everything starts with a simpler experience: know what is available, submit a request, and keep track as it moves forward.</p>
         </div>
         <div className="vd-service-grid">
-          {serviceTypes.map((service) => <article className={`vd-service-card vd-${service.tone}`} key={service.title}><div className="vd-service-icon" aria-hidden="true">{service.icon}</div><span className="vd-card-index">VELTRON / 0{serviceTypes.indexOf(service) + 1}</span><h3>{service.title}</h3><p>{service.description}</p><Link href="/services" aria-label={`Explore ${service.title}`}>Explore <span aria-hidden="true">↗</span></Link></article>)}
+          {serviceTypes.map((service, index) => <article className={`vd-service-card vd-${service.tone}`} key={service.title}><div className="vd-service-icon" aria-hidden="true">{service.icon}</div><span className="vd-card-index">VELTRON / 0{index + 1} · {service.eyebrow}</span><h3>{service.title}</h3><p>{service.description}</p><Link href={service.href} aria-label={`Open ${service.title}`}>Open workspace <span aria-hidden="true">↗</span></Link></article>)}
         </div>
       </section>
 
