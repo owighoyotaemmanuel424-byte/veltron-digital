@@ -50,8 +50,8 @@ export default function FAQPage() {
         <p className="lead">Learn how the Veltron workspace works, what is currently available, and which services still need provider setup.</p>
         <div style={{ display: "grid", gap: 30, marginTop: 38 }}>
           {groups.map((group) => (
-            <section key={group.title} aria-labelledby={group.title.replace(/\\s+/g, "-").toLowerCase()}>
-              <h2 id={group.title.replace(/\\s+/g, "-").toLowerCase()} style={{ fontSize: 22, marginBottom: 14 }}>{group.title}</h2>
+            <section key={group.title} aria-labelledby={group.title.toLowerCase().replaceAll(" ", "-")}>
+              <h2 id={group.title.toLowerCase().replaceAll(" ", "-")} style={{ fontSize: 22, marginBottom: 14 }}>{group.title}</h2>
               <div style={{ display: "grid", gap: 10 }}>
                 {group.items.map(([question, answer]) => (
                   <details key={question} className="card" style={{ padding: "18px 20px" }}>
