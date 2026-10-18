@@ -4,6 +4,7 @@ import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "../logout-button";
 import OrderHistoryTable from "./order-history-table";
+import { PageHeading } from "@/components/veltron-ui";
 
 export const dynamic = "force-dynamic";
 
@@ -58,14 +59,7 @@ export default async function OrdersPage() {
       </aside>
 
       <section className="workspace-main">
-        <header className="workspace-header">
-          <div>
-            <div className="eyebrow">YOUR ACTIVITY</div>
-            <h1>Order history.</h1>
-            <p className="lead">Track your requests and review order totals and statuses.</p>
-          </div>
-          <Link href="/services" className="button">Browse services <span aria-hidden="true">↗</span></Link>
-        </header>
+        <PageHeading eyebrow="Your activity" title="Order history." description="Track your requests and review order totals and statuses." action={{ label: "Browse services", href: "/services" }} />
 
         <section className="dashboard-grid dashboard-stats order-summary" aria-label="Order summary">
           <article className="dash-card"><span className="dash-label">Orders shown</span><strong>{counts.all}</strong><span className="dash-note">Most recent 100 orders</span></article>
