@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import ServiceCatalog from "./service-catalog";
+import { EmptyState, PageHeading } from "@/components/veltron-ui";
 
 export const dynamic = "force-dynamic";
 
@@ -23,12 +24,10 @@ export default async function ServicesPage() {
       <nav className="nav"><Link href="/dashboard">Dashboard</Link><Link href="/sign-in">Sign in</Link></nav>
     </header>
     <section className="section" style={{ paddingTop: 48 }}>
-      <div className="eyebrow">SERVICE CATALOG</div>
-      <h1 style={{ fontSize: 46 }}>Find your next service.</h1>
-      <p className="lead">A live catalog from PostgreSQL. Only activated services appear here.</p>
-      {unavailable ? <div className="empty-state"><h3>Catalog temporarily unavailable</h3><p>Check the database configuration and try again.</p></div>
+      <PageHeading eyebrow="Service catalog" title="Find your next service." description="Browse the active catalog, compare service details, and place a request from one clear workspace." action={{ label: "Open dashboard", href: "/dashboard" }} />
+      {unavailable ? <EmptyState title="Catalog temporarily unavailable" description="The service catalog could not be loaded. Check the database configuration and try again." />
         : services.length ? <ServiceCatalog services={services} />
-        : <div className="empty-state"><div className="empty-mark">◇</div><h3>No active services yet</h3><p>The catalog is connected, but no services have been activated.</p><Link className="button secondary" href="/dashboard">Go to dashboard</Link></div>}
+        : <EmptyState title="No active services yet" description="The catalog is connected, but no services have been activated." action={{ label: "Go to dashboard", href: "/dashboard" }} />}
     </section>
   </main>;
 }
