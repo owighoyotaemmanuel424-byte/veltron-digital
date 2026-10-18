@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { EmptyState, PageHeading, Panel, StatusPill } from "@/components/veltron-ui";
 
 type DocumentRecord = {
   id: string;
@@ -71,7 +72,7 @@ export default function DocumentsPage() {
       <header className="workspace-header">
         <div><div className="eyebrow">DOCUMENT TOOLS</div><h1>Document drafts.</h1><p className="lead">Create and keep legitimate letters, business notes, and service summaries.</p></div>
       </header>
-      <article className="card document-editor">
+      <Panel className="card document-editor">
         <div className="eyebrow">NEW DOCUMENT</div>
         <label htmlFor="document-kind">Document type</label>
         <select id="document-kind" value={kind} onChange={e => setKind(e.target.value)}>
@@ -102,7 +103,7 @@ export default function DocumentsPage() {
         </div>
         {filteredDocuments.length ? <div className="document-list">{filteredDocuments.map(doc => <article className="card document-record" key={doc.id}>
           <div className="eyebrow">{doc.kind.replaceAll("_", " ")}</div><h3>{doc.title}</h3>
-          <p className="small-copy">Draft · {new Date(doc.createdAt).toLocaleString()}</p>
+          <p className="small-copy"><StatusPill tone="neutral">Draft</StatusPill> · {new Date(doc.createdAt).toLocaleString()}</p>
           <pre className="document-preview">{doc.content.body || ""}</pre>
           <button className="button secondary" onClick={() => {
             const w = window.open("", "_blank");
@@ -112,7 +113,7 @@ export default function DocumentsPage() {
             w.document.write("<!doctype html><html><head><title>"+esc(doc.title)+"</title><meta charset='utf-8'><style>body{font:16px/1.6 system-ui,sans-serif;max-width:760px;margin:48px auto;padding:0 24px;color:#111}pre{white-space:pre-wrap;font:inherit}.notice{margin-top:40px;border-top:1px solid #bbb;padding-top:12px;font-size:12px;color:#555}</style></head><body><h1>"+esc(doc.title)+"</h1><p>"+esc(doc.kind.replaceAll("_"," "))+" · Draft</p><pre>"+esc(doc.content.body || "")+"</pre><p class='notice'>User-created draft. Not proof of payment, identity, bank balance, or third-party certification.</p><script>window.onload=()=>window.print()</script></body></html>");
             w.document.close();
           }}>Print / Save as PDF</button>
-        </article>)}</div> : <div className="empty-state"><h3>{documents.length ? "No drafts match these filters" : "No document drafts yet"}</h3><p>{documents.length ? "Try a different search or clear the filters." : "Create a letter, business note, or service summary above."}</p></div>}
+        </article>)}</div> : <EmptyState title={documents.length ? "No drafts match these filters" : "No document drafts yet"} description={documents.length ? "Try a different search or clear the filters." : "Create a letter, business note, or service summary above."} />}
       </section>
     </section>
   </main>;
