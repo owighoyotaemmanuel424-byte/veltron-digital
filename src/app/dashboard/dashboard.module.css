@@ -1,19 +1,19 @@
 /* Veltron Digital dashboard — GlobalGle-inspired workspace */
-.page{--bg:#08090e;--panel:#11131d;--panel2:#151724;--line:#282a3b;--muted:#999db2;--accent:#a99aff;min-height:100vh;background:radial-gradient(ellipse at 80% 0%,#29204440,transparent 34%),var(--bg);color:#f7f7fb;display:grid;grid-template-columns:250px minmax(0,1fr);font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+.page{--bg:#08090e;--panel:#11131d;--panel2:#151724;--line:#282a3b;--muted:#999db2;--accent:#00d778;min-height:100vh;background:radial-gradient(ellipse at 80% 0%,#29204440,transparent 34%),var(--bg);color:#f7f7fb;display:grid;grid-template-columns:250px minmax(0,1fr);font-family:Inter,ui-sans-serif,system-ui,sans-serif}
 .sidebar{position:sticky;top:0;height:100vh;padding:25px 16px 17px;border-right:1px solid #ffffff12;background:#0a0b12;display:flex;flex-direction:column;gap:7px;z-index:5}
 .brand{display:flex;align-items:center;gap:10px;padding:0 10px 27px;font-size:21px;font-weight:850;letter-spacing:-.06em;color:#f7f7fb;text-decoration:none}
-.brandMark{display:grid;place-items:center;width:31px;height:31px;border-radius:10px;background:linear-gradient(145deg,#c2b7ff,#8b7cff);color:#171426;font-size:19px;font-style:italic}
-.brand span:last-child{color:#b6a8ff}
+.brandMark{display:grid;place-items:center;width:31px;height:31px;border-radius:10px;background:linear-gradient(145deg,#37e995,#00c96b);color:#04170d;font-size:19px;font-style:italic}
+.brand span:last-child{color:#18e68b}
 .groupLabel{margin:13px 11px 6px;color:#686d84;font-size:9px;font-weight:800;letter-spacing:.18em}
 .navLink{display:flex;align-items:center;gap:12px;padding:11px 12px;border:1px solid transparent;border-radius:10px;color:#a4a7bb;text-decoration:none;font-size:12px;font-weight:600;transition:background .18s,color .18s}
 .navIcon{display:grid;place-items:center;width:21px;color:#8d91a8;font-size:16px}
 .navLink:hover{background:#ffffff08;color:#fff}
-.active{background:#a99aff17;border-color:#a99aff24;color:#f8f6ff}
-.active .navIcon{color:#c6bdff}
+.active{background:#00d77817;border-color:#00d77824;color:#f8f6ff}
+.active .navIcon{color:#39f3a0}
 .coming{margin-left:auto;padding:3px 5px;border:1px solid #ffffff14;border-radius:5px;color:#73788e;font-size:8px;text-transform:uppercase}
 .sidebarBottom{display:grid;gap:12px;margin-top:auto;padding:15px 8px 0;border-top:1px solid #ffffff10}
 .profile{display:flex;align-items:center;gap:10px;min-width:0}
-.avatar{display:grid;place-items:center;flex:none;width:35px;height:35px;border:1px solid #b6a8ff45;border-radius:12px;background:#a99aff1b;color:#d6ceff;font-size:13px;font-weight:800}
+.avatar{display:grid;place-items:center;flex:none;width:35px;height:35px;border:1px solid #18e68b45;border-radius:12px;background:#00d7781b;color:#d6ceff;font-size:13px;font-weight:800}
 .profileText{display:grid;gap:4px;min-width:0}
 .profileText strong{overflow:hidden;color:#e7e6f2;font-size:11px;text-overflow:ellipsis;white-space:nowrap}
 .profileText small{overflow:hidden;color:#777c92;font-size:9px;text-overflow:ellipsis;white-space:nowrap}
@@ -23,20 +23,20 @@
 .breadcrumb{display:flex;align-items:center;gap:10px;color:#777c92;font-size:11px}
 .breadcrumb b{color:#e7e6f2;font-weight:650}
 .topActions{display:flex;align-items:center;gap:10px}
-.helpLink{padding:9px 12px;border:1px solid #ffffff14;border-radius:9px;color:#b5b7c9;text-decoration:none;font-size:10px}
-.helpLink:hover{border-color:#a99aff60;color:#fff}
+.helpLink{padding:9px 12px;border:1px solid #ffffff14;border-radius:9px;color:#c7cbd4;text-decoration:none;font-size:10px}
+.helpLink:hover{border-color:#00d77860;color:#fff}
 .status{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid #285541;border-radius:99px;background:#10231b;color:#a1e6c4;font-size:10px}
 .statusDot{width:6px;height:6px;border-radius:50%;background:#75dba8;box-shadow:0 0 10px #75dba877}
 .heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:34px 0 24px}
-.kicker{color:#b9adff;font-size:9px;font-weight:800;letter-spacing:.19em;text-transform:uppercase}
+.kicker{color:#18e68b;font-size:9px;font-weight:800;letter-spacing:.19em;text-transform:uppercase}
 .heading h1{margin:11px 0 9px;font-size:clamp(29px,3.2vw,43px);line-height:1.08;letter-spacing:-.065em}
 .heading p{margin:0;color:#999db2;font-size:12px;line-height:1.7}
 .headingAction{display:flex;gap:9px;flex-wrap:wrap}
-.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:11px 14px;border:1px solid transparent;border-radius:9px;background:linear-gradient(115deg,#c2b7ff,#9d8aff);color:#171426;text-decoration:none;font-size:11px;font-weight:800;white-space:nowrap;transition:transform .18s,filter .18s}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:11px 14px;border:1px solid transparent;border-radius:9px;background:linear-gradient(115deg,#37e995,#00b963);color:#04170d;text-decoration:none;font-size:11px;font-weight:800;white-space:nowrap;transition:transform .18s,filter .18s}
 .button:hover{transform:translateY(-1px);filter:brightness(1.07)}
 .buttonSecondary{background:#171824;border-color:#ffffff18;color:#e5e2f4}
 .heroCard{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(200px,.8fr);gap:25px;align-items:center;overflow:hidden;padding:clamp(22px,3vw,32px);border:1px solid #ffffff17;border-radius:19px;background:radial-gradient(ellipse at 90% 10%,#8d7cff35,transparent 40%),linear-gradient(120deg,#191827,#11131e 70%,#111923)}
-.heroCard:after{position:absolute;right:-70px;bottom:-145px;width:300px;height:300px;border:1px solid #b6a8ff16;border-radius:50%;box-shadow:0 0 0 30px #b6a8ff04,0 0 0 60px #b6a8ff03;content:"";pointer-events:none}
+.heroCard:after{position:absolute;right:-70px;bottom:-145px;width:300px;height:300px;border:1px solid #18e68b16;border-radius:50%;box-shadow:0 0 0 30px #18e68b04,0 0 0 60px #18e68b03;content:"";pointer-events:none}
 .heroTitle{position:relative;z-index:1}
 .heroTitle .overline{display:flex;align-items:center;gap:8px;color:#bdb2ff;font-size:9px;font-weight:800;letter-spacing:.15em}
 .heroTitle h2{max-width:500px;margin:15px 0 10px;font-size:clamp(23px,3vw,35px);line-height:1.08;letter-spacing:-.06em}
@@ -52,7 +52,7 @@
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
 .metric{min-width:0;padding:18px;border:1px solid #ffffff13;border-radius:14px;background:linear-gradient(145deg,#151622,#10111a)}
 .metricTop{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#999db2;font-size:10px}
-.metricIcon{display:grid;place-items:center;width:30px;height:30px;border:1px solid #a99aff24;border-radius:9px;background:#a99aff12;color:#c5bcff;font-size:15px}
+.metricIcon{display:grid;place-items:center;width:30px;height:30px;border:1px solid #00d77824;border-radius:9px;background:#00d77812;color:#39f3a0;font-size:15px}
 .metricValue{display:block;margin:15px 0 6px;font-size:27px;line-height:1;letter-spacing:-.055em;font-weight:800;overflow-wrap:anywhere}
 .metricNote{color:#747a91;font-size:9px;line-height:1.6}
 .contentGrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.8fr);gap:15px;margin-top:28px}
@@ -60,7 +60,7 @@
 .panelHead{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 19px;border-bottom:1px solid #ffffff10}
 .panelHead h2{margin:5px 0 0;font-size:16px;letter-spacing:-.04em}
 .panelHead small{color:#858aa0;font-size:9px}
-.textLink{color:#c4baff;text-decoration:none;font-size:10px;font-weight:700;white-space:nowrap}
+.textLink{color:#18e68b;text-decoration:none;font-size:10px;font-weight:700;white-space:nowrap}
 .tableWrap{overflow-x:auto}
 .table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap}
 .table th{padding:12px 15px;background:#ffffff03;color:#777d94;font-size:9px;font-weight:700}
@@ -68,21 +68,21 @@
 .serviceCell{display:grid;gap:4px}
 .serviceCell strong{font-size:10px;font-weight:700}
 .serviceCell small{color:#777d92;font-size:9px}
-.reference{color:#bcb2ff;font-variant-numeric:tabular-nums}
+.reference{color:#18e68b;font-variant-numeric:tabular-nums}
 .badge{display:inline-flex;padding:5px 8px;border:1px solid #ffffff12;border-radius:99px;background:#ffffff06;color:#c1c3d3;font-size:9px;text-transform:capitalize}
 .statuscompleted{border-color:#2b654a;background:#12271d;color:#a1e6c4}
 .statusprocessing,.statuspaid{border-color:#294d6a;background:#142433;color:#a5d9ff}
 .statuspending{border-color:#6b5528;background:#2a2315;color:#f1d58d}
 .statusfailed,.statuscancelled,.statusrefunded{border-color:#6b3443;background:#2a171e;color:#ffb7c3}
 .empty{display:grid;justify-items:start;gap:9px;padding:25px}
-.emptyIcon{display:grid;place-items:center;width:38px;height:38px;border:1px solid #a99aff2c;border-radius:12px;background:#a99aff12;color:#c5bcff;font-size:19px}
+.emptyIcon{display:grid;place-items:center;width:38px;height:38px;border:1px solid #00d7782c;border-radius:12px;background:#00d77812;color:#39f3a0;font-size:19px}
 .empty h3{margin:2px 0;font-size:14px}
 .empty p{max-width:440px;margin:0;color:#9296aa;font-size:10px;line-height:1.8}
 .walletList{display:grid;gap:0;padding:0 18px}
 .walletItem{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0;border-bottom:1px solid #ffffff0d}
 .walletItem:last-child{border-bottom:0}
 .walletLeft{display:flex;align-items:center;gap:10px;min-width:0}
-.currencyMark{display:grid;place-items:center;flex:none;width:35px;height:35px;border:1px solid #ffffff14;border-radius:11px;background:#ffffff06;color:#c5bcff;font-size:11px;font-weight:800}
+.currencyMark{display:grid;place-items:center;flex:none;width:35px;height:35px;border:1px solid #ffffff14;border-radius:11px;background:#ffffff06;color:#39f3a0;font-size:11px;font-weight:800}
 .walletText{display:grid;gap:4px;min-width:0}
 .walletText strong{font-size:10px}
 .walletText small{color:#7f849a;font-size:9px}
@@ -92,7 +92,7 @@
 .securityIcon{display:grid;place-items:center;flex:none;width:37px;height:37px;border:1px solid #76d9ad26;border-radius:11px;background:#76d9ad12;color:#8ce4b9;font-size:17px}
 .securityRow strong{display:block;font-size:11px}
 .securityRow p{margin:5px 0 0;color:#858aa0;font-size:9px;line-height:1.6}
-.securityLink{display:inline-flex;margin-top:13px;color:#c4baff;text-decoration:none;font-size:10px;font-weight:750}
+.securityLink{display:inline-flex;margin-top:13px;color:#18e68b;text-decoration:none;font-size:10px;font-weight:750}
 .footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:17px;border-top:1px solid #ffffff10;color:#6f748b;font-size:9px}
 .footer a{color:#a9a3ca;text-decoration:none}
 @media(max-width:1150px){.page{grid-template-columns:220px minmax(0,1fr)}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.contentGrid{grid-template-columns:minmax(0,1fr)}.walletArea{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.securityPanel{margin-top:0}.heroCard{grid-template-columns:minmax(0,1fr) minmax(180px,.75fr)}}
@@ -112,12 +112,12 @@
 .actionGroupTitle span,.panelCount{color:#777d94;font-size:9px}
 .actionGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .actionTile{display:flex;align-items:center;gap:10px;min-width:0;min-height:76px;padding:12px;border:1px solid #ffffff10;border-radius:12px;background:linear-gradient(145deg,#171824,#11121b);color:#f7f7fb;text-decoration:none;transition:transform .18s,border-color .18s,background .18s}
-.actionTile:hover{transform:translateY(-2px);border-color:#a99aff65;background:#1b1a2b}
-.actionTileIcon{display:grid;place-items:center;flex:none;width:34px;height:34px;border:1px solid #a99aff24;border-radius:10px;background:#a99aff12;color:#c5bcff;font-size:16px}
+.actionTile:hover{transform:translateY(-2px);border-color:#00d77865;background:#1b1a2b}
+.actionTileIcon{display:grid;place-items:center;flex:none;width:34px;height:34px;border:1px solid #00d77824;border-radius:10px;background:#00d77812;color:#39f3a0;font-size:16px}
 .actionTileText{display:grid;gap:5px;min-width:0}
 .actionTileText strong{overflow:hidden;font-size:10px;text-overflow:ellipsis;white-space:nowrap}
 .actionTileText small{display:-webkit-box;overflow:hidden;color:#777d92;font-size:9px;line-height:1.5;-webkit-box-orient:vertical;-webkit-line-clamp:2}
-.actionArrow{margin-left:auto;color:#aaa0e9;font-size:12px}
+.actionArrow{margin-left:auto;color:#18e68b;font-size:12px}
 .activityGrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:15px;margin-top:26px;align-items:start}
 .amountPositive{color:#91e2b5!important;font-weight:750;font-variant-numeric:tabular-nums}
 .amountNegative{color:#ffb7c3!important;font-weight:750;font-variant-numeric:tabular-nums}
@@ -162,40 +162,40 @@
 
 
 /* Reference fidelity pass: Globalgle-inspired compact canvas, fine borders and Veltron purple accents. */
-.page{--bg:#000;--panel:#050505;--panel2:#080808;--line:#242424;--muted:#9b9b9b;--accent:#a99aff;background:#000;color:#f7f7f7}
+.page{--bg:#000;--panel:#050505;--panel2:#080808;--line:#242424;--muted:#9b9b9b;--accent:#00d778;background:#000;color:#f7f7f7}
 .sidebar{background:#050505;border-right-color:#202020}
-.brandMark{background:#a99aff;color:#171426}
-.brand span:last-child{color:#a99aff}
-.active{background:#a99aff17;border-color:#a99aff55;color:#fff}
-.active .navIcon{color:#c5bcff}
+.brandMark{background:#00d778;color:#04170d}
+.brand span:last-child{color:#00d778}
+.active{background:#00d77817;border-color:#00d77855;color:#fff}
+.active .navIcon{color:#39f3a0}
 .navLink:hover{background:#101010}
-.kicker,.heroTitle .overline{color:#a99aff}
-.button{background:#a99aff;color:#171426}
+.kicker,.heroTitle .overline{color:#00d778}
+.button{background:#00d778;color:#04170d}
 .buttonSecondary{background:#050505;border-color:#303030;color:#e9e9e9}
 .helpLink{border-color:#2b2b2b;color:#d1d1d1}
-.status{border-color:#a99aff55;background:#171426;color:#8fffc3}
-.statusDot{background:#a99aff;box-shadow:0 0 9px #a99aff77}
+.status{border-color:#00d77855;background:#04170d;color:#8fffc3}
+.statusDot{background:#00d778;box-shadow:0 0 9px #00d77877}
 .metric,.panel,.actionGroup{border-color:#292929;background:#030303}
-.metricIcon,.actionTileIcon,.emptyIcon{border-color:#a99aff55;background:#a99aff12;color:#c5bcff}
+.metricIcon,.actionTileIcon,.emptyIcon{border-color:#00d77855;background:#00d77812;color:#39f3a0}
 .actionTile{border-color:#2a2a2a;background:#030303}
-.actionTile:hover{border-color:#a99aff;background:#191827}
-.actionArrow,.textLink,.securityLink{color:#a99aff}
+.actionTile:hover{border-color:#00d778;background:#191827}
+.actionArrow,.textLink,.securityLink{color:#00d778}
 .securityPanel{border-color:#292929;background:#030303}
-.securityIcon{border-color:#a99aff55;background:#a99aff12;color:#a99aff}
-.reference{color:#a99aff}
-.amountPositive{color:#a99aff!important}
+.securityIcon{border-color:#00d77855;background:#00d77812;color:#00d778}
+.reference{color:#00d778}
+.amountPositive{color:#00d778!important}
 .mobileBar{background:#050505;border-bottom-color:#242424}
 .mobileBar .brand{color:#f7f7f7}
 .menuButton{border-color:#292929;background:#0a0a0a}
-.menuLine,.menuLineOpen{background:#a99aff}
+.menuLine,.menuLineOpen{background:#00d778}
 .mobileDrawer{background:#050505;border-right-color:#252525}
-.drawerClose{background:#0b0b0b;border-color:#303030;color:#a99aff}
+.drawerClose{background:#0b0b0b;border-color:#303030;color:#00d778}
 .drawerBottom{border-top-color:#262626}
 .actionGroupTitle span,.panelCount{color:#818181}
 .table th{background:#080808;color:#8c8c8c}
 .table td{border-top-color:#202020;color:#dedede}
 .badge{border-color:#333;background:#080808}
-.statuscompleted{border-color:#a99aff55;background:#a99aff12;color:#a99aff}
+.statuscompleted{border-color:#00d77855;background:#00d77812;color:#00d778}
 .statusprocessing,.statuspaid{border-color:#164a60;background:#06151b;color:#94dfff}
 .statuspending{border-color:#5d4a20;background:#171206;color:#f0cf7c}
 .statusfailed,.statuscancelled,.statusrefunded{border-color:#5a2632;background:#1b080d;color:#ff9caf}
@@ -288,3 +288,71 @@
 :global(html[data-veltron-theme="light"]) .mobileDrawer{background:#fff;border-right-color:#e2e6eb}
 :global(html[data-veltron-theme="light"]) .drawerTitle{color:#14181d}
 :global(html[data-veltron-theme="light"]) .themeToggle{background:#fff;color:#26313b;border-color:#d8dee5}
+
+
+/* Globalgle reference alignment: pure-black canvas, emerald accents, compact service tiles */
+.page{--bg:#000;--panel:#050505;--panel2:#080b09;--line:#292929;--muted:#929292;--accent:#00d778;background:#000}
+.sidebar{background:#030303;border-right-color:#202020}
+.main{background:#000}
+.topbar{border-bottom-color:#202020}
+.heading h1{font-size:clamp(25px,2.6vw,34px);letter-spacing:-.045em}
+.heading p,.sectionIntro p{font-size:11px;color:#a1a1a1}
+.metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:8px}
+.metric{background:#030303;border-color:#292929;border-radius:13px;box-shadow:none;padding:16px}
+.metricTop{font-size:9px}
+.metricValue{font-size:25px}
+.metricIcon,.actionTileIcon{color:#00e783;background:#001d10;border-color:#004d2a}
+.button{background:#00c96b;color:#00150a;border-color:#00c96b;border-radius:9px}
+.buttonSecondary{background:#050505;color:#dedede;border-color:#292929}
+.status{border-color:#005c32;background:#00190d;color:#5df0a4}
+.statusDot{background:#00e783;box-shadow:0 0 8px #00e78366}
+.actionGroup{background:#000;border:0;padding:0;margin-top:18px}
+.actionGroupTitle{margin-bottom:10px}
+.actionGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.actionTile{min-height:82px;background:#030303;border-color:#292929;border-radius:13px;padding:11px}
+.actionTile:hover{background:#07130c;border-color:#00a956}
+.actionTileText strong{font-size:10px;white-space:normal}
+.actionTileText small{font-size:9px}
+.panel{background:#030303;border-color:#292929;border-radius:14px}
+.panelHead{border-bottom-color:#1c1c1c}
+.table th{background:#050505}
+.table td{border-top-color:#1b1b1b}
+.reference{color:#39f3a0}
+.quickSection{margin-top:24px}
+.sectionIntro h2{font-size:19px}
+.kicker{color:#00df78}
+.badge{border-color:#292929;background:#080808}
+.securityPanel{background:#030303;border-color:#292929}
+.securityIcon{background:#001d10;border-color:#00552e;color:#39f3a0}
+.securityLink,.textLink{color:#39f3a0}
+@media(max-width:800px){
+  .page{background:#000}
+  .sidebar{background:#030303}
+  .metrics{grid-template-columns:minmax(0,1fr);gap:9px}
+  .metric{padding:15px 14px;min-height:72px}
+  .metricValue{margin:10px 0 4px;font-size:23px}
+  .actionGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .actionTile{min-height:84px;align-items:flex-start;flex-direction:column;gap:8px}
+  .actionTileIcon{width:30px;height:30px}
+  .actionTileText{width:100%}
+  .actionArrow{position:absolute;right:11px;top:12px}
+  .actionTile{position:relative;padding:11px}
+  .actionTileText strong{padding-right:8px}
+}
+@media(max-width:480px){
+  .main{padding:0 8px 24px}
+  .topbar{min-height:52px;padding:9px 0}
+  .heading{padding:19px 0 13px;gap:12px}
+  .heading h1{font-size:26px}
+  .metrics{grid-template-columns:minmax(0,1fr)}
+  .metric{border-radius:12px}
+  .quickSection{margin-top:20px}
+  .sectionIntro{align-items:flex-start;margin-bottom:12px}
+  .sectionIntro h2{font-size:18px}
+  .actionGroupTitle h3{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#777}
+  .activityGrid{grid-template-columns:minmax(0,1fr);gap:10px;margin-top:20px}
+  .panelHead{padding:13px 11px}
+  .panelHead h2{font-size:12px}
+  .table th,.table td{padding:10px 9px;font-size:9px}
+  .footer{font-size:9px}
+}
