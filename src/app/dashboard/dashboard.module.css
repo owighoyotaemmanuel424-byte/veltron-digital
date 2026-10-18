@@ -161,41 +161,41 @@
 }
 
 
-/* Reference fidelity pass: Globalgle's compact black canvas, fine borders and green actions. */
-.page{--bg:#000;--panel:#050505;--panel2:#080808;--line:#242424;--muted:#9b9b9b;--accent:#00d477;background:#000;color:#f7f7f7}
+/* Reference fidelity pass: Globalgle-inspired compact canvas, fine borders and Veltron purple accents. */
+.page{--bg:#000;--panel:#050505;--panel2:#080808;--line:#242424;--muted:#9b9b9b;--accent:#a99aff;background:#000;color:#f7f7f7}
 .sidebar{background:#050505;border-right-color:#202020}
-.brandMark{background:#00d477;color:#001b0e}
-.brand span:last-child{color:#00d477}
-.active{background:#062116;border-color:#075d37;color:#fff}
-.active .navIcon{color:#00e884}
+.brandMark{background:#a99aff;color:#171426}
+.brand span:last-child{color:#a99aff}
+.active{background:#a99aff17;border-color:#a99aff55;color:#fff}
+.active .navIcon{color:#c5bcff}
 .navLink:hover{background:#101010}
-.kicker,.heroTitle .overline{color:#00d477}
-.button{background:#00d477;color:#001b0e}
+.kicker,.heroTitle .overline{color:#a99aff}
+.button{background:#a99aff;color:#171426}
 .buttonSecondary{background:#050505;border-color:#303030;color:#e9e9e9}
 .helpLink{border-color:#2b2b2b;color:#d1d1d1}
-.status{border-color:#075d37;background:#03160d;color:#8fffc3}
-.statusDot{background:#00d477;box-shadow:0 0 9px #00d47777}
+.status{border-color:#a99aff55;background:#171426;color:#8fffc3}
+.statusDot{background:#a99aff;box-shadow:0 0 9px #a99aff77}
 .metric,.panel,.actionGroup{border-color:#292929;background:#030303}
-.metricIcon,.actionTileIcon,.emptyIcon{border-color:#075d37;background:#041b10;color:#00e884}
+.metricIcon,.actionTileIcon,.emptyIcon{border-color:#a99aff55;background:#a99aff12;color:#c5bcff}
 .actionTile{border-color:#2a2a2a;background:#030303}
-.actionTile:hover{border-color:#00d477;background:#07130d}
-.actionArrow,.textLink,.securityLink{color:#00d477}
+.actionTile:hover{border-color:#a99aff;background:#191827}
+.actionArrow,.textLink,.securityLink{color:#a99aff}
 .securityPanel{border-color:#292929;background:#030303}
-.securityIcon{border-color:#075d37;background:#041b10;color:#00d477}
-.reference{color:#00d477}
-.amountPositive{color:#00d477!important}
+.securityIcon{border-color:#a99aff55;background:#a99aff12;color:#a99aff}
+.reference{color:#a99aff}
+.amountPositive{color:#a99aff!important}
 .mobileBar{background:#050505;border-bottom-color:#242424}
 .mobileBar .brand{color:#f7f7f7}
 .menuButton{border-color:#292929;background:#0a0a0a}
-.menuLine,.menuLineOpen{background:#00d477}
+.menuLine,.menuLineOpen{background:#a99aff}
 .mobileDrawer{background:#050505;border-right-color:#252525}
-.drawerClose{background:#0b0b0b;border-color:#303030;color:#00d477}
+.drawerClose{background:#0b0b0b;border-color:#303030;color:#a99aff}
 .drawerBottom{border-top-color:#262626}
 .actionGroupTitle span,.panelCount{color:#818181}
 .table th{background:#080808;color:#8c8c8c}
 .table td{border-top-color:#202020;color:#dedede}
 .badge{border-color:#333;background:#080808}
-.statuscompleted{border-color:#075d37;background:#041b10;color:#00d477}
+.statuscompleted{border-color:#a99aff55;background:#a99aff12;color:#a99aff}
 .statusprocessing,.statuspaid{border-color:#164a60;background:#06151b;color:#94dfff}
 .statuspending{border-color:#5d4a20;background:#171206;color:#f0cf7c}
 .statusfailed,.statuscancelled,.statusrefunded{border-color:#5a2632;background:#1b080d;color:#ff9caf}
