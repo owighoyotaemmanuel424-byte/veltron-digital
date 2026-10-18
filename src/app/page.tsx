@@ -18,6 +18,7 @@ const serviceTypes = [
 export default function Home() {
   return (
     <main className="vd-page">
+      <div className="vd-announcement"><span className="vd-announcement-pulse" /> <strong>VELTRON DIGITAL</strong><span>One workspace for your digital tools</span><Link href="/faq">Explore what’s available <span aria-hidden="true">↗</span></Link></div>
       <header className="vd-header">
         <Link className="vd-brand" href="/" aria-label="Veltron Digital home">
           <span className="vd-brand-mark">v</span><span>veltron<span className="vd-brand-dot">.</span></span>
@@ -68,6 +69,17 @@ export default function Home() {
           <div className="vd-float-tag vd-float-tag-bottom"><span className="vd-check-mark">✓</span><span><strong>Keep it organized</strong><small>Requests, status and history</small></span></div>
         </div>
         <div className="vd-hero-footnote"><span>DESIGNED FOR CLARITY</span><span className="vd-footnote-line" /><span>MADE TO MOVE WITH YOU</span></div>
+      </section>
+
+      <section className="vd-tools-intro" aria-label="Platform overview">
+        <div className="vd-tools-intro-copy"><span className="vd-tools-overline">ONE ACCOUNT · CONNECTED WORKFLOWS</span><h2>Build, organize, and manage.<br /><span>All from one place.</span></h2></div>
+        <div className="vd-tools-intro-note"><span className="vd-tools-status"><i /> WORKSPACE OVERVIEW</span><p>Explore website drafts, service requests, documents, and account tools in one consistent workspace. Availability is shown clearly before you take action.</p></div>
+        <div className="vd-tools-rail">
+          <Link href="/dashboard/sites"><span className="vd-tool-symbol">▧</span><span><strong>Website Creator</strong><small>Design & preview</small></span><b>↗</b></Link>
+          <Link href="/services"><span className="vd-tool-symbol">◇</span><span><strong>Digital services</strong><small>Browse catalog</small></span><b>↗</b></Link>
+          <Link href="/dashboard/orders"><span className="vd-tool-symbol">↗</span><span><strong>Orders & activity</strong><small>Track progress</small></span><b>↗</b></Link>
+          <Link href="/dashboard/security"><span className="vd-tool-symbol">⌑</span><span><strong>Account security</strong><small>Protect access</small></span><b>↗</b></Link>
+        </div>
       </section>
 
       <section className="vd-service-section" id="services">
