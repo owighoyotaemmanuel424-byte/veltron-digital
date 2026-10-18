@@ -108,6 +108,7 @@ export default async function DashboardPage() {
         <Link className={styles.navLink} href="/dashboard/security"><span className={styles.navIcon}>⌑</span>Account security</Link>
 
         <p className={styles.groupLabel}>TOOLS & ACTIVITY</p>
+        <Link className={styles.navLink} href="/dashboard/sites"><span className={styles.navIcon}>▧</span>Website Creator <small>Drafts</small></Link>
         <Link className={styles.navLink} href="/dashboard/products"><span className={styles.navIcon}>▦</span>Products & tools</Link>
         <Link className={styles.navLink} href="/dashboard/documents"><span className={styles.navIcon}>▤</span>Document drafts</Link>
 
