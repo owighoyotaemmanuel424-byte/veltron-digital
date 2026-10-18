@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { PageHeading } from "@/components/veltron-ui";
 
 export const dynamic = "force-dynamic";
 
@@ -84,9 +85,7 @@ export default async function ProductsPage() {
         </nav>
       </header>
       <section className="section" style={{ paddingTop: 36 }}>
-        <div className="eyebrow">YOUR PRODUCT WORKSPACE</div>
-        <h1 style={{ fontSize: "clamp(2rem, 5vw, 3.2rem)" }}>Products & tools</h1>
-        <p className="lead">A transparent view of the product modules in Veltron Digital, what is currently usable, and what still needs provider setup.</p>
+        <PageHeading eyebrow="Your product workspace" title="Products & tools" description="A transparent view of the product modules in Veltron Digital, what is currently usable, and what still needs provider setup." action={{ label: "View dashboard", href: "/dashboard" }} />
         <div className="cards">
           {products.map((product) => (
             <article className="card" key={product.title}>
