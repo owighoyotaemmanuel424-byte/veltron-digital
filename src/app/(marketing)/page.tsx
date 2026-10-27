@@ -13,6 +13,8 @@ import { faqs, features, testimonials } from "@/lib/demo/marketing";
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
+  // The mounted flag avoids rendering theme-dependent controls before hydration.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   React.useEffect(() => setMounted(true), []);
   return <Button variant="ghost" size="sm" aria-label="Toggle color theme" title="Toggle color theme" className="size-9 px-0" onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>{mounted && resolvedTheme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}</Button>;
 }
