@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   LifeBuoy,
   PackageCheck,
+  ReceiptText,
   LineChart,
   Mail,
   Phone,
@@ -27,6 +28,7 @@ export const nav = {
     { title: "Call Tools", href: "/catalog/call", icon: Phone },
     { title: "Mailing Tools", href: "/catalog/mail", icon: Mail },
     { title: "Generator Tools", href: "/catalog/generator", icon: FileText },
+    { title: "Documents", href: "/documents", icon: ReceiptText },
   ],
   footer: [
     { title: "Settings", href: "/settings", icon: Settings },
