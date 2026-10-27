@@ -17,7 +17,10 @@ export default function CatalogPage() {
   const [demoInfoOpen, setDemoInfoOpen] = useState(false);
   useEffect(() => {
     try {
-      if (window.localStorage.getItem("veltron-catalog-demo-info-v1") !== "seen") {\n        // eslint-disable-next-line react-hooks/set-state-in-effect\n        setDemoInfoOpen(true);\n      }
+      if (window.localStorage.getItem("veltron-catalog-demo-info-v1") !== "seen") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setDemoInfoOpen(true);
+      }
     } catch {
       setDemoInfoOpen(true);
     }
