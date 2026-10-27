@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, BriefcaseBusiness, FileText, Globe, Mail, PanelsTopLeft, PhoneCall, Smartphone, WandSparkles } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, FileText, Globe, Mail, LayoutGrid, PhoneCall, Smartphone, WandSparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { CatalogCategory } from "@/lib/catalog/types";
 import { catalogCategories, demoCatalog } from "@/lib/demo/catalog";
 
-const icons: Record<string, LucideIcon> = { Globe, PanelsTopLeft, PhoneCall, Mail, WandSparkles, Smartphone, FileText, BriefcaseBusiness };
+const icons: Record<string, LucideIcon> = { Globe, LayoutGrid, PhoneCall, Mail, WandSparkles, Smartphone, FileText, BriefcaseBusiness };
 export function CategoryCard({ category, compact = false }: { category: CatalogCategory; compact?: boolean }) {
   const item = catalogCategories.find((entry) => entry.id === category)!;
   const Icon = icons[item.icon] ?? Smartphone;
