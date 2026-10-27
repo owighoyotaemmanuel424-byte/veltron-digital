@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Check, ChevronLeft, ChevronRight, CreditCard, ShieldAlert, X } from "lucide-react";
 import { toast } from "sonner";
 import type { CatalogProduct } from "@/lib/catalog/types";
@@ -48,16 +48,8 @@ export function PurchaseDrawer({ product, open, onOpenChange }: { product: Catal
   const [busy, setBusy] = useState(false);
   const fields = getConfigFields(product.slug, product.category);
 
-  useEffect(() => {
-    if (open) {
-      setStep(0);
-      setConfiguration({});
-      setBusy(false);
-    }
-  }, [open, product.id]);
-
   if (!open) return null;
-  const close = () => { onOpenChange(false); setStep(0); setBusy(false); };
+  const close = () => { onOpenChange(false); setStep(0); setConfiguration({}); setBusy(false); };
   const submit = () => {
     setBusy(true);
     try {
