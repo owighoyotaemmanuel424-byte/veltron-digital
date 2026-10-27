@@ -60,7 +60,7 @@ export default function DocumentsPage() {
         .receipt-document, .receipt-document * { visibility: visible !important; }
         .receipt-document { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; max-width: none !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
         .receipt-document footer, .receipt-document [role="note"] { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-        aside, header, nav, button, [data-radix-portal] { display: none !important; }
+        aside, header, nav, button { display: none !important; }
         @page { margin: 12mm; size: auto; }
       }
     `}</style>
