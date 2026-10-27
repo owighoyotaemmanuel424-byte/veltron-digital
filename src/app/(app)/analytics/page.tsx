@@ -1,0 +1,3 @@
+export default function AnalyticsPage() {
+  return <section className="space-y-2"><p className="text-sm text-muted-foreground">Your workspace at a glance</p><h2 className="text-2xl font-semibold tracking-tight">Analytics</h2><p className="max-w-2xl text-sm text-muted-foreground">Performance summaries and activity insights will appear here as your account data becomes available.</p><div className="mt-6 rounded-xl border border-border bg-card p-6"><p className="font-medium">Analytics workspace</p><p className="mt-1 text-sm text-muted-foreground">This page is ready for charts, trends, and activity reports.</p></div></section>;
+}
