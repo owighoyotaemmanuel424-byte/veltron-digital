@@ -1,18 +1,50 @@
-import { Activity, CircleHelp, Coins, LayoutDashboard, Settings2, WalletCards } from "lucide-react";
+import {
+  Activity,
+  Bitcoin,
+  CircleHelp,
+  Coins,
+  FileText,
+  Globe,
+  LayoutDashboard,
+  LifeBuoy,
+  LineChart,
+  Mail,
+  Phone,
+  PiggyBank,
+  Settings,
+  Settings2,
+  Smartphone,
+  WalletCards,
+} from "lucide-react";
 
-export const appNavigation = [
-  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Analytics", href: "/analytics", icon: Activity },
-  { title: "Crypto", href: "/crypto", icon: Coins },
-  { title: "Savings", href: "/savings", icon: WalletCards },
-  { title: "Settings", href: "/settings", icon: Settings2 },
-  { title: "Support", href: "/support", icon: CircleHelp },
-] as const;
+export const nav = {
+  main: [
+    { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { title: "Analytics", href: "/analytics", icon: LineChart },
+    { title: "Crypto", href: "/crypto", icon: Bitcoin },
+    { title: "Savings", href: "/savings", icon: PiggyBank },
+  ],
+  catalog: [
+    { title: "Website Creator", href: "/catalog/website", icon: Globe },
+    { title: "Digital Tools", href: "/catalog/digital", icon: Smartphone },
+    { title: "Call Tools", href: "/catalog/call", icon: Phone },
+    { title: "Mailing Tools", href: "/catalog/mail", icon: Mail },
+    { title: "Generator Tools", href: "/catalog/generator", icon: FileText },
+  ],
+  footer: [
+    { title: "Settings", href: "/settings", icon: Settings },
+    { title: "Support", href: "/support", icon: LifeBuoy },
+  ],
+} as const;
+
+export const appNavigation = [...nav.main, ...nav.catalog, ...nav.footer] as const;
 
 export function getPageTitle(pathname: string) {
   const item = appNavigation.find(
     (entry) => pathname === entry.href || pathname.startsWith(`${entry.href}/`),
   );
   if (item) return item.title;
-  return pathname === "/" ? "Home" : pathname.split("/").filter(Boolean).at(-1)?.replace(/-/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()) ?? "Workspace";
+  return pathname === "/"
+    ? "Home"
+    : pathname.split("/").filter(Boolean).at(-1)?.replace(/-/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()) ?? "Workspace";
 }
