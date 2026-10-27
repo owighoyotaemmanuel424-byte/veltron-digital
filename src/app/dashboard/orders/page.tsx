@@ -31,6 +31,7 @@ export default async function OrdersPage() {
       createdAt: true,
       updatedAt: true,
       service: { select: { name: true, category: true } },
+      product: { select: { name: true, category: true } },
     },
     orderBy: { createdAt: "desc" },
     take: 100,
@@ -73,7 +74,7 @@ export default async function OrdersPage() {
             <div><div className="eyebrow">ACTIVITY LOG</div><h2>All recent orders</h2></div>
             <Link href="/dashboard" className="text-link">← Back to overview</Link>
           </div>
-          <OrderHistoryTable orders={orders.map((order) => ({ ...order, createdAt: order.createdAt.toISOString() }))} />
+          <OrderHistoryTable orders={orders.map((order) => ({ ...order, service: order.service ?? { name: order.product?.name ?? "Catalog product", category: order.product?.category ?? "catalog" }, createdAt: order.createdAt.toISOString() }))} />
           <p className="dash-note orders-disclaimer">This page shows the latest 100 orders. Order creation does not itself mean payment has settled or a service has been fulfilled.</p>
         </section>
       </section>
