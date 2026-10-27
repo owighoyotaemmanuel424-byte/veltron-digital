@@ -1,3 +1,4 @@
+@import "tailwindcss";
 :root{color-scheme:dark;--bg:#080a0f;--panel:#10141d;--line:#232b39;--muted:#98a4b8;--accent:#00d778}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:#f5f7fb;font-family:Inter,ui-sans-serif,system-ui,sans-serif}a{color:inherit;text-decoration:none}.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,5vw,72px);border-bottom:1px solid var(--line)}.brand{font-weight:800;letter-spacing:-.04em;font-size:22px}.brand span{color:var(--accent)}.nav{display:flex;gap:22px;color:#c2cada;font-size:14px}.hero{max-width:1180px;margin:auto;padding:88px 24px 64px;display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}.eyebrow{color:#54f5ad;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700}h1{font-size:clamp(42px,6vw,72px);line-height:1.02;letter-spacing:-.055em;margin:18px 0}.lead{color:#a8b2c5;line-height:1.7;font-size:17px;max-width:600px}.actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;background:var(--accent);color:white;font-weight:700;border:1px solid transparent}.secondary{background:#151b27;border-color:#30394b}.preview{border:1px solid #293244;border-radius:22px;background:linear-gradient(145deg,#151b29,#0d1119);padding:24px;box-shadow:0 24px 80px #0008}.preview-head{display:flex;justify-content:space-between;color:#aeb8ca;font-size:13px}.metric{margin:26px 0;font-size:34px;font-weight:800;letter-spacing:-.04em}.pills{display:flex;gap:8px;flex-wrap:wrap}.pill{font-size:12px;border:1px solid #30394b;color:#c2cada;padding:7px 10px;border-radius:999px}.section{max-width:1180px;padding:32px 24px 80px;margin:auto}.section h2{font-size:30px;letter-spacing:-.04em}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}.card{border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--panel)}.card p{color:var(--muted);line-height:1.6}.footer{border-top:1px solid var(--line);padding:28px 24px;text-align:center;color:#8793a8;font-size:13px}@media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:58px}.nav{gap:12px}.cards{grid-template-columns:1fr}.preview{max-width:520px}}
 
 
@@ -543,3 +544,82 @@ body{background:var(--vd-shell-bg);color:var(--vd-shell-text)}
 
 .vd-admin-page-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:28px}.vd-admin-page-heading .vd-page-heading{flex:1;margin-bottom:0}.vd-admin-page-heading .status-chip{flex:0 0 auto;margin-top:5px}
 @media(max-width:640px){.vd-admin-page-heading{flex-direction:column;gap:14px}}
+
+
+/* Tailwind CSS v4 design tokens and accessible theme baseline. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-brand: var(--brand);
+  --color-brand-fg: var(--brand-fg);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+:root {
+  color-scheme: light;
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface-2: #F1F5F9;
+  --border: #E2E8F0;
+  --text: #0F172A;
+  --text-muted: #64748B;
+  --brand: #0EA5E9;
+  --brand-fg: #FFFFFF;
+  --success: #10B981;
+  --danger: #F43F5E;
+  --warning: #F59E0B;
+}
+.dark {
+  color-scheme: dark;
+  --bg: #0B1220;
+  --surface: #111A2C;
+  --surface-2: #1A2438;
+  --border: #1F2A40;
+  --text: #E2E8F0;
+  --text-muted: #94A3B8;
+  --brand: #22D3EE;
+  --brand-fg: #0B1220;
+  --success: #34D399;
+  --danger: #FB7185;
+  --warning: #FBBF24;
+}
+html, body { min-height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+.font-tabular, .font-mono, .tabular-nums {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+::selection { background: var(--brand); color: var(--brand-fg); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* Token-aware primitives; legacy page-specific styles remain intact during migration. */
+.card, .dash-card, .empty-state, .vd-ui-panel, .vd-ui-metric {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+.card p, .dash-label, .dash-note, .text-muted { color: var(--text-muted); }
+.table-wrap { border-color: var(--border); }
+th { background: var(--surface-2); color: var(--text-muted); }
+td { color: var(--text); border-color: var(--border); }
