@@ -60,6 +60,10 @@
     "prisma": "^6.16.2",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4",
-    "@tailwindcss/postcss": "^4.1.14"
+    "@tailwindcss/postcss": "^4.1.14",
+    "tsx": "^4.20.6"
+  },
+  "prisma": {
+    "seed": "tsx src/prisma/seed.ts"
   }
 }
