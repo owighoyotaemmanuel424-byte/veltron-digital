@@ -17,9 +17,18 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Veltron — Services, simplified",
-  description:
-    "A secure service marketplace with transparent orders, payments, and account controls.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://veltron.digital"),
+  title: { default: "Veltron Digital — Services, simplified", template: "%s | Veltron Digital" },
+  description: "A secure service marketplace with transparent orders, payments, and account controls.",
+  openGraph: {
+    type: "website",
+    siteName: "Veltron Digital",
+    title: "Veltron Digital — Services, simplified",
+    description: "A secure service marketplace with transparent orders, payments, and account controls.",
+    url: "/",
+  },
+  twitter: { card: "summary_large_image", title: "Veltron Digital", description: "A secure service marketplace with transparent orders, payments, and account controls." },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
