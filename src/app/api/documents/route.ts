@@ -13,7 +13,7 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
   try {
     const documents = await prisma.document.findMany({
-      where: { order: { userId: user.id, product: { category: "generator" } } },
+      where: { order: { userId: user.id, product: { is: { category: "generator" } } } },
       select: { id: true, orderId: true, type: true, payload: true, createdAt: true },
       orderBy: { createdAt: "desc" },
       take: 50,
@@ -69,8 +69,8 @@ export async function POST(request: NextRequest) {
           style: parsed.data.payload?.style ?? "standard",
           note: parsed.data.payload?.note ?? "Demo document — not proof of payment.",
           reference: `DEMO-${parsed.data.type.toUpperCase()}-NOT-A-REAL-TRANSACTION`,
-          txHash: parsed.data.type === "crypto" ? "DEMO-HASH-NOT-A-REAL-TRANSACTION" : undefined,
-          account: parsed.data.type === "bank" ? "DEMO ACCOUNT — NOT REAL" : undefined,
+          ...(parsed.data.type === "crypto" ? { txHash: "DEMO-HASH-NOT-A-REAL-TRANSACTION" } : {}),
+          ...(parsed.data.type === "bank" ? { account: "DEMO ACCOUNT — NOT REAL" } : {}),
           disclaimer: "Demo document — not a real receipt. No real transaction, bank account, or crypto activity is represented.",
         },
       },
