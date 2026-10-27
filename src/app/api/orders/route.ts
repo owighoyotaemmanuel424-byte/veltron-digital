@@ -49,6 +49,15 @@ export async function POST(request: NextRequest) {
   const validatedConfig = getConfigSchema(product.slug, product.category).safeParse(parsed.data.config);
   if (!validatedConfig.success) return NextResponse.json({ error: "Product configuration is invalid.", issues: validatedConfig.error.issues }, { status: 400 });
 
+  const safeConfig: Record<string, unknown> = { ...validatedConfig.data };
+  // Generator configurations are placeholders: never persist user-supplied real transaction hashes,
+  // account identifiers, or receipt references as if they were verified financial data.
+  if (product.slug === "crypto-receipts") safeConfig.txHashPreview = "DEMO-HASH-NOT-A-REAL-TRANSACTION";
+  if (product.slug === "bank-receipt") {
+    safeConfig.accountMask = "DEMO ACCOUNT — NOT REAL";
+    safeConfig.reference = "DEMO-BANK-REFERENCE-NOT-A-REAL-TRANSACTION";
+  }
+  if (product.slug === "store-receipt") safeConfig.orderId = "DEMO-STORE-ORDER-NOT-A-REAL-SALE";
   // DEMO STUB ONLY: provisioning/fulfillment is NOT implemented. Every created order stays PENDING.
   // This route never calls a provider, sends a message, transfers money, or provisions a service.
   try {
@@ -67,8 +76,8 @@ export async function POST(request: NextRequest) {
         unitPriceMinor: priceMinor,
         totalMinor: priceMinor,
         currency: product.price.currency,
-        customerInput: validatedConfig.data as Prisma.InputJsonValue,
-        config: validatedConfig.data as Prisma.InputJsonValue,
+        customerInput: safeConfig as Prisma.InputJsonValue,
+        config: safeConfig as Prisma.InputJsonValue,
         price: product.price.amount,
         idempotencyKey: `demo:${randomUUID()}`,
       },
