@@ -16,7 +16,6 @@ export function Sidebar() {
   const [ready, setReady] = React.useState(false);
 
   // Restore the user's browser-only sidebar preference after hydration.
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     try { setCollapsed(window.localStorage.getItem(STORAGE_KEY) === "true"); } catch { /* storage may be unavailable */ }
