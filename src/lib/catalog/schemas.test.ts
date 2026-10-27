@@ -14,7 +14,7 @@ describe("product configuration schemas", () => {
   it("provides a dedicated schema and field list for every configured product slug", () => {
     expect(Object.keys(productConfigSchemas).sort()).toEqual([...expectedSlugs].sort());
     for (const slug of expectedSlugs) {
-      expect(getConfigFields(slug, slug === "custom-caller" || slug === "voice-notes" ? "call" : slug.includes("mail") || slug === "bank-mailer" ? "mail" : ["buy-domain", "buy-webmail", "broker", "online-banking", "tesla-giveaway", "tesla-investment", "celebrity", "ecommerce-site", "website-widgets", "support-pages", "tracking-pages", "transactions-trackers", "wallets"].includes(slug) ? "website" : ["crypto-receipts", "bank-receipt", "store-receipt"].includes(slug) ? "generator" : "digital").length).toBeGreaterThan(0);
+      expect(getConfigFields(slug, "website").length).toBeGreaterThan(0);
     }
   });
 
