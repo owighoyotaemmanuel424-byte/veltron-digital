@@ -7,6 +7,20 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: veltron
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d veltron"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/veltron?schema=public
       AUTH_SECRET: ci-only-secret-that-is-at-least-thirty-two-characters-long
@@ -21,6 +35,10 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund --legacy-peer-deps
       - run: npx prisma validate
+      - name: Apply additive migrations to ephemeral CI database
+        run: npx prisma migrate deploy
+      - name: Seed and verify demo catalog parity
+        run: npx prisma db seed
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
