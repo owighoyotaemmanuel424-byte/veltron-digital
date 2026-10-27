@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, BriefcaseBusiness, CalendarDays, BarChart3, CheckCircle2, Contact, Database, FileCheck, FileText, Globe, Headphones, Image as ImageIcon, Lightbulb, Mail, Mail, MessagesSquare, Mic, Newspaper, Palette, LayoutGrid, PhoneCall, QrCode, Receipt, Search, Send, ShieldCheck, ShoppingBag, Smartphone, Users, WandSparkles } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, CalendarDays, BarChart3, CheckCircle2, Contact, Database, FileCheck, FileText, Globe, Headphones, Image as ImageIcon, Lightbulb, Mail, MessagesSquare, Mic, Newspaper, Palette, LayoutGrid, PhoneCall, QrCode, Receipt, Search, Send, ShieldCheck, ShoppingBag, Smartphone, Users, WandSparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { CatalogProduct } from "@/lib/catalog/types";
 import { catalogCategories, formatCatalogPrice } from "@/lib/demo/catalog";
 import { Badge } from "@/components/ui/badge";
 
-const icons: Record<string, LucideIcon> = { Globe, LayoutGrid, BriefcaseBusiness, ShoppingBag, ShieldCheck, FileText, QrCode, Image: ImageIcon, CalendarDays, Database, PhoneCall, Headphones, Mic, BarChart3, Contact, MessagesSquare, Mail, Newspaper, Users, Send, Mail, Lightbulb, WandSparkles, Receipt, FileCheck, Search, Palette, Smartphone, CheckCircle2 };
+const icons: Record<string, LucideIcon> = { Globe, LayoutGrid, BriefcaseBusiness, ShoppingBag, ShieldCheck, FileText, QrCode, Image: ImageIcon, CalendarDays, Database, PhoneCall, Headphones, Mic, BarChart3, Contact, MessagesSquare, Mail, Newspaper, Users, Send, Lightbulb, WandSparkles, Receipt, FileCheck, Search, Palette, Smartphone, CheckCircle2 };
 
 export function ProductIcon({ name, className = "size-5" }: { name: string; className?: string }) {
   const Icon = icons[name] ?? Smartphone;
