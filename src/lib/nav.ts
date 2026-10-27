@@ -4,6 +4,7 @@ import {
   Globe,
   LayoutDashboard,
   LifeBuoy,
+  PackageCheck,
   LineChart,
   Mail,
   Phone,
@@ -20,6 +21,7 @@ export const nav = {
     { title: "Savings", href: "/savings", icon: PiggyBank },
   ],
   catalog: [
+    { title: "My Products", href: "/products", icon: PackageCheck },
     { title: "Website Creator", href: "/catalog/website", icon: Globe },
     { title: "Digital Tools", href: "/catalog/digital", icon: Smartphone },
     { title: "Call Tools", href: "/catalog/call", icon: Phone },
