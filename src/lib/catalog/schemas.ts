@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { CatalogCategory } from "@/lib/catalog/types";
 
-export type ConfigFieldKind = "text" | "select" | "number" | "checkbox" | "domain" | "phone" | "file" | "multiselect" | "color";
+export type ConfigFieldKind = "text" | "select" | "number" | "checkbox" | "domain" | "phone" | "file" | "multiselect" | "color" | "list";
 export type ConfigField = {
   name: string;
   label: string;
@@ -32,7 +32,7 @@ const definitions: Record<string, ConfigField[]> = {
   "online-banking": [template(), brandName(), color(), domain()],
   "tesla-giveaway": [count("prizeAmount", "Prize amount (USD)", 1, 10000000), field("entryEmail", "Entry contact email", "text", { placeholder: "contact@example.com" }), field("rulesUrl", "Official rules URL", "text", { placeholder: "https://example.com/rules" }), domain()],
   "tesla-investment": [select("planTier", "Plan tier", ["starter", "growth", "premium", "custom"]), count("minDeposit", "Illustrative minimum deposit (USD)", 0, 10000000), domain()],
-  celebrity: [field("subjectName", "Subject name", "text", { placeholder: "Name to feature" }), field("socialLinks", "Social links", "text", { placeholder: "https://… (separate links with commas)", helpText: "Enter public URLs separated by commas." }), select("theme", "Visual theme", ["editorial", "bold", "minimal", "dark"]), domain()],
+  celebrity: [field("subjectName", "Subject name", "text", { placeholder: "Name to feature" }), field("socialLinks", "Social links", "list", { placeholder: "https://… (separate links with commas)", helpText: "Enter public URLs separated by commas." }), select("theme", "Visual theme", ["editorial", "bold", "minimal", "dark"]), domain()],
   "ecommerce-site": [field("storeName", "Store name"), select("currency", "Store currency", ["USD", "EUR", "GBP", "NGN", "CAD", "AUD"]), count("productCountEstimate", "Estimated product count", 1, 100000), domain()],
   "website-widgets": [select("widgetType", "Widget type", ["chat", "reviews", "pricing", "faq"]), field("embedTarget", "Embed target", "text", { placeholder: "e.g. homepage or /pricing" }), domain()],
   "support-pages": [brandName(), select("channel", "Support channel", ["email", "ticket", "chat"]), select("slaTier", "Response target", ["standard", "priority", "24-hour"]), domain()],
@@ -70,12 +70,14 @@ const valueSchema = (configField: ConfigField): z.ZodTypeAny => {
     case "checkbox": schema = z.boolean(); break;
     case "select": schema = z.string().min(1, `Choose ${configField.label.toLowerCase()}.`).refine((value) => (configField.options ?? []).some((option) => option.value === value), `Choose a valid ${configField.label.toLowerCase()}.`); break;
     case "multiselect": schema = z.array(z.string()).min(configField.required === false ? 0 : 1, `Choose at least one ${configField.label.toLowerCase()}.`).refine((values) => values.every((value) => (configField.options ?? []).some((option) => option.value === value)), "Choose valid options."); break;
+    case "list": schema = z.array(z.string().trim().min(1)).min(configField.required === false ? 0 : 1, `${configField.label} needs at least one entry.`); break;
     case "domain": schema = z.string().trim().min(1, "Enter a domain.").refine((value) => /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z]{2,})+$/i.test(value), "Enter a valid domain such as example.com."); break;
     case "phone": schema = z.string().trim().min(7, "Enter a valid phone number.").max(25, "Phone number is too long.").regex(/^\+?[0-9 ()-]+$/, "Use digits and an optional leading +."); break;
     case "color": schema = z.string().regex(/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i, "Enter a valid hex color."); break;
     case "file": schema = z.string(); break;
     default: schema = z.string().trim();
   }
+  if (configField.kind === "list") return schema;
   if (configField.kind !== "checkbox" && configField.kind !== "multiselect" && configField.required !== false) {
     if (configField.kind === "number") return schema;
     if (configField.kind === "select" || configField.kind === "domain" || configField.kind === "phone" || configField.kind === "color") return schema;
@@ -102,6 +104,7 @@ export function getProductConfigSchema(slug: string) {
 export function parseConfigValue(configField: ConfigField, rawValue: string | boolean | string[]): unknown {
   if (configField.kind === "checkbox") return rawValue === true || rawValue === "true";
   if (configField.kind === "multiselect") return Array.isArray(rawValue) ? rawValue : typeof rawValue === "string" && rawValue ? rawValue.split(",").map((value) => value.trim()).filter(Boolean) : [];
+  if (configField.kind === "list") return Array.isArray(rawValue) ? rawValue.map((value) => value.trim()).filter(Boolean) : typeof rawValue === "string" && rawValue ? rawValue.split(",").map((value) => value.trim()).filter(Boolean) : [];
   if (configField.kind === "number") return rawValue === "" ? undefined : Number(rawValue);
   return typeof rawValue === "string" ? rawValue : "";
 }
