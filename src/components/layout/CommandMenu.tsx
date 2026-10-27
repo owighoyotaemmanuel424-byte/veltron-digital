@@ -3,11 +3,9 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
-import { Activity, ArrowRight, CircleHelp, Coins, LayoutDashboard, Search, Settings2, WalletCards, Zap } from "lucide-react";
+import { ArrowRight, CircleHelp, Search, Zap } from "lucide-react";
 import { appNavigation } from "@/lib/nav";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-
-const iconByTitle = { Dashboard: LayoutDashboard, Analytics: Activity, Crypto: Coins, Savings: WalletCards, Settings: Settings2, Support: CircleHelp } as const;
 
 export function CommandMenu({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const router = useRouter();
@@ -38,7 +36,7 @@ export function CommandMenu({ open, onOpenChange }: { open: boolean; onOpenChang
             <Command.Empty className="px-3 py-8 text-center text-sm text-muted-foreground">No matching pages or actions.</Command.Empty>
             <Command.Group heading="Navigate" className="px-1 py-1 text-xs text-muted-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2">
               {appNavigation.map((item) => {
-                const Icon = iconByTitle[item.title];
+                const Icon = item.icon;
                 return <Command.Item key={item.href} value={item.title} onSelect={() => go(item.href)} className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm text-foreground aria-selected:bg-accent aria-selected:text-accent-foreground"><Icon className="size-4 text-muted-foreground" />{item.title}<ArrowRight className="ml-auto size-3.5 opacity-50" /></Command.Item>;
               })}
             </Command.Group>
