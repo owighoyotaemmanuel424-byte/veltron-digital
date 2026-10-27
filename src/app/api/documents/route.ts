@@ -50,10 +50,10 @@ export async function POST(request: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: "Provide a valid generator order, document type, and mock payload.", issues: parsed.error.issues }, { status: 400 });
   try {
     const order = await prisma.order.findFirst({
-      where: { OR: [{ id: parsed.data.orderId }, { publicId: parsed.data.orderId }], userId: user.id, product: { category: "generator" } },
+      where: { OR: [{ id: parsed.data.orderId }, { publicId: parsed.data.orderId }], userId: user.id, product: { is: { category: "generator" } } },
       select: { id: true, product: { select: { slug: true, name: true } } },
     });
-    if (!order) return NextResponse.json({ error: "A generator product order owned by your account is required." }, { status: 400 });
+    if (!order?.product) return NextResponse.json({ error: "A generator product order owned by your account is required." }, { status: 400 });
     const expectedType = order.product?.slug === "crypto-receipts" ? "crypto" : order.product?.slug === "bank-receipt" ? "bank" : order.product?.slug === "store-receipt" ? "store" : null;
     if (!expectedType || parsed.data.type !== expectedType) return NextResponse.json({ error: "Document type must match the purchased generator." }, { status: 400 });
     // Never accept or persist real transaction hashes, account numbers, credentials, or payment evidence.
