@@ -1,0 +1,3 @@
+import {cn} from "@/lib/utils";
+export type StatusBannerProps={message?:string;uptime?:string;className?:string};
+export function StatusBanner({message="All systems operational",uptime="99.99% uptime",className}:StatusBannerProps){return <div role="status" aria-live="polite" className={cn("flex min-h-8 items-center justify-center gap-2 border-b border-border bg-muted/50 px-3 py-1.5 text-center text-xs text-muted-foreground",className)}><span className="size-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"/><span>{message}<span className="mx-1.5" aria-hidden="true">·</span>{uptime}</span></div>}
