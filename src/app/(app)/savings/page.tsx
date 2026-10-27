@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  ArrowDownRight, ArrowUpRight, CalendarDays, Check, ChevronDown, CircleHelp,
+  ArrowUpRight, CalendarDays, Check, CircleHelp,
   Clock3, MoreHorizontal, Pause, Play, Plus, Sparkles, Target, Trash2, Wallet,
   X, PencilLine, TrendingUp,
 } from "lucide-react";
