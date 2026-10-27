@@ -26,6 +26,13 @@ export async function demoVerifyOtp(code: string): Promise<DemoResult> {
   return { ok: true, message: "Verification complete." };
 }
 
+export async function demoVerifyRecoveryCode(code: string): Promise<DemoResult> {
+  await wait(450);
+  const normalized = code.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const accepted = ["VELT7K2M", "VELT9Q4R", "VELT3N8P", "VELT5X1D", "VELT6B7W", "VELT2H9C"];
+  return accepted.includes(normalized) ? { ok: true, message: "Recovery code accepted." } : { ok: false, code: "INVALID", message: "That recovery code is not valid." };
+}
+
 export async function demoResendOtp(): Promise<DemoResult> {
   await wait(450);
   return { ok: true, message: "A new demo verification code is ready. Use any six digits except 000000." };
