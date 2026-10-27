@@ -36,6 +36,11 @@ enum OrderStatus {
   READY
   EXPIRED
 }
+enum DocumentType {
+  crypto
+  bank
+  store
+}
 enum PaymentStatus {
   INITIALIZED
   PENDING
@@ -151,7 +156,7 @@ model Product {
 model Document {
   id        String   @id @default(cuid())
   orderId   String
-  type      String
+  type      DocumentType
   payload   Json
   createdAt DateTime @default(now())
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
