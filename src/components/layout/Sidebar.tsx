@@ -3,8 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, ChevronRight, LogOut, PanelLeftClose, PanelLeftOpen, UserRound } from "lucide-react";
-import { appNavigation } from "@/lib/nav";
+import { ChevronRight, LogOut, PanelLeftClose, PanelLeftOpen, UserRound } from "lucide-react";
+import { nav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -26,6 +26,17 @@ export function Sidebar() {
     return next;
   });
 
+  const renderGroup = (label: string, items: typeof nav.main | typeof nav.catalog | typeof nav.footer) => (
+    <section key={label} className="space-y-1">
+      {!collapsed && <h2 className="px-3 pb-2 pt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</h2>}
+      {items.map((item) => {
+        const active = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href + "/"));
+        const Icon = item.icon;
+        return <Link key={item.href} href={item.href} title={collapsed ? item.title : undefined} aria-current={active ? "page" : undefined} className={cn("flex h-10 items-center gap-3 rounded-lg px-3 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", collapsed && "justify-center px-0", active ? "bg-brand/10 font-medium text-brand" : "text-muted-foreground hover:bg-accent hover:text-foreground")}><Icon className="size-[18px] shrink-0" /><span className={cn("truncate", collapsed && "sr-only")}>{item.title}</span>{active && !collapsed && <span className="ml-auto size-1.5 rounded-full bg-brand" />}</Link>;
+      })}
+    </section>
+  );
+
   return (
     <aside className={cn("fixed inset-y-0 left-0 z-40 hidden border-r border-border bg-card transition-[width] duration-200 md:flex md:flex-col", collapsed ? "w-[76px]" : "w-64")} aria-label="Main navigation">
       <div className={cn("flex h-16 items-center border-b border-border px-4", collapsed ? "justify-center" : "justify-between")}>
@@ -36,13 +47,10 @@ export function Sidebar() {
         {!collapsed && <Button variant="ghost" size="sm" className="size-8 px-0" onClick={toggle} aria-label="Collapse sidebar"><PanelLeftClose className="size-4" /></Button>}
       </div>
       {collapsed && <Button variant="ghost" size="sm" className="mx-auto mt-3 size-9 px-0" onClick={toggle} aria-label="Expand sidebar"><PanelLeftOpen className="size-4" /></Button>}
-      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-5">
-        {!collapsed && <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Workspace</p>}
-        {appNavigation.map((item) => {
-          const active = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href + "/"));
-          const Icon = item.icon;
-          return <Link key={item.href} href={item.href} title={collapsed ? item.title : undefined} aria-current={active ? "page" : undefined} className={cn("flex h-10 items-center gap-3 rounded-lg px-3 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", collapsed && "justify-center px-0", active ? "bg-brand/10 font-medium text-brand" : "text-muted-foreground hover:bg-accent hover:text-foreground")}><Icon className="size-[18px] shrink-0" /><span className={cn("truncate", collapsed && "sr-only")}>{item.title}</span>{active && !collapsed && <span className="ml-auto size-1.5 rounded-full bg-brand" />}</Link>;
-        })}
+      <nav className="flex-1 space-y-3 overflow-y-auto px-3 py-3">
+        {renderGroup("Workspace", nav.main)}
+        {renderGroup("Catalog", nav.catalog)}
+        {renderGroup("Account", nav.footer)}
       </nav>
       <div className="border-t border-border p-3">
         <div className={cn("flex items-center gap-3 rounded-lg p-2", collapsed && "justify-center")}>
