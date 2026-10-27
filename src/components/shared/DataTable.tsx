@@ -25,17 +25,33 @@ export type DataTableProps<TData, TValue> = {
   emptyAction?: React.ReactNode;
   className?: string;
   onRowClick?: (row: TData) => void;
+  /** Controlled global search (useful when the caller also exports filtered rows). */
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  /** Window rows instead of rendering every row of the current page. */
+  virtualized?: boolean;
 };
+
+/** Row window for the virtualized body: viewport plus overscan, clamped to the row count. */
+export function computeRowWindow(total: number, scrollTop: number, viewportHeight: number, rowHeight: number, overscan = 8) {
+  if (total <= 0 || rowHeight <= 0) return { start: 0, end: 0 };
+  const rawStart = Math.floor(Math.max(scrollTop, 0) / rowHeight) - overscan;
+  const start = Math.max(0, Math.min(rawStart, total - 1));
+  const end = Math.min(total, Math.ceil((Math.max(scrollTop, 0) + Math.max(viewportHeight, 1)) / rowHeight) + overscan);
+  return { start, end: Math.max(end, start + 1) };
+}
 
 export function DataTable<TData, TValue>({
   columns, data, searchPlaceholder = "Filter records…", filterColumnId,
   pageSize = 10, onPageSizeChange, loading = false,
   emptyTitle = "No records found", emptyDescription = "Try changing your search or filters.",
-  emptyAction, className, onRowClick,
+  emptyAction, className, onRowClick, searchValue, onSearchChange, virtualized = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [internalFilter, setInternalFilter] = React.useState("");
+  const globalFilter = searchValue ?? internalFilter;
+  const updateGlobalFilter = onSearchChange ?? setInternalFilter;
   const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>({ left: [], right: [] });
   const [internalPageSize, setInternalPageSize] = React.useState(pageSize);
   const [pageIndex, setPageIndex] = React.useState(0);
@@ -47,7 +63,7 @@ export function DataTable<TData, TValue>({
     state: { sorting, columnFilters, globalFilter, columnPinning, pagination: { pageIndex, pageSize: internalPageSize } },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
+    onGlobalFilterChange: updateGlobalFilter,
     onColumnPinningChange: setColumnPinning,
     onPaginationChange: (updater) => {
       const currentState = { pageIndex, pageSize: internalPageSize };
@@ -66,6 +82,42 @@ export function DataTable<TData, TValue>({
   const rows = table.getRowModel().rows;
   const visibleColumnCount = table.getVisibleLeafColumns().length;
 
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [scrollState, setScrollState] = React.useState({ top: 0, height: 0 });
+  const [measuredRowHeight, setMeasuredRowHeight] = React.useState(0);
+  // Callback ref so the window re-measures whenever a different row becomes the first one.
+  const measureRow = React.useCallback((node: HTMLTableRowElement | null) => {
+    const height = node?.getBoundingClientRect().height ?? 0;
+    if (height > 0) setMeasuredRowHeight((previous) => (Math.abs(previous - height) > 0.5 ? height : previous));
+  }, []);
+  const virtual = virtualized && !loading && rows.length > 0;
+  // Until a row height is measured, render the whole page and window from the next paint.
+  const windowed = virtual && measuredRowHeight > 0;
+  const { start, end } = windowed
+    ? computeRowWindow(rows.length, scrollState.top, scrollState.height, measuredRowHeight)
+    : { start: 0, end: rows.length };
+  const visibleRows = windowed ? rows.slice(start, end) : rows;
+
+  // Viewport height drives how many rows sit in the window.
+  React.useEffect(() => {
+    if (!virtual) return;
+    const element = scrollRef.current;
+    if (!element) return;
+    const sync = () => setScrollState((state) => (state.height === element.clientHeight ? state : { ...state, height: element.clientHeight }));
+    sync();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(sync);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [virtual]);
+
+  // New data (filters, sorting, pagination) restarts the window at the top.
+  React.useEffect(() => {
+    const element = scrollRef.current;
+    if (element && element.scrollTop > 0) element.scrollTop = 0;
+    setScrollState((state) => (state.top === 0 ? state : { ...state, top: 0 }));
+  }, [data]);
+
   return (
     <div className={cn("space-y-3", className)}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -77,7 +129,7 @@ export function DataTable<TData, TValue>({
             value={filterColumnId ? String(table.getColumn(filterColumnId)?.getFilterValue() ?? "") : globalFilter}
             onChange={(event) => {
               if (filterColumnId) table.getColumn(filterColumnId)?.setFilterValue(event.target.value);
-              else setGlobalFilter(event.target.value);
+              else updateGlobalFilter(event.target.value);
               setPageIndex(0);
             }}
             className="pl-9"
@@ -94,7 +146,16 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
 
-      <div className="overflow-auto rounded-lg border border-border">
+      <div
+        ref={scrollRef}
+        className={cn("overflow-auto rounded-lg border border-border", virtual && "max-h-[560px]")}
+        onScroll={virtual ? (event) => {
+          // Read the offset now: React may run the state updater after the handler
+          // returns, when event.currentTarget is already null.
+          const top = event.currentTarget.scrollTop;
+          setScrollState((state) => (state.top === top ? state : { ...state, top }));
+        } : undefined}
+      >
         <table className="w-full caption-bottom text-sm">
           <thead className="sticky top-0 z-10 bg-muted/95 backdrop-blur">
             {table.getHeaderGroups().map((group) => (
@@ -127,11 +188,15 @@ export function DataTable<TData, TValue>({
               <tr key={rowIndex} className="border-b border-border last:border-0">
                 {Array.from({ length: visibleColumnCount }, (_, columnIndex) => <td key={columnIndex} className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>)}
               </tr>
-            )) : rows.length > 0 ? rows.map((row) => (
-              <tr key={row.id} onClick={onRowClick ? () => onRowClick(row.original) : undefined} onKeyDown={onRowClick ? (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onRowClick(row.original); } } : undefined} tabIndex={onRowClick ? 0 : undefined} aria-label={onRowClick ? "Open row details" : undefined} className={"border-b border-border transition-colors hover:bg-muted/40 last:border-0 " + (onRowClick ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring" : "")}>
+            )) : rows.length > 0 ? <>
+              {start > 0 ? <tr aria-hidden="true" style={{ height: start * measuredRowHeight }}><td className="p-0" colSpan={Math.max(visibleColumnCount, 1)} /></tr> : null}
+              {visibleRows.map((row, index) => (
+              <tr key={row.id} ref={virtual && index === 0 ? measureRow : undefined} onClick={onRowClick ? () => onRowClick(row.original) : undefined} onKeyDown={onRowClick ? (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onRowClick(row.original); } } : undefined} tabIndex={onRowClick ? 0 : undefined} aria-label={onRowClick ? "Open row details" : undefined} className={"border-b border-border transition-colors hover:bg-muted/40 last:border-0 " + (onRowClick ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring" : "")}>
                 {row.getVisibleCells().map((cell) => <td key={cell.id} className="px-4 py-3 align-middle">{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>)}
               </tr>
-            )) : (
+              ))}
+              {end < rows.length ? <tr aria-hidden="true" style={{ height: (rows.length - end) * measuredRowHeight }}><td className="p-0" colSpan={Math.max(visibleColumnCount, 1)} /></tr> : null}
+            </> : (
               <tr><td colSpan={Math.max(visibleColumnCount, 1)} className="p-8"><EmptyState title={emptyTitle} description={emptyDescription} />{emptyAction}</td></tr>
             )}
           </tbody>
