@@ -1,0 +1,5 @@
+"use client";
+import { ResponsiveContainer, LineChart, Line } from "recharts";
+import { cn } from "@/lib/utils";
+export type SparklineProps={data:Array<number|{value:number}>;className?:string;positive?:boolean;height?:number;strokeWidth?:number};
+export function Sparkline({data,className,positive=true,height=36,strokeWidth=2}:SparklineProps){const rows=data.map((p,index)=>({index,value:typeof p==="number"?p:p.value}));return <div className={cn("w-full min-w-0",className)} aria-label="Trend sparkline" role="img"><ResponsiveContainer width="100%" height={height}><LineChart data={rows} margin={{top:3,right:2,bottom:3,left:2}}><Line type="monotone" dataKey="value" stroke={positive?"var(--color-brand)":"var(--color-danger)"} strokeWidth={strokeWidth} dot={false} isAnimationActive={false}/></LineChart></ResponsiveContainer></div>}
