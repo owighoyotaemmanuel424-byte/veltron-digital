@@ -692,3 +692,11 @@ td { color: var(--text); border-color: var(--border); }
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 }
+
+
+/* Accessible Radix FAQ expand/collapse motion. */
+@keyframes accordion-down { from { height: 0; } to { height: var(--radix-accordion-content-height); } }
+@keyframes accordion-up { from { height: var(--radix-accordion-content-height); } to { height: 0; } }
+.animate-accordion-down { animation: accordion-down 180ms ease-out; }
+.animate-accordion-up { animation: accordion-up 180ms ease-out; }
+@media (prefers-reduced-motion: reduce) { .animate-accordion-down, .animate-accordion-up { animation-duration: 0.01ms; } }
