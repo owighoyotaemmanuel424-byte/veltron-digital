@@ -1,1 +1,15 @@
-export default function SavingsLoading(){return <main aria-label="Loading savings vaults" aria-busy="true" className="space-y-6"><div className="flex flex-wrap items-center justify-between gap-3"><div className="h-8 w-56 animate-pulse rounded bg-muted motion-reduce:animate-none"/><div className="h-10 w-28 animate-pulse rounded-xl bg-muted motion-reduce:animate-none"/></div><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{Array.from({length:3},(_,i)=><div key={i} className="h-64 animate-pulse rounded-2xl border border-border bg-card motion-reduce:animate-none"/>)}</div></main>
+export default function SavingsLoading() {
+  return (
+    <main aria-label="Loading savings vaults" aria-busy="true" className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="h-8 w-56 animate-pulse rounded bg-muted motion-reduce:animate-none" />
+        <div className="h-10 w-28 animate-pulse rounded-xl bg-muted motion-reduce:animate-none" />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: 3 }, (_, index) => (
+          <div key={index} className="h-64 animate-pulse rounded-2xl border border-border bg-card motion-reduce:animate-none" />
+        ))}
+      </div>
+    </main>
+  );
+}
