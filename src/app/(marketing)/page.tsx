@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import * as Accordion from "@radix-ui/react-accordion";
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Check, ChevronDown, CircleHelp, Command, LockKeyhole, Menu, Moon, ShieldCheck, Sparkles, Sun, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, ChevronDown, CircleHelp, LockKeyhole, Menu, Moon, ShieldCheck, Sparkles, Sun, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBanner } from "@/components/shared/StatusBanner";
 import { faqs, features, testimonials } from "@/lib/demo/marketing";
