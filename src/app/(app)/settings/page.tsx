@@ -1,0 +1,3 @@
+export default function SettingsPage() {
+  return <section className="space-y-2"><p className="text-sm text-muted-foreground">Manage your workspace</p><h2 className="text-2xl font-semibold tracking-tight">Settings</h2><p className="max-w-2xl text-sm text-muted-foreground">Account preferences and security controls will be organized here.</p><div className="mt-6 rounded-xl border border-border bg-card p-6"><p className="font-medium">Preferences</p><p className="mt-1 text-sm text-muted-foreground">Use the theme control in the top bar to switch between light and dark appearance.</p></div></section>;
+}
