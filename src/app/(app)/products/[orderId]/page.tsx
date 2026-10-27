@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { ArrowLeft, Check, CheckCircle2, Clock3, Download, ExternalLink, FileText, PackageCheck, Settings2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,6 @@ function formatDate(value: string) {
 export default function ProductOrderDetailPage() {
   const params = useParams<{ orderId: string }>();
   const orderId = decodeURIComponent(params.orderId);
-  const router = useRouter();
   const snapshot = useSyncExternalStore(subscribeToMyProducts, getMyProductsSnapshot, getServerMyProductsSnapshot);
   const orders = useMemo(() => parseMyProducts(snapshot), [snapshot]);
   const order = orders.find((item) => item.id === orderId);
