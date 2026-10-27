@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
-import { ArrowDownToLine, ArrowUpRight, Copy, Ellipsis, ExternalLink, PackageOpen, Search, Settings2, XCircle } from "lucide-react";
+import { ArrowUpRight, Copy, Ellipsis, ExternalLink, PackageOpen, Search, Settings2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ProductIcon } from "@/components/catalog/ProductCard";
