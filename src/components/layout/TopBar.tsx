@@ -15,6 +15,8 @@ export function TopBar({ title }: { title?: React.ReactNode }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [commandOpen, setCommandOpen] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
+  // The mounted flag avoids rendering theme-dependent controls before hydration.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   React.useEffect(() => setMounted(true), []);
   const pageTitle = title ?? getPageTitle(pathname);
 
