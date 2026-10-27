@@ -26,7 +26,7 @@ const select = (name: string, label: string, values: string[]) => field(name, la
 const multi = (name: string, label: string, values: string[]) => field(name, label, "multiselect", { options: optionList(values), helpText: "Select one or more options." });
 
 const definitions: Record<string, ConfigField[]> = {
-  "buy-domain": [field("domain", "Domain label", "domain", { placeholder: "yourbrand" }), select("tld", "Domain extension", [".com", ".net", ".org", ".io", ".co", ".app"]), count("years", "Registration years", 1, 10), field("privacyAddon", "Add domain privacy", "checkbox", { required: false })],
+  "buy-domain": [field("domain", "Domain label", "text", { placeholder: "yourbrand" }), select("tld", "Domain extension", [".com", ".net", ".org", ".io", ".co", ".app"]), count("years", "Registration years", 1, 10), field("privacyAddon", "Add domain privacy", "checkbox", { required: false })],
   "buy-webmail": [domain(), count("mailboxes", "Number of mailboxes", 1, 500), count("storageGb", "Storage per mailbox (GB)", 1, 1000), count("aliases", "Email aliases", 0, 1000)],
   broker: [template(), brandName(), color(), field("logoPlaceholder", "Logo file", "file", { required: false, helpText: "Demo placeholder only; no file is uploaded." }), domain()],
   "online-banking": [template(), brandName(), color(), domain()],
