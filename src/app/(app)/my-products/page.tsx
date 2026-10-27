@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ProductIcon } from "@/components/catalog/ProductCard";
 import { catalogCategories, formatCatalogPrice, demoCatalog } from "@/lib/demo/catalog";
 
-type SavedProduct = { id: string; productId: string; name: string; category: string; slug: string; purchasedAt: string; configuration: Record<string, string>; status: "Demo active" | "Awaiting manual review" | "Provisioning demo" };
+type SavedProduct = { id: string; productId: string; name: string; category: string; slug: string; purchasedAt: string; configuration: Record<string, string>; status: "Pending" | "Demo active" | "Awaiting manual review" | "Provisioning demo" };
 
 export default function MyProductsPage() {
   const [products, setProducts] = useState<SavedProduct[]>([]);
