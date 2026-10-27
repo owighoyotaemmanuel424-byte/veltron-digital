@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "@neondatabase/auth-ui/css";
 import { AppProviders } from "@/components/providers/AppProviders";
+import { StatusBanner } from "@/components/shared/StatusBanner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,7 +33,7 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable}`}
     >
       <body>
-        <AppProviders>{children}</AppProviders>
+        <AppProviders><StatusBanner />{children}</AppProviders>
       </body>
     </html>
   );
