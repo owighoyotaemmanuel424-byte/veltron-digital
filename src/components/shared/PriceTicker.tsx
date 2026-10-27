@@ -9,5 +9,5 @@ export function PriceTicker({value,className,flashDuration=650,...amountProps}:P
  const [shown,setShown]=useState(value),[direction,setDirection]=useState<"up"|"down"|null>(null);
  useEffect(()=>{setDirection(value>shown?"up":value<shown?"down":null);spring.set(value);const timer=window.setTimeout(()=>setDirection(null),flashDuration);return()=>window.clearTimeout(timer)},[value,flashDuration,spring]); 
  useMotionValueEvent(spring,"change",latest=>setShown(latest));
- return <motion.span className={cn("inline-flex rounded-md transition-colors motion-reduce:transition-none",direction==="up"&&"bg-success/10",direction==="down"&&"bg-danger/10",className)}><Amount {...amountProps} value={shown}/></motion.span>;
+ return <motion.span aria-live="polite" aria-atomic="true" role="status" className={cn("inline-flex rounded-md transition-colors motion-reduce:transition-none",direction==="up"&&"bg-success/10",direction==="down"&&"bg-danger/10",className)}><Amount {...amountProps} value={shown}/></motion.span>;
 }
