@@ -53,7 +53,7 @@ export default async function DashboardPage() {
     }),
     prisma.order.findMany({
       where: { userId: user.id },
-      select: { publicId: true, status: true, totalMinor: true, currency: true, createdAt: true, service: { select: { name: true } } },
+      select: { publicId: true, status: true, totalMinor: true, currency: true, createdAt: true, service: { select: { name: true } }, product: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
       take: 5,
     }),
@@ -226,7 +226,7 @@ export default async function DashboardPage() {
           {recentOrders.length ? <div className={styles.tableWrap}><table className={styles.table}>
             <thead><tr><th>Service</th><th>Reference</th><th>Status</th><th>Total</th><th>Date</th></tr></thead>
             <tbody>{recentOrders.map((order) => <tr key={order.publicId}>
-              <td><div className={styles.serviceCell}><strong>{order.service.name}</strong><small>Service order</small></div></td>
+              <td><div className={styles.serviceCell}><strong>{order.service?.name ?? order.product?.name ?? "Catalog product"}</strong><small>{order.product ? "Catalog order" : "Service order"}</small></div></td>
               <td><span className={styles.reference}>{order.publicId.slice(0, 12)}</span></td>
               <td><span className={`${styles.badge} ${statusClass(order.status)}`}>{order.status.toLowerCase().replaceAll("_", " ")}</span></td>
               <td>{money(order.totalMinor, order.currency)}</td>
