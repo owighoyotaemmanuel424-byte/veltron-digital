@@ -151,6 +151,18 @@ export default async function DashboardPage() {
           <MetricCard label="Recent payments" value={payments.length} detail={`Latest ${payments.length} payment records`} icon="↗" />
         </section>
 
+        <section className={styles.panel} aria-label="My active products" style={{ marginBottom: "1.25rem" }}>
+          <div className={styles.panelHead}>
+            <div><div className={styles.kicker}>YOUR PRODUCTS</div><h2>My Active Products</h2><p style={{ marginTop: ".35rem", color: "var(--muted-foreground, #64748b)" }}>View product status, update configuration, or renew an expired demo order.</p></div>
+            <Link className={styles.textLink} href="/products">Manage products ↗</Link>
+          </div>
+          <Link href="/products" className={styles.actionTile}>
+            <span className={styles.actionTileIcon}>▦</span>
+            <span className={styles.actionTileText}><strong>Open My Products</strong><small>Review active, pending, and expired product orders.</small></span>
+            <span className={styles.actionArrow}>↗</span>
+          </Link>
+        </section>
+
         <section className={styles.quickSection} id="quick-actions">
           <div className={styles.sectionIntro}>
             <div><div className={styles.kicker}>GET STARTED</div><h2>Quick actions</h2><p>Shortcuts to the services currently available in Veltron Digital.</p></div>
