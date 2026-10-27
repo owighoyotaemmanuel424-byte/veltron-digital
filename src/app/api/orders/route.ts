@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/session";
+import { randomUUID } from "node:crypto";
+import { getConfigSchema } from "@/lib/catalog/schemas";
+import { getProduct } from "@/lib/demo/catalog";
+import { demoModeRequired, isDemoMode } from "@/lib/catalog/api";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -30,81 +34,55 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isDemoMode()) return demoModeRequired();
   const user = await getSessionUser();
-  if (!user) return NextResponse.json({ error: "Sign in before placing an order." }, { status: 401 });
+  if (!user) return NextResponse.json({ error: "Sign in before placing a demo order." }, { status: 401 });
   const origin = request.headers.get("origin");
   try {
-    if (!origin || new URL(origin).origin !== request.nextUrl.origin) {
-      return NextResponse.json({ error: "Same-origin request required." }, { status: 403 });
-    }
-  } catch {
-    // Malformed Origin headers must be rejected, not allowed to escape as a 500.
-    return NextResponse.json({ error: "Same-origin request required." }, { status: 403 });
-  }
+    if (!origin || new URL(origin).origin !== request.nextUrl.origin) return NextResponse.json({ error: "Same-origin request required." }, { status: 403 });
+  } catch { return NextResponse.json({ error: "Same-origin request required." }, { status: 403 }); }
+
   let body: unknown;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 }); }
-  const parsed = schema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ error: "Choose a service and provide a valid idempotency key." }, { status: 400 });
-
-  const idempotencyKey = parsed.data.idempotencyKey;
-  const existingOrder = async () => prisma.order.findUnique({
-    where: { idempotencyKey },
-    select: { id: true, publicId: true, userId: true, status: true, totalMinor: true, currency: true },
+  const requestSchema = z.object({
+    category: z.enum(["website", "digital", "call", "mail", "generator"]),
+    slug: z.string().trim().min(1).max(120),
+    config: z.record(z.string(), z.unknown()),
   });
-  const respondForExisting = (existing: Awaited<ReturnType<typeof existingOrder>>) => {
-    if (!existing) return null;
-    if (existing.userId !== user.id) {
-      return NextResponse.json({ error: "Idempotency key conflict." }, { status: 409 });
-    }
-    return NextResponse.json(
-      { order: { publicId: existing.publicId, status: existing.status, totalMinor: existing.totalMinor, currency: existing.currency }, reused: true },
-      { headers: { "Cache-Control": "no-store" } },
-    );
-  };
+  const parsed = requestSchema.safeParse(body);
+  if (!parsed.success) return NextResponse.json({ error: "Provide a valid category, product slug, and configuration.", issues: parsed.error.issues }, { status: 400 });
+  const product = getProduct(parsed.data.category, parsed.data.slug);
+  if (!product) return NextResponse.json({ error: "Catalog product not found." }, { status: 404 });
+  const validatedConfig = getConfigSchema(product.slug, product.category).safeParse(parsed.data.config);
+  if (!validatedConfig.success) return NextResponse.json({ error: "Product configuration is invalid.", issues: validatedConfig.error.issues }, { status: 400 });
 
+  // DEMO STUB ONLY: provisioning/fulfillment is NOT implemented. Every created order stays PENDING.
+  // This route never calls a provider, sends a message, transfers money, or provisions a service.
   try {
-    const existing = respondForExisting(await existingOrder());
-    if (existing) return existing;
-
-    const service = await prisma.service.findFirst({ where: { id: parsed.data.serviceId, status: "ACTIVE" }, select: { id: true, name: true, priceMinor: true, currency: true } });
-    if (!service) return NextResponse.json({ error: "This service is not currently available." }, { status: 404 });
-    const totalMinor = service.priceMinor * parsed.data.quantity;
-    if (!Number.isSafeInteger(totalMinor) || totalMinor <= 0) return NextResponse.json({ error: "The requested order total is invalid." }, { status: 400 });
-    // Persist the order and its audit record atomically. If audit persistence
-    // fails, the order must not be left behind without its required audit event.
-    const order = await prisma.$transaction(async (tx) => {
-      const createdOrder = await tx.order.create({
-        data: {
-          userId: user.id, serviceId: service.id, quantity: parsed.data.quantity,
-          unitPriceMinor: service.priceMinor, totalMinor, currency: service.currency,
-          customerInput: parsed.data.customerInput ? parsed.data.customerInput : undefined,
-          idempotencyKey,
-        },
-        select: { id: true, publicId: true, status: true, totalMinor: true, currency: true, createdAt: true },
-      });
-      await tx.auditLog.create({
-        data: {
-          actorId: user.id,
-          action: "order.created.pending",
-          entityType: "Order",
-          entityId: createdOrder.id,
-          details: { serviceId: service.id, quantity: parsed.data.quantity, totalMinor, currency: service.currency },
-        },
-      });
-      return createdOrder;
+    const dbProduct = await prisma.product.upsert({
+      where: { category_slug: { category: product.category, slug: product.slug } },
+      update: { name: product.name, description: product.description, price: product.price.amount, currency: product.price.currency, interval: product.price.interval, active: true, metadata: { icon: product.icon, tagline: product.tagline, features: product.features } },
+      create: { category: product.category, slug: product.slug, name: product.name, description: product.description, price: product.price.amount, currency: product.price.currency, interval: product.price.interval, metadata: { icon: product.icon, tagline: product.tagline, features: product.features } },
     });
-    return NextResponse.json({ order }, { status: 201, headers: { "Cache-Control": "no-store" } });
-  } catch (error) {
-    // The unique database constraint is the final arbiter when two identical
-    // requests race. Re-read the winning row so retries remain idempotent.
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-      try {
-        const existing = respondForExisting(await existingOrder());
-        if (existing) return existing;
-      } catch {
-        // Fall through to the generic safe response if the winning row cannot be read.
-      }
-    }
-    return NextResponse.json({ error: "Order could not be created. Refresh and try again." }, { status: 503 });
+    const priceMinor = Math.round(product.price.amount * 100);
+    const order = await prisma.order.create({
+      data: {
+        userId: user.id,
+        productId: dbProduct.id,
+        status: "PENDING",
+        quantity: 1,
+        unitPriceMinor: priceMinor,
+        totalMinor: priceMinor,
+        currency: product.price.currency,
+        customerInput: validatedConfig.data as Prisma.InputJsonValue,
+        config: validatedConfig.data as Prisma.InputJsonValue,
+        price: product.price.amount,
+        idempotencyKey: `demo:${randomUUID()}`,
+      },
+      select: { id: true, publicId: true, status: true, config: true, price: true, currency: true, createdAt: true },
+    });
+    return NextResponse.json({ orderId: order.id, order: { ...order, status: "PENDING" as const }, demo: true, fulfillment: "not_implemented" as const }, { status: 201, headers: { "Cache-Control": "no-store" } });
+  } catch {
+    return NextResponse.json({ error: "Demo order could not be persisted. Check the database migration and connection." }, { status: 503, headers: { "Cache-Control": "no-store" } });
   }
 }
