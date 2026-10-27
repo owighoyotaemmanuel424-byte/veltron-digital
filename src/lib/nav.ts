@@ -1,8 +1,5 @@
 import {
-  Activity,
   Bitcoin,
-  CircleHelp,
-  Coins,
   FileText,
   Globe,
   LayoutDashboard,
@@ -12,9 +9,7 @@ import {
   Phone,
   PiggyBank,
   Settings,
-  Settings2,
   Smartphone,
-  WalletCards,
 } from "lucide-react";
 
 export const nav = {
