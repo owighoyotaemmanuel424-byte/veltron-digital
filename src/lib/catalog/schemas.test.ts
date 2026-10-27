@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getConfigFields, getConfigSchema, productConfigSchemas } from "@/lib/catalog/schemas";
+import { demoCatalog } from "@/lib/demo/catalog";
 
 const expectedSlugs = [
   "buy-domain", "buy-webmail", "broker", "online-banking", "tesla-giveaway",
@@ -13,6 +14,7 @@ const expectedSlugs = [
 describe("product configuration schemas", () => {
   it("provides a dedicated schema and field list for every configured product slug", () => {
     expect(Object.keys(productConfigSchemas).sort()).toEqual([...expectedSlugs].sort());
+    expect(expectedSlugs.every((slug) => demoCatalog.some((product) => product.slug === slug))).toBe(true);
     for (const slug of expectedSlugs) {
       expect(getConfigFields(slug, "website").length).toBeGreaterThan(0);
     }
