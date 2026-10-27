@@ -30,10 +30,12 @@ ALTER TABLE "Order" ADD COLUMN "fulfilledAt" TIMESTAMP(3);
 CREATE INDEX "Order_productId_createdAt_idx" ON "Order"("productId", "createdAt");
 ALTER TABLE "Order" ADD CONSTRAINT "Order_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
+CREATE TYPE "DocumentType" AS ENUM ('crypto', 'bank', 'store');
+
 CREATE TABLE "Document" (
   "id" TEXT NOT NULL,
   "orderId" TEXT NOT NULL,
-  "type" TEXT NOT NULL,
+  "type" "DocumentType" NOT NULL,
   "payload" JSONB NOT NULL,
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "Document_pkey" PRIMARY KEY ("id")
