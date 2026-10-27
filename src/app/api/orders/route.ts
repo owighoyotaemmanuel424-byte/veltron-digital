@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { getSessionUser } from "@/lib/session";
 import { randomUUID } from "node:crypto";
@@ -10,20 +9,14 @@ import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-const schema = z.object({
-  serviceId: z.string().min(1).max(100),
-  quantity: z.number().int().min(1).max(1000).default(1),
-  customerInput: z.record(z.string(), z.string().trim().max(500)).optional(),
-  idempotencyKey: z.string().min(16).max(128).regex(/^[A-Za-z0-9._:-]+$/),
-});
-
 export async function GET() {
+  if (!isDemoMode()) return demoModeRequired();
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
   try {
     const orders = await prisma.order.findMany({
       where: { userId: user.id },
-      select: { publicId: true, status: true, quantity: true, unitPriceMinor: true, totalMinor: true, currency: true, createdAt: true, updatedAt: true, service: { select: { name: true, category: true } } },
+      select: { id: true, publicId: true, status: true, quantity: true, unitPriceMinor: true, totalMinor: true, price: true, currency: true, config: true, createdAt: true, fulfilledAt: true, service: { select: { name: true, category: true } }, product: { select: { name: true, category: true, slug: true } } },
       orderBy: { createdAt: "desc" },
       take: 100,
     });
