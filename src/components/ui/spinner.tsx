@@ -1,0 +1,5 @@
+import { LoaderCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
+export function Spinner({ className, label = "Loading", ...props }: React.ComponentProps<"svg"> & { label?: string }) {
+  return <LoaderCircle role="status" aria-label={label} className={cn("size-4 animate-spin motion-reduce:animate-none", className)} {...props} />;
+}
