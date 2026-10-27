@@ -7,7 +7,7 @@ import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { OTPInput } from "@/components/auth/OTPInput";
 import { RecoveryCodeGrid } from "@/components/auth/RecoveryCodeGrid";
 import { Button } from "@/components/ui/button";
-import { demoResendOtp, demoVerifyOtp } from "@/lib/demo/auth";
+import { demoResendOtp, demoVerifyOtp, demoVerifyRecoveryCode } from "@/lib/demo/auth";
 
 export function TwoFactorChallenge({ onSuccess }: { onSuccess: () => void }) {
   const [code, setCode] = React.useState("");
@@ -24,7 +24,7 @@ export function TwoFactorChallenge({ onSuccess }: { onSuccess: () => void }) {
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
-    const result = await demoVerifyOtp(recovery ? code.replace(/[^A-Za-z0-9]/g, "") : code);
+    const result = recovery ? await demoVerifyRecoveryCode(code) : await demoVerifyOtp(code);
     setBusy(false);
     if (!result.ok) { toast.error(result.message); return; }
     toast.success(result.message);
