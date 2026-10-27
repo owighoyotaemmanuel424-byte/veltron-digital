@@ -9,28 +9,7 @@ import { ProductIcon } from "@/components/catalog/ProductCard";
 import { ConfigForm, type ConfigValues } from "@/components/catalog/ConfigForm";
 import { Button } from "@/components/ui/button";
 import { getConfigFields } from "@/lib/catalog/schemas";
-
-const storageKey = "veltron-my-products";
-type SavedProduct = { id: string; productId: string; name: string; category: string; slug: string; purchasedAt: string; configuration: Record<string, unknown>; status: "Pending" | "Demo active" | "Awaiting manual review" | "Provisioning demo" };
-
-function saveMyProduct(product: CatalogProduct, configuration: ConfigValues) {
-  let existing: SavedProduct[] = [];
-  try {
-    const stored: unknown = JSON.parse(localStorage.getItem(storageKey) ?? "[]");
-    existing = Array.isArray(stored) ? stored as SavedProduct[] : [];
-  } catch { existing = []; }
-  const item: SavedProduct = {
-    id: product.id + "-" + Date.now(),
-    productId: product.id,
-    name: product.name,
-    category: product.category,
-    slug: product.slug,
-    purchasedAt: new Date().toISOString(),
-    configuration,
-    status: "Pending",
-  };
-  localStorage.setItem(storageKey, JSON.stringify([item, ...existing]));
-}
+import { addMyProduct } from "@/lib/catalog/my-products";
 
 function displayValue(value: unknown): string {
   if (typeof value === "boolean") return value ? "Yes" : "No";
@@ -53,7 +32,7 @@ export function PurchaseDrawer({ product, open, onOpenChange }: { product: Catal
   const submit = () => {
     setBusy(true);
     try {
-      saveMyProduct(product, configuration);
+      addMyProduct(product, configuration);
       toast.success("Order created (demo)", { description: product.name + " was added to My Products with Pending status. No payment was taken." });
       close();
     } catch {
