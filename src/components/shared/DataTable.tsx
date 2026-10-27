@@ -24,13 +24,14 @@ export type DataTableProps<TData, TValue> = {
   emptyDescription?: string;
   emptyAction?: React.ReactNode;
   className?: string;
+  onRowClick?: (row: TData) => void;
 };
 
 export function DataTable<TData, TValue>({
   columns, data, searchPlaceholder = "Filter records…", filterColumnId,
   pageSize = 10, onPageSizeChange, loading = false,
   emptyTitle = "No records found", emptyDescription = "Try changing your search or filters.",
-  emptyAction, className,
+  emptyAction, className, onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -127,7 +128,7 @@ export function DataTable<TData, TValue>({
                 {Array.from({ length: visibleColumnCount }, (_, columnIndex) => <td key={columnIndex} className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>)}
               </tr>
             )) : rows.length > 0 ? rows.map((row) => (
-              <tr key={row.id} className="border-b border-border transition-colors hover:bg-muted/40 last:border-0">
+              <tr key={row.id} onClick={onRowClick ? () => onRowClick(row.original) : undefined} onKeyDown={onRowClick ? (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onRowClick(row.original); } } : undefined} tabIndex={onRowClick ? 0 : undefined} aria-label={onRowClick ? "Open row details" : undefined} className={"border-b border-border transition-colors hover:bg-muted/40 last:border-0 " + (onRowClick ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring" : "")}>
                 {row.getVisibleCells().map((cell) => <td key={cell.id} className="px-4 py-3 align-middle">{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>)}
               </tr>
             )) : (
