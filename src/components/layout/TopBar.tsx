@@ -4,11 +4,13 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Bell, ChevronDown, Command as CommandIcon, LogOut, Moon, Search, Settings, Sun, UserRound } from "lucide-react";
+import { ChevronDown, LifeBuoy, LogOut, Menu, Moon, Search, Settings, Sun, UserRound } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { getPageTitle } from "@/lib/nav";
 import { CommandMenu } from "@/components/layout/CommandMenu";
+import { signOutAction } from "@/lib/auth/actions";
 
 export function TopBar({ title }: { title?: React.ReactNode }) {
   const pathname = usePathname();
@@ -18,17 +20,101 @@ export function TopBar({ title }: { title?: React.ReactNode }) {
   React.useEffect(() => setMounted(true), []);
   const pageTitle = title ?? getPageTitle(pathname);
 
-  return <>
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-border bg-background/90 px-4 backdrop-blur md:px-7">
-      <div className="min-w-0"><p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Veltron workspace</p><h1 className="truncate text-base font-semibold text-foreground">{pageTitle}</h1></div>
-      <div className="flex shrink-0 items-center gap-1.5">
-        <Button variant="outline" size="sm" className="hidden min-w-36 justify-start gap-2 text-muted-foreground sm:inline-flex md:min-w-48" onClick={() => setCommandOpen(true)} aria-label="Open search"><Search className="size-4" /><span className="mr-auto">Search</span><kbd className="inline-flex items-center gap-0.5 rounded border border-border px-1.5 py-0.5 text-[10px]"><CommandIcon className="size-3" />K</kbd></Button>
-        <Button variant="ghost" size="sm" className="size-9 px-0 sm:hidden" onClick={() => setCommandOpen(true)} aria-label="Search"><Search className="size-4" /></Button>
-        <Button variant="ghost" size="sm" className="size-9 px-0" onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")} aria-label="Toggle theme" title="Toggle theme">{mounted && resolvedTheme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}</Button>
-        <Popover><PopoverTrigger asChild><Button variant="ghost" size="sm" className="relative size-9 px-0" aria-label="Notifications"><Bell className="size-4" /><span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-brand" /></Button></PopoverTrigger><PopoverContent align="end" className="w-72"><p className="font-medium text-foreground">Notifications</p><p className="mt-1 text-sm text-muted-foreground">You’re all caught up.</p></PopoverContent></Popover>
-        <Popover><PopoverTrigger asChild><Button variant="ghost" size="sm" className="ml-1 flex h-9 gap-2 px-1.5" aria-label="Open account menu"><span className="grid size-7 place-items-center rounded-full bg-brand/10 text-brand"><UserRound className="size-4" /></span><ChevronDown className="hidden size-3.5 text-muted-foreground sm:block" /></Button></PopoverTrigger><PopoverContent align="end" className="w-52 p-1.5"><div className="border-b border-border px-3 py-2"><p className="text-sm font-medium text-foreground">Your account</p><p className="text-xs text-muted-foreground">Personal workspace</p></div><Link href="/settings" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent"><UserRound className="size-4" />Profile</Link><Link href="/settings" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent"><Settings className="size-4" />Settings</Link><button type="button" onClick={async () => { try { await fetch("/api/auth/sign-out", { method: "POST", credentials: "same-origin" }); } finally { window.location.assign("/sign-in"); } }} className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-accent"><LogOut className="size-4" />Sign out</button></PopoverContent></Popover>
-      </div>
-    </header>
-    <CommandMenu open={commandOpen} onOpenChange={setCommandOpen} />
-  </>;
+  return (
+    <>
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-border bg-background/85 px-4 backdrop-blur-xl md:px-7">
+        <div className="min-w-0">
+          <p className="eyebrow">Veltron workspace</p>
+          <h1 className="truncate text-base font-semibold tracking-tight text-foreground">{pageTitle}</h1>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setCommandOpen(true)}
+            aria-label="Search"
+            className="size-9 rounded-full px-0 text-muted-foreground hover:text-foreground"
+          >
+            <Search className="size-[18px]" />
+          </Button>
+
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="size-9 rounded-full px-0 text-muted-foreground hover:text-foreground"
+          >
+            <Link href="/support" aria-label="Support">
+              <LifeBuoy className="size-[18px]" />
+            </Link>
+          </Button>
+
+          <a href="/catalog" className="pill-cta hidden sm:inline-flex" aria-label="Join channel">
+            Join channel
+          </a>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="sm" className="size-9 rounded-full px-0" aria-label="Open menu">
+                <Menu className="size-[18px]" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-56 p-1.5">
+              <Link href="/catalog" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent">
+                <UserRound className="size-4" /> Catalog
+              </Link>
+              <Link href="/settings" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent">
+                <Settings className="size-4" /> Settings
+              </Link>
+              <Link href="/support" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent">
+                <LifeBuoy className="size-4" /> Support
+              </Link>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                aria-label="Account menu"
+                className="ml-0.5 flex items-center gap-1.5 rounded-full border border-border bg-card py-1 pl-1 pr-1.5 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <span className="grid size-7 place-items-center rounded-full bg-brand/15 text-brand">
+                  <UserRound className="size-4" />
+                </span>
+                <ChevronDown className="size-3.5" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-60 p-1.5">
+              <div className="border-b border-border px-3 py-2">
+                <p className="text-sm font-medium text-foreground">Your account</p>
+                <p className="text-xs text-muted-foreground">Veltron platform</p>
+              </div>
+              <Link href="/settings" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent">
+                <Settings className="size-4" /> Settings
+              </Link>
+              <button
+                type="button"
+                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+              >
+                {mounted && resolvedTheme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+                {mounted && resolvedTheme === "dark" ? "Light theme" : "Dark theme"}
+              </button>
+              <form action={signOutAction}>
+                <button
+                  type="submit"
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-danger hover:bg-accent"
+                >
+                  <LogOut className="size-4" /> Sign out
+                </button>
+              </form>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </header>
+      <CommandMenu open={commandOpen} onOpenChange={setCommandOpen} />
+    </>
+  );
 }

@@ -700,3 +700,119 @@ td { color: var(--text); border-color: var(--border); }
 .animate-accordion-down { animation: accordion-down 180ms ease-out; }
 .animate-accordion-up { animation: accordion-up 180ms ease-out; }
 @media (prefers-reduced-motion: reduce) { .animate-accordion-down, .animate-accordion-up { animation-duration: 0.01ms; } }
+
+
+/* ==========================================================================
+   Design system: deep charcoal surfaces, high-contrast type, emerald accents.
+   Token names are the app-wide ones (--bg, --surface, --brand, …) so every
+   existing component picks the palette up without touching its markup.
+   ========================================================================== */
+:root,
+.dark {
+  color-scheme: dark;
+  --bg: #0b0f17;
+  --background: #0b0f17;
+  --surface: #11161f;
+  --surface-2: #171e2a;
+  --card: #11161f;
+  --card-foreground: #f8fafc;
+  --popover: #11161f;
+  --popover-foreground: #f8fafc;
+  --border: #1f2a37;
+  --input: #1f2a37;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --foreground: #f8fafc;
+  --muted: #171e2a;
+  --muted-foreground: #94a3b8;
+  --brand: #22c55e;
+  --brand-fg: #04130a;
+  --primary: #22c55e;
+  --primary-foreground: #04130a;
+  --ring: #22c55e;
+  --success: #22c55e;
+  --danger: #f43f5e;
+  --warning: #f59e0b;
+  --secondary: #171e2a;
+  --secondary-foreground: #f8fafc;
+  --accent: #171e2a;
+  --accent-foreground: #f8fafc;
+  --destructive: #f43f5e;
+  --destructive-foreground: #f8fafc;
+  --radius: 0.75rem;
+}
+
+/* Light theme stays usable, but dark is the designed default. */
+.light {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --card: #ffffff;
+  --card-foreground: #0b0f17;
+  --popover: #ffffff;
+  --popover-foreground: #0b0f17;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --text: #0b0f17;
+  --text-muted: #64748b;
+  --foreground: #0b0f17;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --brand: #16a34a;
+  --brand-fg: #ffffff;
+  --primary: #16a34a;
+  --primary-foreground: #ffffff;
+  --ring: #16a34a;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Bold figures and section titles are the primary hierarchy signal. */
+.tabular-nums,
+strong,
+[data-metric] {
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow,
+[data-eyebrow] {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+/* Subtle outline cards with generous padding, used across catalog + savings. */
+.surface-card {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--card);
+  padding: 1.25rem;
+}
+
+/* Pill CTA used in the header (bright blue, per the reference). */
+.pill-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.25rem;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: filter 150ms ease;
+}
+.pill-cta:hover {
+  filter: brightness(1.1);
+}
+

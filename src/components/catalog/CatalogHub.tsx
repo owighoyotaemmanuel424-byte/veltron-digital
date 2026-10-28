@@ -29,6 +29,14 @@ const categoryIcon: Record<CatalogCategory, React.ComponentType<{ className?: st
   ANALYTICS_PRO: LineChart,
 };
 
+/** Colour-coded icon badges give each category a scannable identity. */
+const categoryTone: Record<CatalogCategory, string> = {
+  GLOBAL_BUSINESS: "border-emerald-500/25 bg-emerald-500/10 text-emerald-400",
+  CRYPTO_EXCHANGE: "border-sky-500/25 bg-sky-500/10 text-sky-400",
+  SAVINGS_VAULT: "border-violet-500/25 bg-violet-500/10 text-violet-400",
+  ANALYTICS_PRO: "border-amber-500/25 bg-amber-500/10 text-amber-400",
+};
+
 type Filter = "ALL" | CatalogCategory;
 
 export function CatalogHub({ products, signedIn }: { products: CatalogProduct[]; signedIn: boolean }) {
@@ -126,9 +134,9 @@ export function CatalogHub({ products, signedIn }: { products: CatalogProduct[];
           {visible.map((product) => {
             const Icon = categoryIcon[product.category];
             return (
-              <article key={product.id} className="flex min-w-0 flex-col rounded-xl border border-border bg-card p-4 sm:p-5">
+              <article key={product.id} className="flex min-w-0 flex-col rounded-2xl border border-border bg-card p-5 transition-colors hover:border-border/80">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand">
+                  <span className={cn("grid size-11 shrink-0 place-items-center rounded-xl border", categoryTone[product.category])}>
                     <Icon className="size-5" aria-hidden="true" />
                   </span>
                   <Badge variant="outline">{categoryLabels[product.category]}</Badge>
@@ -138,11 +146,11 @@ export function CatalogHub({ products, signedIn }: { products: CatalogProduct[];
                 <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4 text-xs">
                   <div>
                     <dt className="text-muted-foreground">{product.apyRate > 0 ? "Target APY" : "Fee"}</dt>
-                    <dd className="mt-1 font-semibold">{product.apyRate > 0 ? percent(product.apyRate) : percent(product.feeRate * 100)}</dd>
+                    <dd className="mt-1 text-base font-semibold tabular-nums">{product.apyRate > 0 ? percent(product.apyRate) : percent(product.feeRate * 100)}</dd>
                   </div>
                   <div>
                     <dt className="text-muted-foreground">Monthly</dt>
-                    <dd className="mt-1 font-semibold">{product.tiers[0]?.priceMonthly ? money(product.tiers[0].priceMonthly) : "Free"}</dd>
+                    <dd className="mt-1 text-base font-semibold tabular-nums">{product.tiers[0]?.priceMonthly ? money(product.tiers[0].priceMonthly) : "Free"}</dd>
                   </div>
                 </dl>
                 {/* Full-width, 44px targets on touch. */}

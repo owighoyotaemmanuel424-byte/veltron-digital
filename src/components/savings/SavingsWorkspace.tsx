@@ -56,24 +56,24 @@ export function SavingsWorkspace({ vaults }: { vaults: SavingsVaultView[] }) {
   return (
     <div className="space-y-5">
       <div className="grid gap-3 sm:grid-cols-3">
-        <article className="rounded-xl border border-border bg-card p-4 sm:p-5">
+        <article className="rounded-2xl border border-border bg-card p-5">
           <span className="flex items-center gap-2 text-xs text-muted-foreground"><Wallet className="size-4 text-brand" aria-hidden="true" />Total saved</span>
-          <strong className="mt-2 block text-2xl font-semibold tracking-tight">{money(totalSaved)}</strong>
+          <strong className="mt-2 block text-2xl font-semibold tabular-nums tracking-tight">{money(totalSaved)}</strong>
           <p className="mt-1 text-xs text-muted-foreground">{vaults.length} {vaults.length === 1 ? "vault" : "vaults"}</p>
         </article>
-        <article className="rounded-xl border border-border bg-card p-4 sm:p-5">
+        <article className="rounded-2xl border border-border bg-card p-5">
           <span className="flex items-center gap-2 text-xs text-muted-foreground"><TrendingUp className="size-4 text-success" aria-hidden="true" />Blended APY</span>
-          <strong className="mt-2 block text-2xl font-semibold tracking-tight">{percent(weightedApy)}</strong>
+          <strong className="mt-2 block text-2xl font-semibold tabular-nums tracking-tight">{percent(weightedApy)}</strong>
           <p className="mt-1 text-xs text-muted-foreground">Weighted by balance</p>
         </article>
-        <article className="rounded-xl border border-border bg-card p-4 sm:p-5">
+        <article className="rounded-2xl border border-border bg-card p-5">
           <span className="flex items-center gap-2 text-xs text-muted-foreground"><CalendarClock className="size-4 text-brand" aria-hidden="true" />Locked</span>
-          <strong className="mt-2 block text-2xl font-semibold tracking-tight">{vaults.filter((vault) => vault.locked).length}</strong>
+          <strong className="mt-2 block text-2xl font-semibold tabular-nums tracking-tight">{vaults.filter((vault) => vault.locked).length}</strong>
           <p className="mt-1 text-xs text-muted-foreground">Fixed-term vaults</p>
         </article>
       </div>
 
-      <section className="rounded-xl border border-border bg-card p-4 sm:p-5">
+      <section className="rounded-2xl border border-border bg-card p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-base font-semibold"><Calculator className="size-4 text-brand" aria-hidden="true" />Compound calculator</h2>
@@ -126,7 +126,7 @@ export function SavingsWorkspace({ vaults }: { vaults: SavingsVaultView[] }) {
             {vaults.map((vault) => {
               const progress = vault.target ? Math.min(100, Math.round((vault.balance / vault.target) * 100)) : null;
               return (
-                <article key={vault.id} className="rounded-xl border border-border bg-card p-4 sm:p-5">
+                <article key={vault.id} className="rounded-2xl border border-border bg-card p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <h3 className="truncate text-sm font-semibold">{vault.name}</h3>
@@ -138,7 +138,7 @@ export function SavingsWorkspace({ vaults }: { vaults: SavingsVaultView[] }) {
                     </div>
                   </div>
 
-                  <p className="mt-4 text-xl font-semibold tracking-tight">{money(vault.balance)}</p>
+                  <p className="mt-4 text-xl font-semibold tabular-nums tracking-tight">{money(vault.balance)}</p>
                   {vault.target ? (
                     <>
                       <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-2" role="progressbar" aria-valuenow={progress ?? 0} aria-valuemin={0} aria-valuemax={100} aria-label={`${vault.name} progress`}>
