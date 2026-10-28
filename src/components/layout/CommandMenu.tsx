@@ -3,11 +3,11 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
-import { Activity, ArrowRight, CircleHelp, Coins, LayoutDashboard, Search, Settings2, WalletCards, Zap } from "lucide-react";
+import { Activity, ArrowRight, CircleHelp, Coins, LayoutDashboard, Search, Settings2, Store, WalletCards, Zap } from "lucide-react";
 import { appNavigation } from "@/lib/nav";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
-const iconByTitle = { Dashboard: LayoutDashboard, Analytics: Activity, Crypto: Coins, Savings: WalletCards, Settings: Settings2, Support: CircleHelp } as const;
+const iconByTitle = { Dashboard: LayoutDashboard, Catalog: Store, Analytics: Activity, Crypto: Coins, Savings: WalletCards, Settings: Settings2, Support: CircleHelp } as const;
 
 export function CommandMenu({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const router = useRouter();

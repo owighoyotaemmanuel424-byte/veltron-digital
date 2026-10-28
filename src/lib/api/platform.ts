@@ -1,4 +1,5 @@
 import { catalogProducts, type CatalogCategory, type CatalogProduct, type CatalogTier } from "@/lib/demo/catalog";
+import { demoVaults, type SavingsVaultView } from "@/lib/demo/savings";
 
 /**
  * Typed client for the platform API (`services/platform`).
@@ -76,6 +77,69 @@ export function normalizeCatalogPayload(payload: unknown): CatalogProduct[] {
   return products
     .map((entry) => normalizeProduct(entry as ApiProduct))
     .filter((entry): entry is CatalogProduct => entry !== null && entry.id !== undefined);
+}
+
+export type ApiVault = {
+  id: string;
+  name?: string | null;
+  currentBalance: string | number;
+  targetAmount?: string | number | null;
+  apyRate: string | number;
+  schedule?: "DAILY" | "WEEKLY" | "MONTHLY";
+  isLocked?: boolean;
+};
+
+export type VaultsResult = { vaults: SavingsVaultView[]; source: CatalogSource };
+
+export function normalizeVault(input: ApiVault): SavingsVaultView | null {
+  if (!input?.id) return null;
+  const balance = asNumber(input.currentBalance);
+  const target = input.targetAmount === null || input.targetAmount === undefined ? null : asNumber(input.targetAmount);
+  return {
+    id: input.id,
+    name: input.name?.trim() || "Savings vault",
+    balance: Number.isFinite(balance) ? balance : 0,
+    target: target !== null && target > 0 ? target : null,
+    apy: asNumber(input.apyRate),
+    schedule: input.schedule ?? "MONTHLY",
+    locked: input.isLocked ?? false,
+  };
+}
+
+export function normalizeVaultPayload(payload: unknown): SavingsVaultView[] {
+  if (!payload || typeof payload !== "object") return [];
+  const vaults = (payload as { vaults?: unknown }).vaults;
+  if (!Array.isArray(vaults)) return [];
+  return vaults.map((entry) => normalizeVault(entry as ApiVault)).filter((entry): entry is SavingsVaultView => entry !== null);
+}
+
+export type FetchVaultsOptions = {
+  baseUrl?: string | null;
+  fetchImpl?: typeof fetch;
+  fallback?: SavingsVaultView[];
+  timeoutMs?: number;
+  accessToken?: string;
+};
+
+export async function fetchPlatformVaults(options: FetchVaultsOptions = {}): Promise<VaultsResult> {
+  const fallback = options.fallback ?? demoVaults;
+  const baseUrl = options.baseUrl === null ? null : (options.baseUrl ?? platformApiBaseUrl());
+  // Vaults are per-user, so without a session token there is nothing to read.
+  if (!baseUrl || !options.accessToken) return { vaults: fallback, source: "demo" };
+
+  const fetchImpl = options.fetchImpl ?? fetch;
+  try {
+    const response = await fetchImpl(`${baseUrl}/v1/vaults`, {
+      headers: { accept: "application/json", authorization: `Bearer ${options.accessToken}` },
+      cache: "no-store",
+      signal: AbortSignal.timeout(options.timeoutMs ?? 2500),
+    });
+    if (!response.ok) return { vaults: fallback, source: "demo" };
+    const vaults = normalizeVaultPayload(await response.json());
+    return vaults.length ? { vaults, source: "live" } : { vaults: fallback, source: "demo" };
+  } catch {
+    return { vaults: fallback, source: "demo" };
+  }
 }
 
 export type FetchCatalogOptions = {

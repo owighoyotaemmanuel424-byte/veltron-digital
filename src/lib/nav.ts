@@ -1,7 +1,8 @@
-import { Activity, CircleHelp, Coins, LayoutDashboard, Settings2, WalletCards } from "lucide-react";
+import { Activity, CircleHelp, Coins, LayoutDashboard, Settings2, Store, WalletCards } from "lucide-react";
 
 export const appNavigation = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { title: "Catalog", href: "/catalog", icon: Store },
   { title: "Analytics", href: "/analytics", icon: Activity },
   { title: "Crypto", href: "/crypto", icon: Coins },
   { title: "Savings", href: "/savings", icon: WalletCards },
