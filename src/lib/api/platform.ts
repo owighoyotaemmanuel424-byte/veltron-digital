@@ -1,13 +1,12 @@
-import { catalogProducts, type CatalogCategory, type CatalogProduct, type CatalogTier } from "@/lib/demo/catalog";
-import { demoVaults, type SavingsVaultView } from "@/lib/demo/savings";
+import { categoryLabels, type CatalogCategory, type CatalogProduct, type CatalogTier } from "@/lib/marketplace/catalog";
+import type { SavingsVaultView, VaultSchedule } from "@/lib/finance/vaults";
 
 /**
  * Typed client for the platform API (`services/platform`).
  *
- * The catalog is public, so it can be fetched during server rendering. When the
- * API is not configured or is unreachable the caller transparently receives the
- * demo catalog instead — the UI never renders an error page because a backing
- * service is down, and the source of the data is reported alongside it.
+ * There is no demo fallback: a caller either gets data the platform returned, or
+ * an explicit `unavailable` result it is expected to render as an error state.
+ * Silently substituting fixtures would make a live screen misreport its source.
  */
 
 export type ApiProduct = {
@@ -20,8 +19,23 @@ export type ApiProduct = {
   isActive: boolean;
 };
 
-export type CatalogSource = "live" | "demo";
-export type CatalogResult = { products: CatalogProduct[]; source: CatalogSource };
+export type ApiVault = {
+  id: string;
+  name?: string | null;
+  currentBalance: string | number;
+  targetAmount?: string | number | null;
+  apyRate: string | number;
+  schedule?: VaultSchedule;
+  isLocked?: boolean;
+};
+
+export type CatalogResult =
+  | { status: "ok"; products: CatalogProduct[] }
+  | { status: "unavailable"; reason: string; detail?: string };
+
+export type VaultsResult =
+  | { status: "ok"; vaults: SavingsVaultView[] }
+  | { status: "unavailable"; reason: string; detail?: string };
 
 const CATEGORY_MAP: Record<string, CatalogCategory> = {
   BUSINESS_SUITE: "GLOBAL_BUSINESS",
@@ -41,16 +55,9 @@ const asNumber = (value: string | number): number => {
 function tierFor(product: ApiProduct): CatalogTier {
   const feeRate = asNumber(product.feeRate);
   const apy = asNumber(product.apyRate);
-  return {
-    name: "Standard",
-    priceMonthly: 0,
-    apy: apy > 0 ? apy : null,
-    feeRate,
-    limits: "Contact sales",
-  };
+  return { name: "Standard", priceMonthly: 0, apy: apy > 0 ? apy : null, feeRate, limits: "Contact sales" };
 }
 
-/** Maps one API row onto the catalog card model, or null for unknown categories. */
 export function normalizeProduct(input: ApiProduct): CatalogProduct | null {
   const category = CATEGORY_MAP[input.category?.toUpperCase?.() ?? ""];
   if (!category || !input.name) return null;
@@ -60,36 +67,24 @@ export function normalizeProduct(input: ApiProduct): CatalogProduct | null {
     id: input.id,
     name: input.name,
     category,
-    tagline: input.description?.slice(0, 120) || "Available in the live platform catalog.",
+    tagline: input.description?.slice(0, 120) || categoryLabels[category],
     description: input.description || "No description has been published for this product yet.",
     feeRate,
     apyRate,
-    features: [`Fee ${(feeRate * 100).toFixed(2)}%`, apyRate > 0 ? `APY ${apyRate.toFixed(2)}%` : "Usage based"],
+    features: [
+      `Fee ${(feeRate * 100).toFixed(2)}%`,
+      apyRate > 0 ? `APY ${apyRate.toFixed(2)}%` : "Usage based",
+    ],
     tiers: [tierFor(input)],
   };
 }
 
-/** Pure mapper for the `/v1/catalog` payload; drops rows it cannot represent. */
 export function normalizeCatalogPayload(payload: unknown): CatalogProduct[] {
   if (!payload || typeof payload !== "object") return [];
   const products = (payload as { products?: unknown }).products;
   if (!Array.isArray(products)) return [];
-  return products
-    .map((entry) => normalizeProduct(entry as ApiProduct))
-    .filter((entry): entry is CatalogProduct => entry !== null && entry.id !== undefined);
+  return products.map((entry) => normalizeProduct(entry as ApiProduct)).filter((entry): entry is CatalogProduct => entry !== null);
 }
-
-export type ApiVault = {
-  id: string;
-  name?: string | null;
-  currentBalance: string | number;
-  targetAmount?: string | number | null;
-  apyRate: string | number;
-  schedule?: "DAILY" | "WEEKLY" | "MONTHLY";
-  isLocked?: boolean;
-};
-
-export type VaultsResult = { vaults: SavingsVaultView[]; source: CatalogSource };
 
 export function normalizeVault(input: ApiVault): SavingsVaultView | null {
   if (!input?.id) return null;
@@ -113,65 +108,46 @@ export function normalizeVaultPayload(payload: unknown): SavingsVaultView[] {
   return vaults.map((entry) => normalizeVault(entry as ApiVault)).filter((entry): entry is SavingsVaultView => entry !== null);
 }
 
-export type FetchVaultsOptions = {
-  baseUrl?: string | null;
-  fetchImpl?: typeof fetch;
-  fallback?: SavingsVaultView[];
-  timeoutMs?: number;
-  accessToken?: string;
-};
-
-export async function fetchPlatformVaults(options: FetchVaultsOptions = {}): Promise<VaultsResult> {
-  const fallback = options.fallback ?? demoVaults;
-  const baseUrl = options.baseUrl === null ? null : (options.baseUrl ?? platformApiBaseUrl());
-  // Vaults are per-user, so without a session token there is nothing to read.
-  if (!baseUrl || !options.accessToken) return { vaults: fallback, source: "demo" };
-
-  const fetchImpl = options.fetchImpl ?? fetch;
-  try {
-    const response = await fetchImpl(`${baseUrl}/v1/vaults`, {
-      headers: { accept: "application/json", authorization: `Bearer ${options.accessToken}` },
-      cache: "no-store",
-      signal: AbortSignal.timeout(options.timeoutMs ?? 2500),
-    });
-    if (!response.ok) return { vaults: fallback, source: "demo" };
-    const vaults = normalizeVaultPayload(await response.json());
-    return vaults.length ? { vaults, source: "live" } : { vaults: fallback, source: "demo" };
-  } catch {
-    return { vaults: fallback, source: "demo" };
-  }
-}
-
-export type FetchCatalogOptions = {
-  /** Explicit `null` forces the demo catalog without any network call. */
-  baseUrl?: string | null;
-  fetchImpl?: typeof fetch;
-  fallback?: CatalogProduct[];
-  timeoutMs?: number;
-};
-
 export function platformApiBaseUrl(): string | null {
   const base = process.env.PLATFORM_API_URL ?? process.env.NEXT_PUBLIC_PLATFORM_API_URL;
   return base ? base.replace(/\/$/, "") : null;
 }
 
-export async function fetchPlatformCatalog(options: FetchCatalogOptions = {}): Promise<CatalogResult> {
-  const fallback = options.fallback ?? catalogProducts;
-  const baseUrl = options.baseUrl === null ? null : (options.baseUrl ?? platformApiBaseUrl());
-  if (!baseUrl) return { products: fallback, source: "demo" };
+type RequestOptions = { baseUrl?: string | null; fetchImpl?: typeof fetch; timeoutMs?: number };
 
+async function request(path: string, options: RequestOptions & { accessToken?: string }): Promise<unknown> {
+  const baseUrl = options.baseUrl === null ? null : (options.baseUrl ?? platformApiBaseUrl());
+  if (!baseUrl) throw new Error("PLATFORM_API_URL is not configured");
   const fetchImpl = options.fetchImpl ?? fetch;
+  const response = await fetchImpl(`${baseUrl}${path}`, {
+    headers: {
+      accept: "application/json",
+      ...(options.accessToken ? { authorization: `Bearer ${options.accessToken}` } : {}),
+    },
+    cache: "no-store",
+    signal: AbortSignal.timeout(options.timeoutMs ?? 4000),
+  });
+  if (!response.ok) throw new Error(`platform request failed (HTTP ${response.status})`);
+  return response.json();
+}
+
+export async function fetchPlatformCatalog(options: RequestOptions = {}): Promise<CatalogResult> {
   try {
-    const response = await fetchImpl(`${baseUrl}/v1/catalog`, {
-      headers: { accept: "application/json" },
-      cache: "no-store",
-      signal: AbortSignal.timeout(options.timeoutMs ?? 2500),
-    });
-    if (!response.ok) return { products: fallback, source: "demo" };
-    const products = normalizeCatalogPayload(await response.json());
-    return products.length ? { products, source: "live" } : { products: fallback, source: "demo" };
-  } catch {
-    // Unreachable/timeout/TLS failures all degrade to the demo catalog.
-    return { products: fallback, source: "demo" };
+    const products = normalizeCatalogPayload(await request("/v1/catalog", options));
+    return { status: "ok", products };
+  } catch (error) {
+    return { status: "unavailable", reason: "catalog_unreachable", detail: error instanceof Error ? error.message : undefined };
+  }
+}
+
+export async function fetchPlatformVaults(options: RequestOptions & { accessToken?: string } = {}): Promise<VaultsResult> {
+  if (!options.accessToken) {
+    return { status: "unavailable", reason: "not_signed_in", detail: "A platform session token is required to read vaults." };
+  }
+  try {
+    const vaults = normalizeVaultPayload(await request("/v1/vaults", options));
+    return { status: "ok", vaults };
+  } catch (error) {
+    return { status: "unavailable", reason: "vaults_unreachable", detail: error instanceof Error ? error.message : undefined };
   }
 }

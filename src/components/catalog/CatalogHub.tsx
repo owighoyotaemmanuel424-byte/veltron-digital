@@ -1,18 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { toast } from "sonner";
-import {
-  ArrowRight,
-  Check,
-  LineChart,
-  Search,
-  ShieldCheck,
-  Sparkles,
-  TrendingUp,
-  Wallet,
-  X,
-} from "lucide-react";
+import Link from "next/link";
+import { useActionState } from "react";
+import { ArrowRight, Check, LineChart, Search, Sparkles, TrendingUp, Wallet, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,15 +16,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { createVaultAction, type VaultActionState } from "@/app/(app)/savings/actions";
+import { categoryLabels, money, percent, type CatalogCategory, type CatalogProduct } from "@/lib/marketplace/catalog";
 import { cn } from "@/lib/utils";
-import {
-  categoryLabels,
-  demoWalletBalance,
-  money,
-  percent,
-  type CatalogCategory,
-  type CatalogProduct,
-} from "@/lib/demo/catalog";
 
 const categoryOrder: CatalogCategory[] = ["GLOBAL_BUSINESS", "CRYPTO_EXCHANGE", "SAVINGS_VAULT", "ANALYTICS_PRO"];
 
@@ -46,16 +31,16 @@ const categoryIcon: Record<CatalogCategory, React.ComponentType<{ className?: st
 
 type Filter = "ALL" | CatalogCategory;
 
-type CatalogHubProps = { products: CatalogProduct[]; source?: "live" | "demo" };
-
-export function CatalogHub({ products, source = "demo" }: CatalogHubProps) {
+export function CatalogHub({ products, signedIn }: { products: CatalogProduct[]; signedIn: boolean }) {
   const [query, setQuery] = React.useState("");
   const [filter, setFilter] = React.useState<Filter>("ALL");
   const [quickView, setQuickView] = React.useState<CatalogProduct | null>(null);
   const [activation, setActivation] = React.useState<CatalogProduct | null>(null);
-  const [tierIndex, setTierIndex] = React.useState(0);
-  const [amount, setAmount] = React.useState("");
-  const [balance, setBalance] = React.useState(demoWalletBalance);
+  const [state, formAction, pending] = useActionState<VaultActionState, FormData>(createVaultAction, null);
+
+  React.useEffect(() => {
+    if (state?.ok) setActivation(null);
+  }, [state]);
 
   const visible = React.useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -65,92 +50,58 @@ export function CatalogHub({ products, source = "demo" }: CatalogHubProps) {
         !needle ||
         product.name.toLowerCase().includes(needle) ||
         product.tagline.toLowerCase().includes(needle) ||
-        categoryLabels[product.category].toLowerCase().includes(needle) ||
-        product.features.some((feature) => feature.toLowerCase().includes(needle));
+        categoryLabels[product.category].toLowerCase().includes(needle);
       return matchesCategory && matchesQuery;
     });
   }, [products, filter, query]);
 
-  const openQuickView = (product: CatalogProduct) => {
-    setQuickView(product);
-    setTierIndex(0);
-  };
-
-  const startActivation = (product: CatalogProduct, tier = 0) => {
+  const startActivation = (product: CatalogProduct) => {
     setActivation(product);
-    setTierIndex(tier);
-    setAmount("");
     setQuickView(null);
   };
 
-  const numericAmount = Number(amount);
-  const validAmount = Number.isFinite(numericAmount) && numericAmount > 0;
-  const fee = activation && validAmount ? numericAmount * activation.tiers[tierIndex].feeRate : 0;
-  const total = validAmount ? numericAmount + fee : 0;
-  const insufficient = total > balance;
-
-  const confirmActivation = () => {
-    if (!activation || !validAmount || insufficient) return;
-    setBalance((current) => Number((current - total).toFixed(2)));
-    toast.success(`${activation.name} activated`, {
-      description: `${money(total)} debited · ${money(balance - total)} available`,
-    });
-    setActivation(null);
-    setAmount("");
-  };
-
   return (
-    <div className="space-y-6">
-      {source === "demo" ? (
-        <p className="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-warning">
-          The platform API is not reachable, so this catalog is showing bundled demo products and a simulated wallet balance.
-        </p>
-      ) : null}
-
-      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:items-center">
-        <div className="relative min-w-0 flex-1">
+    <div className="space-y-5">
+      {/* Sticky control bar: thumb-reachable on phones, inline on desktop. */}
+      <div className="sticky top-0 z-20 -mx-4 space-y-3 border-b border-border/60 bg-background/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:rounded-xl sm:border sm:border-border sm:bg-card sm:p-3">
+        <div className="relative">
           <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             aria-label="Search catalog"
             placeholder="Search services, vaults, analytics…"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            className="pl-9 pr-9"
+            className="h-11 pl-9 pr-11"
           />
           {query ? (
             <button
               type="button"
               aria-label="Clear search"
               onClick={() => setQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              className="absolute right-0 top-0 grid size-11 place-items-center text-muted-foreground hover:text-foreground"
             >
               <X className="size-4" />
             </button>
           ) : null}
         </div>
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 py-2 text-xs text-muted-foreground">
-          <Wallet aria-hidden="true" className="size-4 text-brand" />
-          <span className="font-medium text-foreground">{money(balance)}</span>
-          <span>available</span>
-        </div>
-      </div>
 
-      <div role="tablist" aria-label="Catalog categories" className="flex flex-wrap gap-1.5 rounded-lg border border-border bg-card p-1.5">
-        {(["ALL", ...categoryOrder] as Filter[]).map((entry) => (
-          <button
-            key={entry}
-            type="button"
-            role="tab"
-            aria-selected={filter === entry}
-            onClick={() => setFilter(entry)}
-            className={cn(
-              "h-8 rounded-md px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              filter === entry ? "bg-brand text-brand-fg" : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
-            )}
-          >
-            {entry === "ALL" ? "All services" : categoryLabels[entry]}
-          </button>
-        ))}
+        <div role="tablist" aria-label="Catalog categories" className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {(["ALL", ...categoryOrder] as Filter[]).map((entry) => (
+            <button
+              key={entry}
+              type="button"
+              role="tab"
+              aria-selected={filter === entry}
+              onClick={() => setFilter(entry)}
+              className={cn(
+                "h-9 shrink-0 rounded-full px-3.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                filter === entry ? "bg-brand text-brand-fg" : "border border-border bg-surface-2 text-muted-foreground",
+              )}
+            >
+              {entry === "ALL" ? "All services" : categoryLabels[entry]}
+            </button>
+          ))}
+        </div>
       </div>
 
       <p className="text-xs text-muted-foreground" aria-live="polite">
@@ -159,48 +110,46 @@ export function CatalogHub({ products, source = "demo" }: CatalogHubProps) {
       </p>
 
       {visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border bg-surface p-10 text-center">
-          <p className="text-sm font-medium">Nothing matched that search.</p>
-          <p className="mt-1 text-xs text-muted-foreground">Try a different category or clear the search box.</p>
-          <Button variant="outline" size="sm" className="mt-4" onClick={() => { setQuery(""); setFilter("ALL"); }}>
-            Reset filters
-          </Button>
+        <div className="rounded-xl border border-dashed border-border bg-surface p-8 text-center">
+          <p className="text-sm font-medium">{products.length ? "Nothing matched that search." : "No active products yet."}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {products.length ? "Try another category or clear the search box." : "An administrator has not published any products in this category."}
+          </p>
+          {products.length ? (
+            <Button variant="outline" size="sm" className="mt-4 h-10" onClick={() => { setQuery(""); setFilter("ALL"); }}>
+              Reset filters
+            </Button>
+          ) : null}
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {visible.map((product) => {
             const Icon = categoryIcon[product.category];
             return (
-              <article key={product.id} className="flex min-w-0 flex-col rounded-xl border border-border bg-card p-5">
+              <article key={product.id} className="flex min-w-0 flex-col rounded-xl border border-border bg-card p-4 sm:p-5">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="grid size-10 place-items-center rounded-lg bg-brand/10 text-brand">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand">
                     <Icon className="size-5" aria-hidden="true" />
                   </span>
-                  {product.popular ? <Badge variant="success">Popular</Badge> : <Badge variant="outline">{categoryLabels[product.category]}</Badge>}
+                  <Badge variant="outline">{categoryLabels[product.category]}</Badge>
                 </div>
                 <h2 className="mt-4 text-base font-semibold tracking-tight">{product.name}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{product.tagline}</p>
+                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{product.tagline}</p>
                 <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4 text-xs">
                   <div>
-                    <dt className="text-muted-foreground">{product.apyRate > 0 ? "Target APY" : "Trading fee"}</dt>
-                    <dd className="mt-1 font-semibold">
-                      {product.apyRate > 0 ? percent(product.apyRate) : percent(product.feeRate * 100)}
-                    </dd>
+                    <dt className="text-muted-foreground">{product.apyRate > 0 ? "Target APY" : "Fee"}</dt>
+                    <dd className="mt-1 font-semibold">{product.apyRate > 0 ? percent(product.apyRate) : percent(product.feeRate * 100)}</dd>
                   </div>
                   <div>
-                    <dt className="text-muted-foreground">From</dt>
-                    <dd className="mt-1 font-semibold">
-                      {product.tiers[0].priceMonthly === 0 ? "Free" : `${money(product.tiers[0].priceMonthly)}/mo`}
-                    </dd>
+                    <dt className="text-muted-foreground">Monthly</dt>
+                    <dd className="mt-1 font-semibold">{product.tiers[0]?.priceMonthly ? money(product.tiers[0].priceMonthly) : "Free"}</dd>
                   </div>
                 </dl>
-                <div className="mt-5 flex gap-2">
-                  <Button variant="outline" size="sm" className="flex-1" onClick={() => openQuickView(product)}>
-                    Quick view
-                  </Button>
-                  <Button variant="brand" size="sm" className="flex-1" onClick={() => startActivation(product)}>
-                    Activate
-                    <ArrowRight className="size-4" aria-hidden="true" />
+                {/* Full-width, 44px targets on touch. */}
+                <div className="mt-5 grid grid-cols-2 gap-2">
+                  <Button variant="outline" className="h-11 w-full" onClick={() => setQuickView(product)}>Details</Button>
+                  <Button variant="brand" className="h-11 w-full" onClick={() => startActivation(product)}>
+                    Activate<ArrowRight className="size-4" aria-hidden="true" />
                   </Button>
                 </div>
               </article>
@@ -210,7 +159,7 @@ export function CatalogHub({ products, source = "demo" }: CatalogHubProps) {
       )}
 
       <Dialog open={quickView !== null} onOpenChange={(open) => (!open ? setQuickView(null) : undefined)}>
-        <DialogContent className="max-w-xl">
+        <DialogContent className="max-h-[88dvh] max-w-xl overflow-y-auto">
           {quickView ? (
             <>
               <DialogHeader>
@@ -219,8 +168,8 @@ export function CatalogHub({ products, source = "demo" }: CatalogHubProps) {
               </DialogHeader>
               <p className="text-sm leading-6 text-muted-foreground">{quickView.description}</p>
 
-              <div className="overflow-hidden rounded-lg border border-border">
-                <table className="w-full text-left text-xs">
+              <div className="overflow-x-auto rounded-lg border border-border">
+                <table className="w-full min-w-[420px] text-left text-xs">
                   <thead className="bg-surface-2 text-muted-foreground">
                     <tr>
                       <th scope="col" className="px-3 py-2 font-medium">Tier</th>
@@ -245,15 +194,14 @@ export function CatalogHub({ products, source = "demo" }: CatalogHubProps) {
               <ul className="grid gap-2 text-sm sm:grid-cols-2">
                 {quickView.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2 text-muted-foreground">
-                    <Check className="size-4 shrink-0 text-success" aria-hidden="true" />
-                    {feature}
+                    <Check className="size-4 shrink-0 text-success" aria-hidden="true" />{feature}
                   </li>
                 ))}
               </ul>
 
-              <DialogFooter className="gap-2">
-                <Button variant="outline" onClick={() => setQuickView(null)}>Close</Button>
-                <Button variant="brand" onClick={() => startActivation(quickView)}>Activate service</Button>
+              <DialogFooter className="gap-2 sm:gap-2">
+                <Button variant="outline" className="h-11 w-full sm:w-auto" onClick={() => setQuickView(null)}>Close</Button>
+                <Button variant="brand" className="h-11 w-full sm:w-auto" onClick={() => startActivation(quickView)}>Activate</Button>
               </DialogFooter>
             </>
           ) : null}
@@ -261,68 +209,64 @@ export function CatalogHub({ products, source = "demo" }: CatalogHubProps) {
       </Dialog>
 
       <Dialog open={activation !== null} onOpenChange={(open) => (!open ? setActivation(null) : undefined)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-h-[88dvh] max-w-md overflow-y-auto">
           {activation ? (
             <>
               <DialogHeader>
                 <DialogTitle>Activate {activation.name}</DialogTitle>
                 <DialogDescription>
-                  Funds are debited from your available balance through the ledger, and locked until activation completes.
+                  {activation.category === "SAVINGS_VAULT"
+                    ? "Opens a vault through the platform API. Nothing is created until the request succeeds."
+                    : "This product is provisioned by the operations desk, so it cannot be self-activated yet."}
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="space-y-1.5">
-                <label htmlFor="activation-tier" className="text-sm font-medium">Tier</label>
-                <select
-                  id="activation-tier"
-                  value={tierIndex}
-                  onChange={(event) => setTierIndex(Number(event.target.value))}
-                  className="h-10 w-full rounded-md border border-border bg-surface px-3 text-sm text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  {activation.tiers.map((tier, index) => (
-                    <option key={tier.name} value={index}>
-                      {tier.name} · {tier.priceMonthly === 0 ? "Free" : `${money(tier.priceMonthly)}/mo`} ·{" "}
-                      {tier.apy !== null ? `${percent(tier.apy)} APY` : `${percent(tier.feeRate * 100)} fee`}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {activation.category === "SAVINGS_VAULT" ? (
+                !signedIn ? (
+                  <div className="space-y-4">
+                    <p className="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-warning">
+                      Sign in to open a vault against your own account.
+                    </p>
+                    <Button asChild variant="brand" className="h-11 w-full">
+                      <Link href="/login">Sign in</Link>
+                    </Button>
+                  </div>
+                ) : (
+                  <form action={formAction} className="space-y-4">
+                    <input type="hidden" name="productId" value={activation.id} />
+                    <input type="hidden" name="name" value={activation.name} />
+                    <input type="hidden" name="apyRate" value={activation.apyRate.toFixed(2)} />
+                    <input type="hidden" name="schedule" value="MONTHLY" />
 
-              <div className="space-y-1.5">
-                <label htmlFor="activation-amount" className="text-sm font-medium">Funding amount (USD)</label>
-                <Input
-                  id="activation-amount"
-                  inputMode="decimal"
-                  placeholder="1000.00"
-                  value={amount}
-                  onChange={(event) => setAmount(event.target.value.replace(/[^0-9.]/g, ""))}
-                />
-              </div>
+                    <div className="space-y-1.5">
+                      <label htmlFor="targetAmount" className="text-sm font-medium">Goal (USD, optional)</label>
+                      <Input id="targetAmount" name="targetAmount" inputMode="decimal" placeholder="5000.00" className="h-11" />
+                    </div>
 
-              <dl className="space-y-2 rounded-lg border border-border bg-surface-2 p-3 text-sm">
-                <div className="flex justify-between"><dt className="text-muted-foreground">Amount</dt><dd>{money(validAmount ? numericAmount : 0)}</dd></div>
-                <div className="flex justify-between"><dt className="text-muted-foreground">Fee ({percent(activation.tiers[tierIndex].feeRate * 100)})</dt><dd>{money(fee)}</dd></div>
-                <div className="flex justify-between border-t border-border pt-2 font-semibold"><dt>Total</dt><dd>{money(total)}</dd></div>
-                <div className="flex justify-between text-xs"><dt className="text-muted-foreground">Available</dt><dd>{money(balance)}</dd></div>
-              </dl>
+                    <dl className="space-y-2 rounded-lg border border-border bg-surface-2 p-3 text-sm">
+                      <div className="flex justify-between"><dt className="text-muted-foreground">APY</dt><dd>{percent(activation.apyRate)}</dd></div>
+                      <div className="flex justify-between"><dt className="text-muted-foreground">Schedule</dt><dd>Monthly</dd></div>
+                      <div className="flex justify-between"><dt className="text-muted-foreground">Fee</dt><dd>{percent(activation.feeRate * 100)}</dd></div>
+                    </dl>
 
-              {insufficient ? (
-                <p role="alert" className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
-                  Insufficient balance. Lower the amount or top up your wallet first.
-                </p>
+                    {state?.error ? (
+                      <p role="alert" className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">{state.error}</p>
+                    ) : null}
+
+                    <DialogFooter className="gap-2 sm:gap-2">
+                      <Button type="button" variant="outline" className="h-11 w-full sm:w-auto" onClick={() => setActivation(null)}>Cancel</Button>
+                      <Button type="submit" variant="brand" className="h-11 w-full sm:w-auto" disabled={pending}>
+                        {pending ? "Opening…" : "Open vault"}
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                )
               ) : (
-                <p className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <ShieldCheck className="size-4 text-success" aria-hidden="true" />
-                  Settlement posts a balanced debit and credit to the ledger.
-                </p>
+                <DialogFooter className="gap-2 sm:gap-2">
+                  <Button variant="outline" className="h-11 w-full sm:w-auto" onClick={() => setActivation(null)}>Close</Button>
+                  <Button variant="brand" className="h-11 w-full sm:w-auto" disabled>Not self-serve</Button>
+                </DialogFooter>
               )}
-
-              <DialogFooter className="gap-2">
-                <Button variant="outline" onClick={() => setActivation(null)}>Cancel</Button>
-                <Button variant="brand" disabled={!validAmount || insufficient} onClick={confirmActivation}>
-                  Confirm activation
-                </Button>
-              </DialogFooter>
             </>
           ) : null}
         </DialogContent>
