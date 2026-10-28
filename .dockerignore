@@ -1,0 +1,15 @@
+node_modules
+.next
+.open-next
+freebuff-sites-build
+.git
+.github
+artifacts
+logs
+.debs
+.local-libs
+*.log
+tsconfig.tsbuildinfo
+.env
+.env.*
+!.env.example

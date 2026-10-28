@@ -1,0 +1,205 @@
+// Veltron platform schema — PostgreSQL 15+, mirroring the Globalgle HQ catalogue,
+// wallet, transaction, vault and KYC entities plus the immutable double-entry
+// postings that back every balance change.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum VaultSchedule {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+  EXCHANGE
+  SAVINGS_DEPOSIT
+  SAVINGS_INTEREST
+  FEE
+  ADJUSTMENT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model CatalogProduct {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String   @db.VarChar(255)
+  category    String   @db.VarChar(50)
+  description String   @default("")
+  feeRate     Decimal  @default(0.0010) @db.Decimal(5, 4)
+  apyRate     Decimal  @default(0.00) @db.Decimal(5, 2)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  transactions   Transaction[]
+  savingsVaults  SavingsVault[]
+
+  @@index([category, isActive])
+  @@map("catalog_products")
+}
+
+model User {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email            String   @unique @db.VarChar(255)
+  passwordHash     String   @db.VarChar(255)
+  role             UserRole @default(USER)
+  telegram2faId    String?  @map("telegram_2fa_id") @db.VarChar(100)
+  telegram2faSecret String? @map("telegram_2fa_secret") @db.VarChar(64)
+  isVerified       Boolean  @default(false) @map("is_verified")
+  kycStatus        KycStatus @default(PENDING) @map("kyc_status")
+  createdAt        DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime @updatedAt @db.Timestamptz(6)
+
+  wallets       Wallet[]
+  savingsVaults SavingsVault[]
+  kycDocuments  KycDocument[]
+
+  @@index([role])
+  @@map("users")
+}
+
+model Wallet {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String   @map("user_id") @db.Uuid
+  currencyCode  String   @map("currency_code") @db.VarChar(10)
+  balance       Decimal  @default(0.00000000) @db.Decimal(18, 8)
+  lockedBalance Decimal  @default(0.00000000) @map("locked_balance") @db.Decimal(18, 8)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions   Transaction[]
+  ledgerPostings LedgerPosting[]
+
+  @@unique([userId, currencyCode], name: "unique_user_currency")
+  @@index([userId])
+  @@map("wallets")
+}
+
+// User-facing business record of a single money movement. Never updated after
+// completion: corrections are new transactions that offset the original.
+model Transaction {
+  id          String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  walletId    String            @map("wallet_id") @db.Uuid
+  productId   String?           @map("product_id") @db.Uuid
+  type        TransactionType
+  amount      Decimal           @db.Decimal(18, 8)
+  fee         Decimal           @default(0.00000000) @db.Decimal(18, 8)
+  status      TransactionStatus @default(COMPLETED)
+  referenceId String            @unique @map("reference_id") @db.VarChar(255)
+  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  wallet  Wallet           @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  product CatalogProduct?  @relation(fields: [productId], references: [id])
+
+  @@index([walletId, createdAt])
+  @@index([status, createdAt])
+  @@map("transactions")
+}
+
+// Immutable double-entry group. Postings must net to zero, enforced both in the
+// ledger service and by the deferred constraint in the migration SQL.
+model LedgerTransaction {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reference   String   @unique @db.VarChar(255)
+  description String   @db.VarChar(255)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  postings LedgerPosting[]
+
+  @@index([createdAt])
+  @@map("ledger_transactions")
+}
+
+// `accountKey` is either `wallet:<uuid>` or `system:<name>` (fees, external
+// funding, house). Signed amounts: debits positive, credits negative.
+model LedgerPosting {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  transactionId      String   @map("transaction_id") @db.Uuid
+  accountKey         String   @map("account_key") @db.VarChar(120)
+  currencyCode       String   @map("currency_code") @db.VarChar(10)
+  amount             Decimal  @db.Decimal(18, 8)
+  walletId           String?  @map("wallet_id") @db.Uuid
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  transaction LedgerTransaction @relation(fields: [transactionId], references: [id], onDelete: Restrict)
+  wallet      Wallet?           @relation(fields: [walletId], references: [id])
+
+  @@index([transactionId])
+  @@index([accountKey, createdAt])
+  @@index([walletId, createdAt])
+  @@map("ledger_postings")
+}
+
+// System-side counterparty accounts so that every user balance change has an
+// equal and opposite posting (funding source, fee income, house account).
+model SystemAccount {
+  key          String   @id @db.VarChar(120)
+  currencyCode String   @map("currency_code") @db.VarChar(10)
+  balance      Decimal  @default(0.00000000) @db.Decimal(18, 8)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("system_accounts")
+}
+
+model SavingsVault {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String        @map("user_id") @db.Uuid
+  productId      String?       @map("product_id") @db.Uuid
+  name           String        @default("Savings vault") @db.VarChar(120)
+  targetAmount   Decimal?      @map("target_amount") @db.Decimal(18, 2)
+  currentBalance Decimal       @default(0.00000000) @map("current_balance") @db.Decimal(18, 8)
+  apyRate        Decimal       @map("apy_rate") @db.Decimal(5, 2)
+  recurringCron  String?       @map("recurring_cron") @db.VarChar(50)
+  schedule       VaultSchedule @default(MONTHLY)
+  isLocked       Boolean       @default(false) @map("is_locked")
+  lastAccruedAt  DateTime?     @map("last_accrued_at") @db.Timestamptz(6)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product CatalogProduct? @relation(fields: [productId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([lastAccruedAt])
+  @@map("savings_vaults")
+}
+
+model KycDocument {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  documentType String  @map("document_type") @db.VarChar(50)
+  fileUrl    String    @map("file_url") @db.VarChar(512)
+  status     KycStatus @default(PENDING)
+  reviewedBy String?   @map("reviewed_by") @db.Uuid
+  reviewedAt DateTime? @map("reviewed_at") @db.Timestamptz(6)
+  notes      String?   @db.VarChar(512)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@map("kyc_documents")
+}
