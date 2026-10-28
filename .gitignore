@@ -147,3 +147,13 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+/freebuff-sites-build/
+/.open-next/
+/.wrangler/
+
+# Local verification scratch (screenshots, dev logs, sandbox tooling)
+/artifacts/
+/logs/
+/.debs/
+/.local-libs/
+/tsconfig.tsbuildinfo
