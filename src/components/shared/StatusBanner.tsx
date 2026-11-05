@@ -1,3 +1,5 @@
+import Link from "next/link";
 import {cn} from "@/lib/utils";
+import {ArrowUpRight} from "lucide-react";
 export type StatusBannerProps={message?:string;uptime?:string;className?:string};
-export function StatusBanner({message="All systems operational",uptime="99.99% uptime",className}:StatusBannerProps){return <div role="status" aria-live="polite" className={cn("flex min-h-8 items-center justify-center gap-2 border-b border-border bg-muted/50 px-3 py-1.5 text-center text-xs text-muted-foreground",className)}><span className="size-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"/><span>{message}<span className="mx-1.5" aria-hidden="true">·</span>{uptime}</span></div>}
+export function StatusBanner({message="All systems operational",uptime="99.99% uptime",className}:StatusBannerProps){return <div role="status" aria-live="polite" className={cn("flex flex-wrap items-center justify-center gap-x-2 gap-y-1 border-b border-border bg-muted/50 px-3 py-2 text-center text-xs text-muted-foreground",className)}><span className="size-1.5 shrink-0 rounded-full bg-success" aria-hidden="true"/><span>{message}<span className="mx-1.5" aria-hidden="true">·</span>{uptime}</span><Link href="/status" className="inline-flex items-center gap-1 font-medium text-foreground underline-offset-4 hover:underline">System status <ArrowUpRight size={12}/></Link></div>}

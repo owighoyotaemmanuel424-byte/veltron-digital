@@ -14,6 +14,30 @@ Original digital services marketplace built with Next.js App Router, TypeScript,
 - PostgreSQL models for users, orders, payments, webhook events, audit logs, wallet accounts, ledger entries, hosted sites, telephony records and generated documents.
 - Paystack signature verification groundwork. Payment settlement, wallet posting and fulfilment are not enabled by webhook receipt alone.
 
+## Product Catalog (demo)
+
+The catalog is a UI/API demonstration, not a live storefront. The source currently contains **57 products across five verticals**: the original 30 seed products plus 27 additional configured products. The seed script intentionally upserts every entry in `src/lib/demo/catalog.ts` so database inventory matches what the UI displays.
+
+- **Website Creator** — Starter Website, Business Website, Portfolio Website, Landing Page Kit, Online Store Setup, Website Care Plan, Domain Registration, Business Webmail, Broker Website, Online Banking Template, Giveaway Landing Page, Investment Plan Landing Page, Celebrity Profile Site, Ecommerce Site, Website Widgets, Support Pages, Tracking Pages, Transaction Tracker, Wallet Interface.
+- **Digital Tools** — PDF Toolkit, Productivity Suite, QR Code Studio, Image Optimizer, Social Planner, Data Cleanup Kit, Wallet Funding UI, SMS Sender Setup, SMS Verification UI, eSIM Plan Selector, Account Requirements, Account Verification UI.
+- **Call Tools** — Call Workflow Planner, Team Dialer Setup, Voice Notes Kit, Call Analytics Starter, Customer Follow-up, Call Center Consultation, Custom Caller Setup, Voice Notes Workflow.
+- **Mailing Tools** — Email Signature Kit, Newsletter Starter, Mailing List Organizer, Campaign Planner, Deliverability Review, Transactional Email Plan, Email List Campaign, Invoice Email Workflow, Bank Notification Mailer.
+- **Generator Tools** — Content Idea Generator, Business Name Generator, Invoice Generator Kit, Policy Document Builder, SEO Brief Generator, Brand Kit Generator, Crypto Receipt Generator, Bank Receipt Generator, Store Receipt Generator.
+
+### Demo-mode limitations
+
+**None of the catalog products are provisioned or fulfilled in demo mode.** Prices and fulfillment badges are illustrative only. Orders created in the browser preview remain local demo entries; API-created orders remain `PENDING`. Checkout does not collect payment, and the demo does not send email, place calls, activate third-party services, create a live website, verify a transaction, or generate a real financial record. Receipt/document examples are visibly marked as demos and are not proof of payment.
+
+### Seed the catalog
+
+After applying the additive Prisma migrations and generating the client, run:
+
+```bash
+npx prisma db seed
+```
+
+The seed is idempotent and upserts by `(category, slug)`; it does not reset or delete existing database records. See [the catalog matrix](docs/CATALOG_MATRIX.md) for every product, price, illustrative fulfillment badge, and demo status.
+
 ## Important readiness limitations
 This is an actively developed platform, **not yet production-ready**. Admin catalog/user management and pending order review are implemented. Remaining gates include balanced ledger posting and payment reconciliation, provider-backed order fulfilment, hosted-site provisioning, telephony integration, document rendering, password/account recovery, device-level abuse monitoring, broader CSRF review, end-to-end coverage, production migrations, and verified deployment.
 

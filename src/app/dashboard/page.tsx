@@ -53,7 +53,7 @@ export default async function DashboardPage() {
     }),
     prisma.order.findMany({
       where: { userId: user.id },
-      select: { publicId: true, status: true, totalMinor: true, currency: true, createdAt: true, service: { select: { name: true } } },
+      select: { publicId: true, status: true, totalMinor: true, currency: true, createdAt: true, service: { select: { name: true } }, product: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
       take: 5,
     }),
@@ -151,6 +151,18 @@ export default async function DashboardPage() {
           <MetricCard label="Recent payments" value={payments.length} detail={`Latest ${payments.length} payment records`} icon="↗" />
         </section>
 
+        <section className={styles.panel} aria-label="My active products" style={{ marginBottom: "1.25rem" }}>
+          <div className={styles.panelHead}>
+            <div><div className={styles.kicker}>YOUR PRODUCTS</div><h2>My Active Products</h2><p style={{ marginTop: ".35rem", color: "var(--muted-foreground, #64748b)" }}>View product status, update configuration, or renew an expired demo order.</p></div>
+            <Link className={styles.textLink} href="/products">Manage products ↗</Link>
+          </div>
+          <Link href="/products" className={styles.actionTile}>
+            <span className={styles.actionTileIcon}>▦</span>
+            <span className={styles.actionTileText}><strong>Open My Products</strong><small>Review active, pending, and expired product orders.</small></span>
+            <span className={styles.actionArrow}>↗</span>
+          </Link>
+        </section>
+
         <section className={styles.quickSection} id="quick-actions">
           <div className={styles.sectionIntro}>
             <div><div className={styles.kicker}>GET STARTED</div><h2>Quick actions</h2><p>Shortcuts to the services currently available in Veltron Digital.</p></div>
@@ -214,7 +226,7 @@ export default async function DashboardPage() {
           {recentOrders.length ? <div className={styles.tableWrap}><table className={styles.table}>
             <thead><tr><th>Service</th><th>Reference</th><th>Status</th><th>Total</th><th>Date</th></tr></thead>
             <tbody>{recentOrders.map((order) => <tr key={order.publicId}>
-              <td><div className={styles.serviceCell}><strong>{order.service.name}</strong><small>Service order</small></div></td>
+              <td><div className={styles.serviceCell}><strong>{order.service?.name ?? order.product?.name ?? "Catalog product"}</strong><small>{order.product ? "Catalog order" : "Service order"}</small></div></td>
               <td><span className={styles.reference}>{order.publicId.slice(0, 12)}</span></td>
               <td><span className={`${styles.badge} ${statusClass(order.status)}`}>{order.status.toLowerCase().replaceAll("_", " ")}</span></td>
               <td>{money(order.totalMinor, order.currency)}</td>
