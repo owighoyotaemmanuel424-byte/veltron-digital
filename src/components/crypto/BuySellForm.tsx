@@ -20,7 +20,7 @@ import {
   type OrderInput,
   type OrderKind,
   type Side,
-} from "@/lib/demo/crypto";
+} from "@/lib/crypto/market";
 
 type BuySellFormProps = {
   asset: Asset;

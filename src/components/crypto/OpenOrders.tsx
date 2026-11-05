@@ -8,7 +8,7 @@ import { DataTable } from "@/components/shared/DataTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatClock, formatPrice, formatQty, type OpenOrder } from "@/lib/demo/crypto";
+import { formatClock, formatPrice, formatQty, type OpenOrder } from "@/lib/crypto/market";
 
 type OpenOrdersProps = { orders: OpenOrder[]; onCancel: (order: OpenOrder) => void };
 
@@ -95,7 +95,7 @@ export function OpenOrders({ orders, onCancel }: OpenOrdersProps) {
     <Card className="overflow-hidden">
       <CardHeader className="pb-3">
         <CardTitle className="text-base">Open orders</CardTitle>
-        <p className="text-xs text-muted-foreground">Simulated fills update while the workspace is open. Cancel any order to release the row instantly.</p>
+        <p className="text-xs text-muted-foreground">Resting orders from the matching engine. Cancelling releases the funds the engine locked and removes the row immediately.</p>
       </CardHeader>
       <CardContent>
         <DataTable

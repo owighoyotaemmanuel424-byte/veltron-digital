@@ -72,6 +72,43 @@ export function createPlatformRouter(config: Config, limiter: RateLimiter, engin
     }),
   );
 
+  // --- Markets ---------------------------------------------------------------
+  // Public market data. Prices, depth and OHLC all come from the single
+  // in-process engine, so the WS stream and these REST reads cannot disagree.
+  router.get("/markets", (_req, res) => {
+    res.setHeader("Cache-Control", "no-store");
+    res.json({
+      markets: engine.tickers().map((ticker) => ({
+        ...ticker,
+        sparkline: engine.sparkline(ticker.symbol),
+      })),
+    });
+  });
+
+  const candleQuery = z.object({
+    timeframe: z.enum(["1H", "4H", "1D", "1W"]).default("1H"),
+    limit: z.coerce.number().int().min(2).max(120).default(120),
+  });
+
+  router.get("/markets/:symbol/candles", (req, res) => {
+    const symbol = String(req.params.symbol).toUpperCase();
+    if (!engine.symbols().includes(symbol)) {
+      res.status(404).json({ error: "unknown_symbol" });
+      return;
+    }
+    const parsed = candleQuery.safeParse(req.query);
+    if (!parsed.success) {
+      res.status(422).json({ error: "invalid_query", message: "timeframe must be 1H, 4H, 1D or 1W" });
+      return;
+    }
+    res.setHeader("Cache-Control", "no-store");
+    res.json({
+      symbol,
+      timeframe: parsed.data.timeframe,
+      candles: engine.candles(symbol, parsed.data.timeframe, parsed.data.limit),
+    });
+  });
+
   // --- Wallets ---------------------------------------------------------------
   router.get(
     "/wallets",

@@ -8,7 +8,7 @@ import { Sparkline } from "@/components/shared/Sparkline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { change24h, formatPercent, type Asset } from "@/lib/demo/crypto";
+import { change24h, formatPercent, type Asset } from "@/lib/crypto/market";
 
 type WatchlistProps = {
   assets: Asset[];

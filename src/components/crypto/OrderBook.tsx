@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { formatPrice, formatQty, spread, spreadPercent, type BookLevel } from "@/lib/demo/crypto";
+import { formatPrice, formatQty, spread, spreadPercent, type BookLevel } from "@/lib/crypto/market";
 
 type OrderBookProps = { levels: { bids: BookLevel[]; asks: BookLevel[] }; symbol: string; precision: number };
 

@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { formatQty, formatUsd, holdingValue, type Asset, type Balances } from "@/lib/demo/crypto";
+import { formatQty, formatUsd, holdingValue, type Asset, type Balances } from "@/lib/crypto/market";
 
 type WalletStripProps = { assets: Asset[]; balances: Balances; equity: number };
 
@@ -17,7 +17,7 @@ export function WalletStrip({ assets, balances, equity }: WalletStripProps) {
           <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Total equity</p>
           <p className="mt-1 text-2xl font-semibold tracking-tight tabular-nums">{formatUsd(equity)}</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Cash {formatUsd(balances.usd)} · {holdings.length} assets · demo wallet
+            Cash {formatUsd(balances.usd)} · {holdings.length} assets · platform wallet
           </p>
         </div>
         <ul className="flex gap-2 overflow-x-auto pb-1 xl:flex-wrap xl:justify-end xl:overflow-visible xl:pb-0">

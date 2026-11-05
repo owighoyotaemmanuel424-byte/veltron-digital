@@ -58,7 +58,12 @@ export function attachRealtimeServer(server: Server, engine: MarketEngine, path 
 
   engine.on("ticker", (ticker) => broadcast("ticker", ticker));
   engine.on("book", (book) => broadcast("book", book));
-  engine.on("fill", (fill) => broadcast("fill", fill));
+  // Fills are relayed without `userId`: the feed is unauthenticated, so a
+  // subscriber must not learn which account traded.
+  engine.on("fill", (fill) => {
+    const { userId: _userId, ...publicFill } = fill;
+    broadcast("fill", publicFill);
+  });
 
   const heartbeat = setInterval(() => {
     for (const client of wss.clients as Set<Client>) {

@@ -27,7 +27,7 @@ import {
   type Asset,
   type Candle,
   type Timeframe,
-} from "@/lib/demo/crypto";
+} from "@/lib/crypto/market";
 
 type TradeChartProps = {
   asset: Asset;
@@ -245,14 +245,21 @@ export function TradeChart({ asset, candles, timeframe, onTimeframeChange }: Tra
         </div>
       </CardHeader>
       <CardContent className="pb-4">
-        <div
-          ref={holderRef}
-          data-timeframe={timeframe}
-          data-symbol={asset.symbol}
-          aria-label={`${asset.symbol} ${timeframe} candlestick chart with volume`}
-          role="img"
-          className="h-[320px] w-full sm:h-[380px]"
-        />
+        <div className="relative">
+          <div
+            ref={holderRef}
+            data-timeframe={timeframe}
+            data-symbol={asset.symbol}
+            aria-label={`${asset.symbol} ${timeframe} candlestick chart with volume`}
+            role="img"
+            className="h-[320px] w-full sm:h-[380px]"
+          />
+          {candles.length === 0 ? (
+            <p className="pointer-events-none absolute inset-0 grid place-items-center text-xs text-muted-foreground">
+              Collecting {timeframe} candles from the engine…
+            </p>
+          ) : null}
+        </div>
       </CardContent>
     </Card>
   );

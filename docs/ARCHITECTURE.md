@@ -44,6 +44,11 @@ and fee-income credit, netting to zero.
 crossing limit orders and emits `ticker` / `book` / `fill` / `orders` events. `realtime/server.ts`
 relays those to subscribed sockets and pings every 30s to drop half-open connections.
 
+The engine also owns OHLC history: it backfills a bounded series per symbol and timeframe at boot
+and folds every print into the newest bucket, so `/v1/markets/:symbol/candles` and the `ticker`
+stream can never disagree. Fills are relayed without `userId`, because the socket is unauthenticated;
+account state (wallets, resting orders) is read over the authenticated REST routes instead.
+
 ```
 client → { "type": "subscribe", "symbols": ["BTC", "ETH"] }
 server → { "type": "snapshot",  "payload": { "tickers": [...], "book": {...} } }
@@ -73,6 +78,7 @@ duplicated job cannot credit twice.
 | POST | `/v1/auth/2fa/enroll` \| `/2fa/confirm` | bearer | TOTP pairing + otpauth URL |
 | POST | `/v1/auth/telegram/webhook` | HMAC + secret token | Bot updates |
 | GET | `/v1/catalog` | – | Active products by category |
+| GET | `/v1/markets` · `/v1/markets/:symbol/candles` | – | Tickers, sparklines and OHLC straight from the engine |
 | GET | `/v1/wallets` | bearer | Balances + locked balances |
 | POST | `/v1/wallets/deposit` \| `/withdraw` | bearer | Ledger-backed movements |
 | GET/POST | `/v1/vaults`, `/v1/vaults/:id/deposit` | bearer | Vault lifecycle |
@@ -93,8 +99,8 @@ so compose and orchestrators can probe them.
 
 ## Known gaps
 
-- The Next.js screens are still fed by the in-repo demo data (`src/lib/demo/*`); only the
-  `/catalog` hub and the existing auth forms are UI-complete against the API contract.
+- `/catalog`, `/savings` and `/crypto` run against this API. The analytics ledger, the marketing
+  copy and the signup/2FA flows still read `src/lib/demo/*`.
 - KYC document upload (multipart) and Telegram bot provisioning are modelled in the schema and
   admin routes but not wired to a file store.
 - The matching engine is in-memory per instance; horizontal scaling needs a Redis-backed book.
